@@ -1,28 +1,41 @@
 import { notFound } from "next/navigation"
 import { NextResponse, type NextRequest } from "next/server"
 
-import { processMdxForLLMs } from "@/lib/llm"
+import { getDemoItem } from "@/lib/registry"
 import { source } from "@/lib/source"
-import { type Style } from "@/registry/_legacy-styles"
 
 export const revalidate = false
 export const dynamic = "force-static"
 export const dynamicParams = true
 
-function getStyleFromSlug(slug: string[] | undefined, fallbackStyle: string) {
-  // Detect base from URL: /docs/components/base, /radix, or /aria.
-  if (slug && slug[0] === "components" && slug[1]) {
-    if (slug[1] === "base") {
-      return "base-nova"
-    }
-    if (slug[1] === "aria") {
-      return "aria-nova"
-    }
-    if (slug[1] === "radix") {
-      return "new-york-v4"
-    }
-  }
-  return fallbackStyle
+const DEFAULT_STYLE = "radix-nova"
+
+// Replace each <ComponentPreview name="..." /> with the demo's source so the
+// markdown is useful on its own.
+async function inlineComponentPreviews(content: string) {
+  const regex = /<ComponentPreview[\s\S]*?\/>/g
+  const matches = Array.from(content.matchAll(regex))
+
+  const replacements = await Promise.all(
+    matches.map(async ([match]) => {
+      const name = match.match(/name="([^"]+)"/)?.[1]
+      if (!name) {
+        return match
+      }
+
+      const styleName = match.match(/styleName="([^"]+)"/)?.[1] ?? DEFAULT_STYLE
+      const demo = await getDemoItem(name, styleName)
+      const code = demo?.files[0]?.content
+      if (!code) {
+        return match
+      }
+
+      return `\`\`\`tsx\n${code.replaceAll("export default", "export")}\n\`\`\``
+    })
+  )
+
+  let index = 0
+  return content.replace(regex, () => replacements[index++])
 }
 
 export async function GET(
@@ -37,12 +50,8 @@ export async function GET(
     notFound()
   }
 
-  // Default to the base style. Legacy content pins new-york-v4 per tag.
-  const effectiveStyle = getStyleFromSlug(slug, "base-nova")
-
-  const processedContent = processMdxForLLMs(
-    await page.data.getText("raw"),
-    effectiveStyle as Style["name"]
+  const processedContent = await inlineComponentPreviews(
+    await page.data.getText("raw")
   )
 
   return new NextResponse(processedContent, {

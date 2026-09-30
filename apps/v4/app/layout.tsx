@@ -6,16 +6,12 @@ import { META_THEME_COLORS, siteConfig } from "@/lib/config"
 import { DOCS_SIDEBAR_SCROLL_RESTORE_SCRIPT } from "@/lib/docs-sidebar-scroll"
 import { fontVariables } from "@/lib/fonts"
 import { ActiveThemeProvider } from "@/components/active-theme"
-import { Analytics } from "@/components/analytics"
 import { TailwindIndicator } from "@/components/tailwind-indicator"
 import { ThemeProvider } from "@/components/theme-provider"
-import { TooltipProvider as BaseTooltipProvider } from "@/registry/bases/base/ui/tooltip"
-import { Toaster } from "@/registry/bases/radix/ui/sonner"
-import { TooltipProvider as RadixTooltipProvider } from "@/registry/bases/radix/ui/tooltip"
-import { Toaster as BaseToaster } from "@/styles/base-nova/ui/toast"
+import { Toaster } from "@/registry/new-york-v4/ui/sonner"
+import { TooltipProvider } from "@/registry/new-york-v4/ui/tooltip"
 
 import "@/app/globals.css"
-import "@/app/(app)/(typeset)/typeset.css"
 
 export const metadata: Metadata = {
   title: {
@@ -24,14 +20,7 @@ export const metadata: Metadata = {
   },
   metadataBase: new URL(siteConfig.url),
   description: siteConfig.description,
-  keywords: ["Next.js", "React", "Tailwind CSS", "Components", "shadcn"],
-  authors: [
-    {
-      name: "shadcn",
-      url: "https://shadcn.com",
-    },
-  ],
-  creator: "shadcn",
+  keywords: ["React", "Tailwind CSS", "shadcn", "dashboard", "registry"],
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -39,21 +28,11 @@ export const metadata: Metadata = {
     title: siteConfig.name,
     description: siteConfig.description,
     siteName: siteConfig.name,
-    images: [
-      {
-        url: `${siteConfig.url}/opengraph-image.png`,
-        width: 1200,
-        height: 630,
-        alt: siteConfig.name,
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: siteConfig.name,
     description: siteConfig.description,
-    images: [`${siteConfig.url}/opengraph-image.png`],
-    creator: "@shadcn",
   },
   icons: {
     icon: "/favicon.ico",
@@ -61,11 +40,6 @@ export const metadata: Metadata = {
     apple: "/apple-touch-icon.png",
   },
   manifest: `${siteConfig.url}/site.webmanifest`,
-  alternates: {
-    types: {
-      "application/rss+xml": `${siteConfig.url}/rss.xml`,
-    },
-  },
 }
 
 export default function RootLayout({
@@ -109,16 +83,12 @@ export default function RootLayout({
         <ThemeProvider>
           <ActiveThemeProvider>
             <NuqsAdapter>
-              <BaseTooltipProvider delay={0}>
-                <RadixTooltipProvider delayDuration={0}>
-                  {children}
-                  <Toaster position="top-center" />
-                  <BaseToaster />
-                </RadixTooltipProvider>
-              </BaseTooltipProvider>
+              <TooltipProvider delayDuration={0}>
+                {children}
+                <Toaster position="top-center" />
+              </TooltipProvider>
             </NuqsAdapter>
             <TailwindIndicator />
-            <Analytics />
           </ActiveThemeProvider>
         </ThemeProvider>
       </body>

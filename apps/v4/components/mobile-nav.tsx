@@ -2,12 +2,10 @@
 
 import * as React from "react"
 import Link, { type LinkProps } from "next/link"
-import { usePathname, useRouter } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { cn } from "cn"
 
-import { PAGES_NEW } from "@/lib/docs"
-import { showMcpDocs } from "@/lib/flags"
-import { getCurrentBase, getPagesFromFolder } from "@/lib/page-tree"
+import { DOCS_NAV } from "@/lib/page-tree"
 import { type source } from "@/lib/source"
 import { Button } from "@/registry/new-york-v4/ui/button"
 import {
@@ -16,62 +14,15 @@ import {
   PopoverTrigger,
 } from "@/registry/new-york-v4/ui/popover"
 
-const TOP_LEVEL_SECTIONS = [
-  { name: "Introduction", href: "/docs" },
-  {
-    name: "Components",
-    href: "/docs/components",
-  },
-  {
-    name: "Installation",
-    href: "/docs/installation",
-  },
-  {
-    name: "Theming",
-    href: "/docs/theming",
-  },
-  {
-    name: "CLI",
-    href: "/docs/cli",
-  },
-  {
-    name: "RTL",
-    href: "/docs/rtl",
-  },
-  {
-    name: "Skills",
-    href: "/docs/skills",
-  },
-  {
-    name: "MCP Server",
-    href: "/docs/mcp",
-  },
-  {
-    name: "Registry",
-    href: "/docs/registry",
-  },
-  {
-    name: "Forms",
-    href: "/docs/forms",
-  },
-  {
-    name: "Changelog",
-    href: "/docs/changelog",
-  },
-]
-
 export function MobileNav({
-  tree,
   items,
   className,
 }: {
-  tree: typeof source.pageTree
+  tree?: typeof source.pageTree
   items: { href: string; label: string }[]
   className?: string
 }) {
   const [open, setOpen] = React.useState(false)
-  const pathname = usePathname()
-  const currentBase = getCurrentBase(pathname)
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -125,63 +76,24 @@ export function MobileNav({
               ))}
             </div>
           </div>
-          <div className="flex flex-col gap-4">
-            <div className="text-sm font-medium text-muted-foreground">
-              Sections
-            </div>
-            <div className="flex flex-col gap-3">
-              {TOP_LEVEL_SECTIONS.map(({ name, href }) => {
-                if (!showMcpDocs && href.includes("/mcp")) {
-                  return null
-                }
-                return (
-                  <MobileLink key={name} href={href} onOpenChange={setOpen}>
-                    {name}
-                    {PAGES_NEW.includes(href) && (
-                      <span
-                        className="flex size-2 rounded-full bg-blue-500"
-                        title="New"
-                      />
-                    )}
+          {DOCS_NAV.map((group) => (
+            <div key={group.name} className="flex flex-col gap-4">
+              <div className="text-sm font-medium text-muted-foreground">
+                {group.name}
+              </div>
+              <div className="flex flex-col gap-3">
+                {group.items.map((item) => (
+                  <MobileLink
+                    key={item.href}
+                    href={item.href}
+                    onOpenChange={setOpen}
+                  >
+                    {item.name}
                   </MobileLink>
-                )
-              })}
+                ))}
+              </div>
             </div>
-          </div>
-          <div className="flex flex-col gap-8">
-            {tree?.children?.map((group, index) => {
-              if (group.type === "folder") {
-                const pages = getPagesFromFolder(group, currentBase)
-                return (
-                  <div key={index} className="flex flex-col gap-4">
-                    <div className="text-sm font-medium text-muted-foreground">
-                      {group.name}
-                    </div>
-                    <div className="flex flex-col gap-3">
-                      {pages.map((item) => {
-                        if (!showMcpDocs && item.url.includes("/mcp")) {
-                          return null
-                        }
-                        return (
-                          <MobileLink
-                            key={`${item.url}-${index}`}
-                            href={item.url}
-                            onOpenChange={setOpen}
-                            className="flex items-center gap-2"
-                          >
-                            {item.name}{" "}
-                            {PAGES_NEW.includes(item.url) && (
-                              <span className="flex size-2 rounded-full bg-blue-500" />
-                            )}
-                          </MobileLink>
-                        )
-                      })}
-                    </div>
-                  </div>
-                )
-              }
-            })}
-          </div>
+          ))}
         </div>
       </PopoverContent>
     </Popover>

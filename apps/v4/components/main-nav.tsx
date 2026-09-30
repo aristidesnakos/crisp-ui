@@ -4,7 +4,6 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "cn"
 
-import { PAGES_NEW } from "@/lib/docs"
 import { Button } from "@/registry/new-york-v4/ui/button"
 
 export function MainNav({
@@ -29,7 +28,6 @@ export function MainNav({
           <Link
             href={item.href}
             data-active={pathname === item.href}
-            data-new={PAGES_NEW.includes(item.href)}
             className="relative items-center"
           >
             {item.label}

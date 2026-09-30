@@ -3,16 +3,13 @@ import Image from "next/image"
 import Link from "next/link"
 import { cn } from "cn"
 
-import { source } from "@/lib/source"
 import { Callout } from "@/components/callout"
 import { CodeBlockCommand } from "@/components/code-block-command"
 import { CodeCollapsibleWrapper } from "@/components/code-collapsible-wrapper"
 import { CodeTabs } from "@/components/code-tabs"
 import { ComponentPreview } from "@/components/component-preview"
 import { ComponentSource } from "@/components/component-source"
-import { ComponentsList } from "@/components/components-list"
 import { CopyButton } from "@/components/copy-button"
-import { DirectoryList } from "@/components/directory-list"
 import { getIconForLanguageExtension } from "@/components/icons"
 import {
   Accordion,
@@ -34,35 +31,6 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/registry/new-york-v4/ui/tabs"
-
-function getComponentsFolder() {
-  const componentsFolder = source.pageTree.children.find(
-    (page) => page.$id === "components"
-  )
-
-  if (componentsFolder?.type !== "folder") {
-    return null
-  }
-
-  return componentsFolder
-}
-
-// This is only used on /docs/components/ index page, so default to base.
-function ComponentsListWrapper({ variant }: { variant?: "all" | "new" }) {
-  const componentsFolder = getComponentsFolder()
-
-  if (!componentsFolder) {
-    return null
-  }
-
-  return (
-    <ComponentsList
-      componentsFolder={componentsFolder}
-      currentBase="base"
-      variant={variant}
-    />
-  )
-}
 
 function getNodeText(node: React.ReactNode): string {
   if (typeof node === "string" || typeof node === "number") {
@@ -347,8 +315,6 @@ export const mdxComponents = {
   ComponentPreview,
   ComponentSource,
   CodeCollapsibleWrapper,
-  ComponentsList: ComponentsListWrapper,
-  DirectoryList,
   Link,
   LinkedCard: ({ className, ...props }: React.ComponentProps<typeof Link>) => (
     <Link

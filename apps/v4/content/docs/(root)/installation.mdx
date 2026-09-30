@@ -1,0 +1,46 @@
+---
+title: Installation
+description: Add a crisp-ui item to a project that already uses shadcn/ui.
+---
+
+## Requirements
+
+- A project set up with `npx shadcn@latest init`.
+- Tailwind 3.4 or newer (the parts use `size-*`).
+
+## Add an item
+
+Install any item by URL. Its dependencies come with it.
+
+```bash
+npx shadcn@latest add https://<your-domain>/r/status-notify.json
+```
+
+## Use the `@crisp` namespace
+
+Register the registry once in `components.json`:
+
+```json title="components.json"
+{
+  "registries": {
+    "@crisp": "https://<your-domain>/r/{name}.json"
+  }
+}
+```
+
+Then install by name:
+
+```bash
+npx shadcn@latest add @crisp/status-notify
+```
+
+## Items
+
+| Item               | What it is                                                          |
+| ------------------ | ------------------------------------------------------------------- |
+| `status-notify`    | The whole pattern, wired together                                   |
+| `status-strip`     | Headline number, segmented bar, legend and an action slot           |
+| `recipient-roster` | One list of people with a switch per channel                        |
+| `confirm-send`     | Click, confirm with the count, send, "Sent to N"                    |
+| `save-bar`         | "Unsaved changes" with Discard and Save, hidden when clean          |
+| `notify-envelope`  | Pure helpers: roster from lists, list comparison, One-message To/Cc |

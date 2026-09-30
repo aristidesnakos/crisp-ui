@@ -19,16 +19,31 @@ export function GitHubLink() {
   )
 }
 
+// "https://github.com/owner/repo" -> "owner/repo"
+const repo = new URL(siteConfig.links.github).pathname
+  .replace(/^\/+|\/+$/g, "")
+  .replace(/\.git$/, "")
+
 export async function StarsCount() {
-  const data = await fetch("https://api.github.com/repos/shadcn-ui/ui", {
-    next: { revalidate: 86400 },
-  })
-  const json = await data.json()
+  let stars: number | undefined
+
+  try {
+    const data = await fetch(`https://api.github.com/repos/${repo}`, {
+      next: { revalidate: 86400 },
+    })
+    const json = await data.json()
+    stars =
+      typeof json.stargazers_count === "number"
+        ? json.stargazers_count
+        : undefined
+  } catch {}
+
+  if (stars === undefined) {
+    return null
+  }
 
   const formattedCount =
-    json.stargazers_count >= 1000
-      ? `${Math.round(json.stargazers_count / 1000)}k`
-      : json.stargazers_count?.toLocaleString()
+    stars >= 1000 ? `${Math.round(stars / 1000)}k` : stars.toLocaleString()
 
   return (
     <span className="w-fit text-xs text-muted-foreground tabular-nums">
