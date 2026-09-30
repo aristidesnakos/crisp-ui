@@ -19,14 +19,8 @@ writeFileSync(
 )
 
 execFileSync(
-  "node",
-  [
-    "../../packages/shadcn/dist/index.js",
-    "build",
-    "registry-crisp.json",
-    "--output",
-    "public/r",
-  ],
+  "pnpm",
+  ["exec", "shadcn", "build", "registry-crisp.json", "--output", "public/r"],
   { stdio: "inherit" }
 )
 console.log(`crisp-ui registry built for ${origin}`)

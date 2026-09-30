@@ -10,10 +10,11 @@
     "lint": "eslint . --cache --cache-location .eslintcache",
     "lint:fix": "eslint --fix . --cache --cache-location .eslintcache",
     "typecheck": "tsc --noEmit",
+    "test": "vitest run",
     "format:write": "prettier --write \"**/*.{ts,tsx,mdx}\" --cache",
     "format:check": "prettier --check \"**/*.{ts,tsx,mdx}\" --cache",
     "postinstall": "fumadocs-mdx",
-    "crisp:build": "pnpm --filter=shadcn build && node ./scripts/build-crisp-registry.mjs",
+    "crisp:build": "node ./scripts/build-crisp-registry.mjs",
     "preview": "pnpm crisp:build && next build && next start --port 4000"
   },
   "dependencies": {
@@ -34,8 +35,6 @@
     "@paper-design/shaders-react": "^0.0.72",
     "@phosphor-icons/react": "^2.1.10",
     "@remixicon/react": "^4.7.0",
-    "@shadcn/helpers": "workspace:*",
-    "@shadcn/react": "workspace:*",
     "@streamdown/code": "^1.1.1",
     "@tabler/icons-react": "^3.31.0",
     "@tailwindcss/postcss": "^4.3.0",

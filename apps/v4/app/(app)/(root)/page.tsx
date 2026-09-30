@@ -1,5 +1,6 @@
 import { type Metadata } from "next"
 import Link from "next/link"
+import StatusNotifyDemo from "@/examples/radix/status-notify-demo"
 
 import { siteConfig } from "@/lib/config"
 import {
@@ -8,7 +9,6 @@ import {
   PageHeaderDescription,
   PageHeaderHeading,
 } from "@/components/page-header"
-import StatusNotifyDemo from "@/examples/radix/status-notify-demo"
 import { Button } from "@/registry/new-york-v4/ui/button"
 
 const title = "Dashboards that keep people in the loop"
