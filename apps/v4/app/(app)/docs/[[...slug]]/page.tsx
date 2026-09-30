@@ -46,11 +46,15 @@ export async function generateMetadata(props: {
       description: doc.description,
       type: "article",
       url: absoluteUrl(page.url),
+      // A page's openGraph replaces the layout's rather than merging, so the
+      // shared image is repeated here.
+      images: [{ url: "/og.png", width: 1200, height: 630 }],
     },
     twitter: {
       card: "summary_large_image",
       title: doc.title,
       description: doc.description,
+      images: ["/og.png"],
     },
   }
 }

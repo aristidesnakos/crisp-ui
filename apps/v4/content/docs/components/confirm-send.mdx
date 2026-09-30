@@ -1,0 +1,110 @@
+---
+title: Confirm send
+description: Click, confirm with the recipient count, send, then a status line. Can be blocked with a reason.
+---
+
+<ComponentPreview styleName="radix-nova" name="confirm-send-demo" />
+
+Use it for any action that messages other people and cannot be taken back. It is never one click to send: the button becomes "Send to 3 people?" with Send and Cancel, and only then does your handler run. The count is part of the question, so nobody sends to a list they have not seen.
+
+It is usually the `action` of a [`status-strip`](/docs/components/status-strip).
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add https://<your-domain>/r/confirm-send.json
+```
+
+Or, with the [`@crisp` namespace](/docs/installation) set up:
+
+```bash
+npx shadcn@latest add @crisp/confirm-send
+```
+
+This also adds the shadcn `button` and `lucide-react`.
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource
+  src="registry/crisp/ui/confirm-send.tsx"
+  title="components/ui/confirm-send.tsx"
+/>
+
+<Step>
+  Add the shadcn `button` and install `lucide-react`. Update the import paths to
+  match your project setup.
+</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { ConfirmSend } from "@/components/ui/confirm-send"
+```
+
+```tsx
+const [sending, setSending] = React.useState(false)
+const [sentCount, setSentCount] = React.useState<number | null>(null)
+
+<ConfirmSend
+  count={saved.length}
+  label="Email this summary"
+  sending={sending}
+  sentCount={sentCount}
+  blockedReason={dirty ? "Save your changes first" : undefined}
+  onSend={async () => {
+    setSending(true)
+    try {
+      setSentCount(await api.sendSummary())
+    } finally {
+      setSending(false)
+    }
+  }}
+/>
+```
+
+The component owns only the "are you sure" step. You own `sending` and `sentCount`.
+
+## Notes
+
+- **Count the saved list.** Pass the number of people the send will actually reach. If the list on screen has unsaved edits, use `blockedReason` to stop the send until they are saved. A confirmation that is open when the list changes is dismissed, because what it says no longer matches what would be sent.
+- **Blocked and empty.** `blockedReason` disables the button and sets it as the button's tooltip and its accessible description. When `count` is 0 the same happens with `emptyReason`. `blockedReason` wins when both apply.
+- **"Sent to N".** Show it by passing `sentCount`. It appears beside the button, which becomes an outline button, and it hides while the button is blocked. Reset it to `null` when the list changes or you want it gone. The component never clears it.
+- **Button text.** With a count it reads "`label` to 3 people" and with none just "`label`". Change the nouns with `noun` and `nounPlural`.
+- **Sending state.** The confirmation closes as soon as Send is pressed, then `sending` disables the button. The label does not change while `sending` is true, so pair it with your own indicator if the send is slow.
+- **Fragment output.** It renders a fragment of buttons and text, so put it in a flex container that supplies the gap.
+
+## Props
+
+### ConfirmSend
+
+| Prop            | Type                          | Description                                                                       |
+| --------------- | ----------------------------- | --------------------------------------------------------------------------------- |
+| `count`         | `number`                      | How many recipients the saved list reaches. Required.                             |
+| `onSend`        | `() => void \| Promise<void>` | Called after the person confirms. Required.                                       |
+| `noun`          | `string`                      | One recipient. Default `"person"`.                                                |
+| `nounPlural`    | `string`                      | Plural of `noun`. Default `"people"` for `"person"`, otherwise `noun` plus `"s"`. |
+| `blockedReason` | `string`                      | Blocks the send and explains why. Cancels an open confirmation.                   |
+| `emptyReason`   | `string`                      | The reason shown when `count` is 0. Default "Add at least one recipient first".   |
+| `sending`       | `boolean`                     | Disables the button while your send runs. Default `false`.                        |
+| `sentCount`     | `number \| null`              | Shows "Sent to N" when set. Default `null`.                                       |
+| `label`         | `string`                      | Idle button label. Default "Send now".                                            |

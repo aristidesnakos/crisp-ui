@@ -14,14 +14,14 @@ export interface StatusSegment {
 
 const TONE_BAR: Record<StatusTone, string> = {
   done: "bg-primary",
-  active: "bg-primary/45",
+  active: "bg-primary/45 ring-1 ring-inset ring-primary/70",
   pending:
     "bg-[repeating-linear-gradient(135deg,currentColor_0_3px,transparent_3px_6px)] text-muted-foreground/60 ring-1 ring-inset ring-muted-foreground/30",
 }
 
 const TONE_DOT: Record<StatusTone, string> = {
   done: "bg-primary",
-  active: "bg-primary/45",
+  active: "bg-primary/45 ring-1 ring-inset ring-primary/70",
   pending: "ring-1 ring-muted-foreground/50",
 }
 
@@ -53,9 +53,13 @@ function StatusStrip({
       {...props}
     >
       <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
-        <p className="text-3xl leading-none font-semibold tracking-tight text-foreground tabular-nums">
+        <p
+          role="status"
+          className="text-3xl leading-none font-semibold tracking-tight text-foreground tabular-nums"
+        >
           {done}
-          <span className="ml-2 text-sm font-normal tracking-normal text-muted-foreground">
+          <span className="ml-1.5 text-sm font-normal tracking-normal text-muted-foreground">
+            {" "}
             of {total} {headlineNoun}
           </span>
         </p>
@@ -80,18 +84,21 @@ function StatusStrip({
             ))}
         </div>
       )}
-      <dl className="flex flex-wrap gap-x-5 gap-y-1 text-sm text-muted-foreground tabular-nums">
+      <ul
+        role="list"
+        className="flex flex-wrap gap-x-5 gap-y-1 text-sm text-muted-foreground tabular-nums"
+      >
         {segments.map((s) => (
-          <div key={s.key} className="flex items-center gap-1.5">
+          <li key={s.key} className="flex items-center gap-1.5">
             <span
               className={cn("size-2 rounded-[2px]", TONE_DOT[s.tone])}
               aria-hidden="true"
             />
-            <dd className="font-semibold text-foreground">{s.count}</dd>
-            <dt>{s.label}</dt>
-          </div>
+            <span className="font-semibold text-foreground">{s.count}</span>
+            <span>{s.label}</span>
+          </li>
         ))}
-      </dl>
+      </ul>
     </div>
   )
 }

@@ -1,0 +1,91 @@
+---
+title: Save bar
+description: An "Unsaved changes" bar with Discard and Save that only renders when there is something to save.
+---
+
+<ComponentPreview styleName="radix-nova" name="save-bar-demo" />
+
+Use it under any form or list that is edited in place and saved as a whole. When nothing has changed the bar is not there at all, so a clean screen has no save controls to ignore. When something has, it says so and offers exactly two ways out: Save or Discard.
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add https://<your-domain>/r/save-bar.json
+```
+
+Or, with the [`@crisp` namespace](/docs/installation) set up:
+
+```bash
+npx shadcn@latest add @crisp/save-bar
+```
+
+This also adds the shadcn `button`.
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource
+  src="registry/crisp/ui/save-bar.tsx"
+  title="components/ui/save-bar.tsx"
+/>
+
+<Step>
+  Add the shadcn `button`. Update the import paths to match your project setup.
+</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { SaveBar } from "@/components/ui/save-bar"
+```
+
+```tsx
+<SaveBar
+  dirty={name !== saved.name}
+  saving={saving}
+  onDiscard={() => setName(saved.name)}
+  onSave={save}
+/>
+```
+
+## Notes
+
+- **You decide what is dirty.** The bar only reads `dirty`. Compare the edited value with the saved one. For lists of addresses, `sameList` in [`notify-envelope`](/docs/components/notify-envelope) ignores order, case and duplicates, so reordering is not a change worth saving.
+- **Dirty must go back to false after a save.** Update the saved value once the write succeeds. If it fails, leave it, and the bar stays so the person can try again.
+- **Saving.** While `saving` is true both buttons are disabled and Save reads "Saving…".
+- **Placement.** It is a plain bar with a top border and a muted background, meant to sit at the bottom of a card. It is not sticky or fixed.
+- **Announcement.** The bar is a labelled `region`, and a hidden live region announces "Unsaved changes" when it appears and "Saving changes…" while it saves.
+- **Focus.** After Save or Discard the bar unmounts, and so does the button that had focus. The bar cannot know where focus should go, so move it yourself, for example to the field or heading the person was editing.
+- **Fixed wording.** The text, "Discard" and "Save" are not configurable. Copy the file if you need different words.
+
+## Props
+
+### SaveBar
+
+Also accepts the props of a `div`.
+
+| Prop        | Type         | Description                                                 |
+| ----------- | ------------ | ----------------------------------------------------------- |
+| `dirty`     | `boolean`    | The bar renders nothing while this is false. Required.      |
+| `onSave`    | `() => void` | Called when Save is pressed. Required.                      |
+| `onDiscard` | `() => void` | Called when Discard is pressed. Required.                   |
+| `saving`    | `boolean`    | Disables both buttons and shows "Saving…". Default `false`. |

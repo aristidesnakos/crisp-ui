@@ -18,10 +18,12 @@ export const DOCS_NAV = [
     name: "Patterns",
     items: [
       { name: "Components", href: "/docs/components" },
-      {
-        name: "Status and notify",
-        href: "/docs/components/radix/status-notify",
-      },
+      { name: "Status and notify", href: "/docs/components/status-notify" },
+      { name: "Status strip", href: "/docs/components/status-strip" },
+      { name: "Recipient roster", href: "/docs/components/recipient-roster" },
+      { name: "Confirm send", href: "/docs/components/confirm-send" },
+      { name: "Save bar", href: "/docs/components/save-bar" },
+      { name: "Notify envelope", href: "/docs/components/notify-envelope" },
     ],
   },
 ]

@@ -25,9 +25,9 @@ const nextConfig = {
   redirects() {
     return [
       {
-        source: "/docs/components/:name",
-        destination: "/docs/components/radix/:name",
-        permanent: false,
+        source: "/docs/components/radix/:name",
+        destination: "/docs/components/:name",
+        permanent: true,
       },
     ]
   },

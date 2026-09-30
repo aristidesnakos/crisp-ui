@@ -1,0 +1,135 @@
+---
+title: Recipient roster
+description: One list of people with a switch per channel, per-channel limits, paste-to-add and inline validation.
+---
+
+<ComponentPreview styleName="radix-nova" name="recipient-roster-demo" />
+
+Use it when the same people can hear about something in more than one way: an email as things happen, a digest when someone sends it, or both. Each person appears once, with a switch for every channel. Your storage can stay one list per channel, and [`notify-envelope`](/docs/components/notify-envelope) converts between the two shapes.
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add https://<your-domain>/r/recipient-roster.json
+```
+
+Or, with the [`@crisp` namespace](/docs/installation) set up:
+
+```bash
+npx shadcn@latest add @crisp/recipient-roster
+```
+
+This also adds the shadcn `button`, `input` and `switch`, and `lucide-react`.
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource
+  src="registry/crisp/ui/recipient-roster.tsx"
+  title="components/ui/recipient-roster.tsx"
+/>
+
+<Step>
+  Add the shadcn `button`, `input` and `switch`, and install `lucide-react`.
+  Update the import paths to match your project setup.
+</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { peopleFromLists } from "@/lib/notify-envelope"
+import {
+  RecipientRoster,
+  type RosterChannel,
+  type RosterPerson,
+} from "@/components/ui/recipient-roster"
+```
+
+```tsx
+const channels: RosterChannel[] = [
+  {
+    key: "automatic",
+    label: "Each finish",
+    hint: "as staff complete",
+    limit: 5,
+  },
+  { key: "onDemand", label: "Digest", hint: "only when sent", limit: 5 },
+]
+
+const [people, setPeople] = React.useState<RosterPerson[]>(() =>
+  peopleFromLists(saved, ["automatic", "onDemand"])
+)
+```
+
+```tsx
+<RecipientRoster
+  people={people}
+  channels={channels}
+  onChange={setPeople}
+  footnote="No one is set, so these notices go to the admin team instead."
+/>
+```
+
+The roster is controlled. It never saves anything. It calls `onChange` with the next list and you keep the state, so you decide when a change is saved. Pair it with [`save-bar`](/docs/components/save-bar).
+
+## Notes
+
+- **Adding people.** The input at the bottom adds on Enter, and also when it loses focus, so an address typed just before clicking Save is not lost. Pasting text that contains spaces, commas or semicolons adds every address in it.
+- **Addresses are lowercased and trimmed.** Duplicates, including ones already on the roster, are skipped. New people start with every channel off.
+- **Validation is all or nothing.** If any address in a paste fails `validate`, none of them are added and the message names the first bad one. The default check is deliberately close to what servers accept. Pass `validate` to match your backend exactly. It receives the lowercased address.
+- **Limits.** When a channel is at its `limit`, the switches for people who are not on it lock. Switches that are on stay usable, so you can always turn one off.
+- **Pass lowercase addresses in `people`.** Duplicate detection compares exact strings. Build the list with `peopleFromLists`, which lowercases, instead of writing it by hand.
+- **A channel missing from `person.channels` counts as off.**
+- **Layout.** Each channel is a column of 3.5rem on narrow screens and 6.75rem from `sm` up. The `hint` is hidden on narrow screens. The remove button shows on hover on wide screens, and always on touch devices.
+- **Accessibility.** Each switch is named "`label`: `email`" unless you pass `switchLabel`. Validation errors are announced with `role="alert"`.
+
+## Props
+
+### RecipientRoster
+
+| Prop           | Type                               | Description                                                                        |
+| -------------- | ---------------------------------- | ---------------------------------------------------------------------------------- |
+| `people`       | `RosterPerson[]`                   | The current list, including unsaved edits. Required.                               |
+| `channels`     | `RosterChannel[]`                  | One column and one switch per entry. Required.                                     |
+| `onChange`     | `(people: RosterPerson[]) => void` | Called with the full next list after an add, remove or toggle. Required.           |
+| `disabled`     | `boolean`                          | Disables the switches, the remove buttons and the input, for example while saving. |
+| `validate`     | `(email: string) => boolean`       | Return true if the address is acceptable. Defaults to a server-like email check.   |
+| `emptyMessage` | `ReactNode`                        | Shown when `people` is empty. Has a default that tells people to add an address.   |
+| `footnote`     | `ReactNode`                        | One line under the list, for example what happens when nobody is set.              |
+| `className`    | `string`                           | Merged onto the root element.                                                      |
+
+### RosterChannel
+
+| Field         | Type                        | Description                                                               |
+| ------------- | --------------------------- | ------------------------------------------------------------------------- |
+| `key`         | `string`                    | Matches a key in each person's `channels`.                                |
+| `label`       | `string`                    | Column heading.                                                           |
+| `hint`        | `string`                    | When it sends, for example "as staff complete". Hidden on narrow screens. |
+| `limit`       | `number`                    | Maximum people on this channel. The heading shows `n / limit`.            |
+| `switchLabel` | `(email: string) => string` | Accessible name for a person's switch.                                    |
+
+### RosterPerson
+
+| Field      | Type                      | Description                               |
+| ---------- | ------------------------- | ----------------------------------------- |
+| `email`    | `string`                  | The person's address, lowercase.          |
+| `channels` | `Record<string, boolean>` | Whether they are on each channel, by key. |

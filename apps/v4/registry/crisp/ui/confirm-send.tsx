@@ -38,6 +38,10 @@ function ConfirmSend({
 }: ConfirmSendProps) {
   const [confirming, setConfirming] = React.useState(false)
   const reasonId = React.useId()
+  const promptRef = React.useRef<HTMLSpanElement>(null)
+  const idleRef = React.useRef<HTMLButtonElement>(null)
+  // Set when the user leaves the confirmation, so focus can go back to the button.
+  const restoreFocus = React.useRef(false)
   const plural = nounPlural ?? (noun === "person" ? "people" : `${noun}s`)
   const phrase = (n: number) => `${n} ${n === 1 ? noun : plural}`
   const reason = blockedReason ?? (count === 0 ? emptyReason : undefined)
@@ -48,53 +52,90 @@ function ConfirmSend({
     if (reason) setConfirming(false)
   }, [reason, count])
 
-  if (confirming && !reason) {
-    return (
-      <>
-        <span className="text-sm text-muted-foreground">
-          Send to {phrase(count)}?
-        </span>
-        <Button
-          disabled={sending}
-          onClick={async () => {
-            setConfirming(false)
-            await onSend()
-          }}
-        >
-          {sending ? "Sending…" : "Send"}
-        </Button>
-        <Button variant="outline" onClick={() => setConfirming(false)}>
-          Cancel
-        </Button>
-      </>
-    )
-  }
+  // The button that had focus is replaced by the prompt (and back), so move
+  // focus with it. Waits while the idle button is disabled (sending) and never
+  // steals focus the user has already moved elsewhere.
+  React.useEffect(() => {
+    if (confirming) {
+      promptRef.current?.focus()
+    } else if (restoreFocus.current && idleRef.current && !sending) {
+      restoreFocus.current = false
+      if (document.activeElement === document.body) idleRef.current.focus()
+    }
+  }, [confirming, sending])
 
   const justSent = sentCount !== null && !reason
+  // One live region that stays mounted across both states, so each send is
+  // announced; it is emptied while a send is in flight so a repeat is announced.
+  const liveMessage =
+    confirming || !justSent || sending
+      ? sending
+        ? "Sending…"
+        : ""
+      : `Sent to ${phrase(sentCount)}`
+
   return (
     <>
-      {justSent && (
-        <span
-          role="status"
-          className="inline-flex items-center gap-1.5 text-sm font-medium"
-        >
-          <CheckCircle2 className="size-4" aria-hidden="true" />
-          Sent to {phrase(sentCount)}
-        </span>
-      )}
-      <Button
-        variant={justSent ? "outline" : "default"}
-        disabled={Boolean(reason) || sending}
-        title={reason}
-        aria-describedby={reason ? reasonId : undefined}
-        onClick={() => setConfirming(true)}
-      >
-        {count === 0 ? label : `${label} to ${phrase(count)}`}
-      </Button>
-      {reason && (
-        <span id={reasonId} className="sr-only">
-          {reason}
-        </span>
+      <span role="status" className="sr-only">
+        {liveMessage}
+      </span>
+      {confirming && !reason ? (
+        <>
+          {/* tabIndex -1: focusable by script so the question is read out, but not a tab stop. */}
+          <span
+            ref={promptRef}
+            tabIndex={-1}
+            className="text-sm text-muted-foreground outline-none"
+          >
+            Send to {phrase(count)}?
+          </span>
+          <Button
+            disabled={sending}
+            onClick={async () => {
+              restoreFocus.current = true
+              setConfirming(false)
+              await onSend()
+            }}
+          >
+            {sending ? "Sending…" : "Send"}
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => {
+              restoreFocus.current = true
+              setConfirming(false)
+            }}
+          >
+            Cancel
+          </Button>
+        </>
+      ) : (
+        <>
+          {justSent && (
+            <span
+              aria-hidden="true"
+              className="inline-flex items-center gap-1.5 text-sm font-medium"
+            >
+              <CheckCircle2 className="size-4" />
+              Sent to {phrase(sentCount)}
+            </span>
+          )}
+          <Button
+            ref={idleRef}
+            variant={justSent ? "outline" : "default"}
+            disabled={Boolean(reason) || sending}
+            title={reason}
+            aria-describedby={reason ? reasonId : undefined}
+            onClick={() => setConfirming(true)}
+          >
+            {count === 0 ? label : `${label} to ${phrase(count)}`}
+          </Button>
+          {reason && (
+            <span id={reasonId} className="sr-only">
+              {reason}
+            </span>
+          )}
+        </>
       )}
     </>
   )

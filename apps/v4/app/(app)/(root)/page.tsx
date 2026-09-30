@@ -28,15 +28,17 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    url: siteConfig.url,
+    url: "/",
     title: metadataTitle,
     description,
     siteName: siteConfig.name,
+    images: ["/og.png"],
   },
   twitter: {
     card: "summary_large_image",
     title: metadataTitle,
     description,
+    images: ["/og.png"],
   },
 }
 
