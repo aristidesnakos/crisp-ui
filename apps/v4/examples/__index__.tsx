@@ -5869,6 +5869,10 @@ export const ExamplesIndex: Record<string, Record<string, any>> = {
       name: "spinner-size",
       filePath: "examples/radix/spinner-size.tsx",
     },
+    "status-notify-demo": {
+      name: "status-notify-demo",
+      filePath: "examples/radix/status-notify-demo.tsx",
+    },
     "switch-choice-card": {
       name: "switch-choice-card",
       filePath: "examples/radix/switch-choice-card.tsx",

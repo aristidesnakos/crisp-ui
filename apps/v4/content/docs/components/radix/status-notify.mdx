@@ -1,0 +1,146 @@
+---
+title: Status and notify
+description: A status headline, a confirm-then-send action, and one roster of who hears about it.
+base: radix
+component: true
+---
+
+<ComponentPreview styleName="radix-nova" name="status-notify-demo" />
+
+A pattern for any admin surface where people depend on a job and need to hear how it is going: training completion, an import run, a sync, a weekly report.
+
+It reads top to bottom: **where things stand → who hears about it.**
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add https://<your-domain>/r/status-notify.json
+```
+
+This also adds the five smaller items it is built from, and the shadcn `card`, `button`, `input` and `switch` they use.
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource
+  src="registry/crisp/blocks/status-notify.tsx"
+  title="components/status-notify.tsx"
+/>
+
+<Step>
+  Add the parts it imports: `status-strip`, `recipient-roster`, `confirm-send`,
+  `save-bar` and `notify-envelope`. Update the import paths to match your
+  project setup.
+</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { StatusNotify } from "@/components/status-notify"
+```
+
+```tsx
+<StatusNotify
+  headlineNoun="staff trained"
+  segments={[
+    { key: "done", label: "completed", count: 11, tone: "done" },
+    {
+      key: "active",
+      label: "signed in, not trained",
+      count: 4,
+      tone: "active",
+    },
+    { key: "pending", label: "not signed in yet", count: 3, tone: "pending" },
+  ]}
+  automatic={{ label: "Each finish", hint: "as staff complete", limit: 5 }}
+  onDemand={{ label: "Digest", hint: "only when sent", limit: 5 }}
+  saved={{ automatic: [], onDemand: ["mara@example.org"] }}
+  onSave={async (channel, emails) => {
+    const saved = await api.saveRecipients(channel, emails) // throw to fail
+    setSaved((s) => ({ ...s, [channel]: saved })) // <- required
+  }}
+  onSend={async () => (await api.sendSummary()).sent} // optional: real count
+  onError={(error, { action }) => toast.error(`Could not ${action}`)}
+  automaticFallback="No one is set, so these notices go to the admin team instead."
+/>
+```
+
+The block never calls your API. You pass the **saved** lists and two handlers.
+
+<Callout>
+  Your `onSave` must update `saved` (state, refetch or cache) once the write
+  succeeds. Until it does, the "Unsaved changes" bar stays and sending stays
+  blocked, because the summary goes to the saved list. If one channel's save
+  fails and the other succeeds, only the failed channel stays dirty.
+</Callout>
+
+Requires Tailwind 3.4 or newer (the parts use `size-*` and `min-h-12`).
+
+## The pattern
+
+1. **One headline, one bar.** "11 of 18 staff trained", then a segmented bar. The segments are stages of one whole and never overlap. The hatched one means "not started or unreachable". The total is the sentence, not another tile.
+2. **The status is the message.** The send button sits beside the numbers it will send, so no separate preview is needed.
+3. **One roster, one switch per channel.** People appear once. Each channel is a switch on their row with an `n / limit` count in its heading. Your storage can stay one list per channel.
+4. **Say when it sends.** The column hint says "as staff complete" or "only when sent", so nothing automatic looks like something you press.
+5. **Manual sends are deliberate.** Click, then "Send to N people?", then "Sent to N people". The button is blocked while there are unsaved edits, because the send goes to the saved list, and an open confirmation is dismissed if the list changes underneath it.
+6. **Save only when there is something to save.** The "Unsaved changes" bar appears when the roster is dirty. Only the lists that changed are saved, and each result is handled on its own, so one failure cannot discard the other.
+7. **Tell the truth in the empty state.** Say what really happens when nobody is set.
+
+## Envelope rule
+
+When you send the summary, choose the shape per audience:
+
+- **A small, named group who are meant to see one another:** one message, everyone on `To`, the people you want copied on `Cc` and `Reply-To`. One send reaches everyone or fails as a whole, so a retry never double-mails half the list. Use `buildEnvelope` from `notify-envelope`.
+- **A list whose members must not learn about each other:** one message per recipient.
+
+## Parts
+
+Each part is its own item and works alone.
+
+| Item               | What it is                                                                     |
+| ------------------ | ------------------------------------------------------------------------------ |
+| `status-strip`     | Headline number, segmented bar, legend, and a slot for the action              |
+| `recipient-roster` | One list of people with a switch per channel, limits, paste-to-add, validation |
+| `confirm-send`     | Click, confirm with the count, send, "Sent to N"                               |
+| `save-bar`         | "Unsaved changes" with Discard and Save, hidden when clean                     |
+| `notify-envelope`  | Pure helpers: roster from lists, list comparison, one-message To/Cc envelope   |
+
+## Props
+
+### StatusNotify
+
+| Prop                                    | Type                                          | Description                                                                               |
+| --------------------------------------- | --------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `segments`                              | `StatusSegment[]`                             | Stages of one whole. `tone` is `done`, `active` or `pending`.                             |
+| `headlineNoun`                          | `string`                                      | Completes the headline: "11 of 18 `<noun>`".                                              |
+| `automatic` / `onDemand`                | `{ label, hint, limit? }`                     | The two channels.                                                                         |
+| `saved`                                 | `{ automatic: string[]; onDemand: string[] }` | The saved lists.                                                                          |
+| `onSave`                                | `(channel, emails) => Promise<void>`          | Called only for lists that changed. Throw to fail. Must lead to `saved` updating.         |
+| `onSend`                                | `() => Promise<number \| void>`               | Sends the on-demand summary to the saved list. Return the real sent count if you have it. |
+| `onError`                               | `(error, { action, channel? }) => void`       | Called when a save or send throws. Toast or log here.                                     |
+| `automaticFallback`                     | `ReactNode`                                   | What happens when the automatic list is empty.                                            |
+| `validateEmail`                         | `(email) => boolean`                          | Match your backend's rule. The default is close to common server rules.                   |
+| `sendLabel`                             | `string`                                      | Send button label. Default "Email this summary".                                          |
+| `recipientNoun` / `recipientNounPlural` | `string`                                      | Default "person" / "people".                                                              |
+| `title` / `description`                 | `string`                                      | Heading and one-line help above the roster.                                               |
+
+Each channel config (`automatic`, `onDemand`) also accepts `limit` and `switchLabel: (email) => string` for a per-person accessible name.

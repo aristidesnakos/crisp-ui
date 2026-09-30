@@ -1490,6 +1490,7 @@ const shards: Record<
       "spinner-input-group",
       "spinner-rtl",
       "spinner-size",
+      "status-notify-demo",
       "switch-choice-card",
       "switch-demo",
       "switch-description",

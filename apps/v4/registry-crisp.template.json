@@ -1,0 +1,64 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "crisp-ui",
+  "homepage": "__REGISTRY_ORIGIN__",
+  "items": [
+    {
+      "name": "notify-envelope",
+      "type": "registry:lib",
+      "title": "Notify envelope",
+      "description": "Pure helpers: build a roster from per-channel lists, compare lists, and build a one-message To/Cc envelope.",
+      "files": [{ "path": "registry/crisp/lib/notify-envelope.ts", "type": "registry:lib" }]
+    },
+    {
+      "name": "status-strip",
+      "type": "registry:ui",
+      "title": "Status strip",
+      "description": "A headline number, a segmented bar and a legend for the stages of one whole, with a slot for the action that acts on it.",
+      "files": [{ "path": "registry/crisp/ui/status-strip.tsx", "type": "registry:ui" }]
+    },
+    {
+      "name": "save-bar",
+      "type": "registry:ui",
+      "title": "Save bar",
+      "description": "An 'Unsaved changes' bar with Discard and Save that only renders when there is something to save.",
+      "registryDependencies": ["button"],
+      "files": [{ "path": "registry/crisp/ui/save-bar.tsx", "type": "registry:ui" }]
+    },
+    {
+      "name": "confirm-send",
+      "type": "registry:ui",
+      "title": "Confirm send",
+      "description": "Click, confirm with the recipient count, send, then a 'Sent to N' status line. Can be blocked with a reason.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["button"],
+      "files": [{ "path": "registry/crisp/ui/confirm-send.tsx", "type": "registry:ui" }]
+    },
+    {
+      "name": "recipient-roster",
+      "type": "registry:ui",
+      "title": "Recipient roster",
+      "description": "One list of people with a switch per channel, per-channel limits, paste-to-add and inline validation.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["button", "input", "switch"],
+      "files": [{ "path": "registry/crisp/ui/recipient-roster.tsx", "type": "registry:ui" }]
+    },
+    {
+      "name": "status-notify",
+      "type": "registry:block",
+      "title": "Status and notify",
+      "description": "A status headline, a confirm-then-send action, and one recipient roster with save/discard, wired together.",
+      "registryDependencies": [
+        "card",
+        "__REGISTRY_ORIGIN__/r/notify-envelope.json",
+        "__REGISTRY_ORIGIN__/r/status-strip.json",
+        "__REGISTRY_ORIGIN__/r/save-bar.json",
+        "__REGISTRY_ORIGIN__/r/confirm-send.json",
+        "__REGISTRY_ORIGIN__/r/recipient-roster.json"
+      ],
+      "files": [
+        { "path": "registry/crisp/blocks/status-notify.tsx", "type": "registry:component" }
+      ]
+    }
+  ]
+}
