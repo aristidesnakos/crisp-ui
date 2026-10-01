@@ -10,7 +10,7 @@ import {
   validateRule,
   type AlertRule,
   type RuleError,
-} from "@/registry/crisp/lib/alert-rules"
+} from "@/registry/crisp/lib/alert-rules-lib"
 import { Button } from "@/registry/new-york-v4/ui/button"
 import { Input } from "@/registry/new-york-v4/ui/input"
 import { Switch } from "@/registry/new-york-v4/ui/switch"
@@ -424,6 +424,28 @@ function RuleRow({
   )
 }
 
+const NO_ZONES: string[] = []
+let cachedZones: string[] | undefined
+
+// The IANA zones this runtime knows, with UTC always present. Cached because
+// useSyncExternalStore needs the same array on every read.
+function supportedTimeZones(): string[] {
+  if (cachedZones) return cachedZones
+  const supported = (
+    Intl as unknown as { supportedValuesOf?: (key: string) => string[] }
+  ).supportedValuesOf
+  try {
+    const list = supported ? supported("timeZone") : []
+    cachedZones = list.includes("UTC") ? list : [...list, "UTC"]
+  } catch {
+    cachedZones = NO_ZONES
+  }
+  return cachedZones
+}
+
+// The list never changes while the page is open, so there is nothing to subscribe to.
+const subscribeNothing = () => () => {}
+
 /**
  * An editor for when and to whom a reminder goes: which days before the due
  * date, who hears if it is still open afterwards, and the hours nothing is
@@ -441,19 +463,13 @@ function AlertRules({
   ...props
 }: AlertRulesProps) {
   const zoneListId = React.useId()
-  // Filled in after mount: the runtime's list can differ between server and client.
-  const [zones, setZones] = React.useState<string[]>([])
-  React.useEffect(() => {
-    const supported = (
-      Intl as unknown as { supportedValuesOf?: (key: string) => string[] }
-    ).supportedValuesOf
-    try {
-      const list = supported ? supported("timeZone") : []
-      setZones(list.includes("UTC") ? list : [...list, "UTC"])
-    } catch {
-      setZones([])
-    }
-  }, [])
+  // Empty on the server and during hydration, then the runtime's own list: it can
+  // differ between the two, so it is read as an external value, not in an effect.
+  const zones = React.useSyncExternalStore(
+    subscribeNothing,
+    supportedTimeZones,
+    () => NO_ZONES
+  )
 
   return (
     <div data-slot="alert-rules" className={cn(className)} {...props}>

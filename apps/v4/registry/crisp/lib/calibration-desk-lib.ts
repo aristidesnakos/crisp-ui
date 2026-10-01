@@ -13,7 +13,7 @@
 import {
   isEmailAddress,
   type AlertRule,
-} from "@/registry/crisp/lib/alert-rules"
+} from "@/registry/crisp/lib/alert-rules-lib"
 import {
   summarizeApproval,
   type ApprovalPolicy,

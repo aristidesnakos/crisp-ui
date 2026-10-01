@@ -49,10 +49,9 @@ function ConfirmSend({
   const reason = blockedReason ?? (count === 0 ? emptyReason : undefined)
 
   // The list changed under an open prompt (an edit, a save): what it says is no
-  // longer what would be sent, so drop back to the idle button.
-  React.useEffect(() => {
-    if (reason) setConfirming(false)
-  }, [reason, count])
+  // longer what would be sent, so drop back to the idle button. Done while
+  // rendering, not in an effect, so the stale prompt is never painted.
+  if (reason && confirming) setConfirming(false)
 
   // The button that had focus is replaced by the prompt (and back), so move
   // focus with it. Waits while the idle button is disabled (sending) and never

@@ -8,7 +8,7 @@ import {
   sameRules,
   validateRule,
   type AlertRule,
-} from "@/registry/crisp/lib/alert-rules"
+} from "@/registry/crisp/lib/alert-rules-lib"
 import { AlertRules } from "@/registry/crisp/ui/alert-rules"
 import { SaveBar } from "@/registry/crisp/ui/save-bar"
 

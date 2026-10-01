@@ -186,9 +186,13 @@ function DataTable<T>({
   const asOfTime = asOf === undefined ? undefined : new Date(asOf).getTime()
   React.useEffect(() => {
     if (asOfTime === undefined) return
-    setNow(Date.now())
-    const timer = setInterval(() => setNow(Date.now()), 60_000)
-    return () => clearInterval(timer)
+    const tick = () => setNow(Date.now())
+    const first = setTimeout(tick, 0)
+    const timer = setInterval(tick, 60_000)
+    return () => {
+      clearTimeout(first)
+      clearInterval(timer)
+    }
   }, [asOfTime])
 
   // An error leaves nothing to show, so nothing can be selected or acted on.
@@ -209,12 +213,28 @@ function DataTable<T>({
   // reaches a row the person cannot see. Tell the owner when that trims it.
   const selectedIds = selectedIdsProp ?? internalSelected
   const selected = pruneSelection(selectedIds, visibleIds)
+  const trimmed = !sameSelection(selected, selectedIds)
   function setSelected(next: string[]) {
     if (selectedIdsProp === undefined) setInternalSelected(next)
     onSelectionChange?.(next)
   }
+  // Uncontrolled: drop the hidden rows from our own state while rendering (React's
+  // way to adjust state from props), and remember what we trimmed to so the owner
+  // can be told once the render is committed.
+  const [trimmedTo, setTrimmedTo] = React.useState<string[] | null>(null)
+  const notified = React.useRef<string[] | null>(null)
+  if (trimmed && selectedIdsProp === undefined) {
+    setInternalSelected(selected)
+    setTrimmedTo(selected)
+  }
   React.useEffect(() => {
-    if (!sameSelection(selected, selectedIds)) setSelected(selected)
+    if (selectedIdsProp !== undefined) {
+      // Controlled: the owner holds the ids, so ask it to drop the hidden ones.
+      if (trimmed) onSelectionChange?.(selected)
+    } else if (trimmedTo && trimmedTo !== notified.current) {
+      notified.current = trimmedTo
+      onSelectionChange?.(trimmedTo)
+    }
   })
 
   const chosenRows = selectedRows(visibleRows, selected, getRowId)

@@ -13,7 +13,7 @@ import {
   todayOf,
   type Gauge,
   type RecallRequest,
-} from "../registry/crisp/lib/calibration-desk"
+} from "../registry/crisp/lib/calibration-desk-lib"
 import { createMemoryServer } from "../registry/crisp/lib/calibration-desk-server"
 
 const TODAY = "2026-10-01"

@@ -15,7 +15,7 @@ import {
   validateRule,
   type AlertRule,
   type QuietHours,
-} from "../registry/crisp/lib/alert-rules"
+} from "../registry/crisp/lib/alert-rules-lib"
 
 // America/New_York in 2026: clocks go forward 02:00 -> 03:00 EST->EDT at
 // 2026-03-08T07:00Z and back 02:00 -> 01:00 EDT->EST at 2026-11-01T06:00Z.

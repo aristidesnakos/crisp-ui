@@ -22,7 +22,11 @@ export interface SaveBarProps extends React.ComponentProps<"div"> {
  */
 function Announce({ children }: { children: string }) {
   const [message, setMessage] = React.useState("")
-  React.useEffect(() => setMessage(children), [children])
+  React.useEffect(() => {
+    // After mount, in a callback: the region must exist empty first.
+    const timer = setTimeout(() => setMessage(children), 0)
+    return () => clearTimeout(timer)
+  }, [children])
   return (
     <span role="status" className="sr-only">
       {message}
