@@ -211,6 +211,7 @@ describe("navigation", () => {
       "/docs",
       "/docs/installation",
       "/docs/story",
+      "/docs/build-the-arc",
       "/docs/ai",
       "/docs/components",
     ])
