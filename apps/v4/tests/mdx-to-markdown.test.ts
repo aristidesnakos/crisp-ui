@@ -198,6 +198,24 @@ const [sending, setSending] = React.useState(false)
     expect(md).toContain("[Other](https://example.com/docs/x)")
   })
 
+  it("replaces the <your-domain> placeholder in install commands with the origin", async () => {
+    const mdx =
+      "```bash\nnpx shadcn@latest add https://<your-domain>/r/confirm-send.json\n```\n"
+
+    expect(
+      await mdxToMarkdown(mdx, resolvers, { origin: "https://regularui.com/" })
+    ).toBe(
+      "```bash\nnpx shadcn@latest add https://regularui.com/r/confirm-send.json\n```\n"
+    )
+    // Without an origin the text is left as written.
+    expect(await mdxToMarkdown(mdx, resolvers)).toBe(mdx)
+  })
+
+  it("leaves blank lines inside code exactly as they are", async () => {
+    const code = "```ts\nconst a = 1\n\n\n\nconst b = 2\n```\n"
+    expect(await mdxToMarkdown(code, resolvers)).toBe(code)
+  })
+
   it("drops unknown component wrapper tags and keeps their children", async () => {
     const md = await mdxToMarkdown(
       "<Gallery cols={2}>\n\nText inside.\n\n</Gallery>\n",

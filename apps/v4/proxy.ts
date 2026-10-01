@@ -16,7 +16,10 @@ function prefersMarkdown(request: NextRequest) {
  * through `/docs/<page>.md`). A browser still gets HTML.
  *
  * The proxy only picks which prerendered page to serve, so docs pages stay
- * static. `Vary: Accept` tells caches the two answers are different.
+ * static. `Vary: Accept` tells caches the two answers are different. It
+ * reaches the client on the markdown response; Next replaces the Vary header
+ * of a prerendered HTML response with its own, so a CDN placed in front of
+ * this app must be told to key docs URLs on Accept itself.
  */
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl

@@ -244,7 +244,13 @@ export async function mdxToMarkdown(
     }
   }
 
-  return parts.join("\n\n").replace(/\n{3,}/g, "\n\n") + "\n"
+  const md = `${parts.join("\n\n")}\n`
+
+  // The docs write install commands against a placeholder host. An agent
+  // cannot run that, so the twin names the real one.
+  return options.origin
+    ? md.replaceAll("https://<your-domain>", options.origin.replace(/\/+$/, ""))
+    : md
 }
 
 /** A whole page: title, description, then the converted body. */
