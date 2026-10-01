@@ -9,12 +9,18 @@ import { getPageMarkdown } from "@/lib/docs-markdown"
 import { twinPath } from "@/lib/mdx-to-markdown"
 import { getAgentPrompt, getSectorExamples } from "@/lib/pattern-sections"
 import { source } from "@/lib/source"
+import {
+  buildDocsJsonLd,
+  docsCrumbs,
+  serializeJsonLd,
+} from "@/lib/structured-data"
 import { absoluteUrl } from "@/lib/utils"
 import { AgentPromptBar } from "@/components/agent-prompt-bar"
 import { DevFeedback } from "@/components/dev/dev-feedback"
 import { DocsCopyPage } from "@/components/docs-copy-page"
 import { DocsTableOfContents } from "@/components/docs-toc"
 import { Button } from "@/registry/new-york-v4/ui/button"
+import { getSiteUrl } from "@/app/site-url"
 
 export const revalidate = false
 export const dynamic = "force-static"
@@ -86,12 +92,33 @@ export default async function Page(props: {
   const rawMdx = await doc.getText("raw")
   const agentPrompt = getAgentPrompt(rawMdx)
   const sectorExamples = getSectorExamples(rawMdx)
+  // The nav's own labels win over a section index's title ("Patterns", not
+  // "Components"); otherwise an ancestor is named by its own docs page.
+  const navLabels = new Map<string, string>(
+    siteConfig.navItems.map((item) => [item.href, item.label])
+  )
+  const jsonLd = buildDocsJsonLd(
+    { title: doc.title, description: doc.description ?? "", url: page.url },
+    docsCrumbs(
+      page.url,
+      navLabels.get(page.url) ?? doc.title,
+      (url) =>
+        navLabels.get(url) ??
+        source.getPage(url.split("/").slice(2))?.data.title
+    ),
+    getSiteUrl(),
+    siteConfig.name
+  )
 
   return (
     <div
       data-slot="docs"
       className="flex scroll-mt-24 items-stretch pb-8 text-[1.05rem] sm:text-[15px] xl:w-full"
     >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
+      />
       <div className="flex min-w-0 flex-1 flex-col">
         <div className="h-(--top-spacing) shrink-0" />
         <div className="mx-auto flex w-full max-w-160 min-w-0 flex-1 flex-col gap-6 px-4 py-6 text-foreground md:px-0 lg:py-8 dark:text-foreground">
