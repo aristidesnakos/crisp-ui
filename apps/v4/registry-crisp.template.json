@@ -14,6 +14,14 @@
       "files": [{ "path": "registry/crisp/lib/notify-envelope.ts", "type": "registry:lib" }]
     },
     {
+      "files": [
+        {
+          "path": "registry/crisp/lib/notify-envelope.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
       "name": "status-strip",
       "type": "registry:ui",
       "title": "Status strip",
@@ -24,6 +32,11 @@
       "files": [{ "path": "registry/crisp/ui/status-strip.tsx", "type": "registry:ui" }]
     },
     {
+      "files": [
+        { "path": "registry/crisp/ui/status-strip.tsx", "type": "registry:ui" }
+      ]
+    },
+    {
       "name": "save-bar",
       "type": "registry:ui",
       "title": "Save bar",
@@ -32,7 +45,9 @@
       "meta": { "stage": "act", "recipe": "__REGISTRY_ORIGIN__/docs/components/save-bar.md" },
       "docs": "An \"Unsaved changes\" bar with Discard and Save, hidden when there is nothing to save.\nRead the installed file before using it; use only the props it exports.\nDocs: __REGISTRY_ORIGIN__/docs/components/save-bar.md\nVerify: run your typechecker.",
       "registryDependencies": ["button"],
-      "files": [{ "path": "registry/crisp/ui/save-bar.tsx", "type": "registry:ui" }]
+      "files": [
+        { "path": "registry/crisp/ui/save-bar.tsx", "type": "registry:ui" }
+      ]
     },
     {
       "name": "confirm-send",
@@ -44,7 +59,9 @@
       "docs": "A button that confirms with the recipient count before sending, then shows \"Sent to N\".\nRead the installed file before using it; use only the props it exports.\nDocs: __REGISTRY_ORIGIN__/docs/components/confirm-send.md\nVerify: run your typechecker.",
       "dependencies": ["lucide-react"],
       "registryDependencies": ["button"],
-      "files": [{ "path": "registry/crisp/ui/confirm-send.tsx", "type": "registry:ui" }]
+      "files": [
+        { "path": "registry/crisp/ui/confirm-send.tsx", "type": "registry:ui" }
+      ]
     },
     {
       "name": "recipient-roster",
@@ -56,7 +73,12 @@
       "docs": "One list of people with a switch per channel, per-channel limits, paste-to-add and inline validation.\nRead the installed file before using it; use only the props it exports.\nDocs: __REGISTRY_ORIGIN__/docs/components/recipient-roster.md\nVerify: run your typechecker.",
       "dependencies": ["lucide-react"],
       "registryDependencies": ["button", "input", "switch"],
-      "files": [{ "path": "registry/crisp/ui/recipient-roster.tsx", "type": "registry:ui" }]
+      "files": [
+        {
+          "path": "registry/crisp/ui/recipient-roster.tsx",
+          "type": "registry:ui"
+        }
+      ]
     },
     {
       "name": "status-notify",
@@ -75,7 +97,47 @@
         "__REGISTRY_ORIGIN__/r/recipient-roster.json"
       ],
       "files": [
-        { "path": "registry/crisp/blocks/status-notify.tsx", "type": "registry:component" }
+        {
+          "path": "registry/crisp/blocks/status-notify.tsx",
+          "type": "registry:component"
+        }
+      ]
+    },
+    {
+      "name": "alert-rules-lib",
+      "type": "registry:lib",
+      "title": "Alert rules helpers",
+      "description": "Pure helpers for reminder rules: validate a rule, test and move past quiet hours in any time zone (DST-safe), list which reminders are due, and describe a rule in a sentence.",
+      "categories": ["notifications", "utilities"],
+      "meta": {
+        "stage": "decide",
+        "recipe": "__REGISTRY_ORIGIN__/docs/components/alert-rules.md"
+      },
+      "docs": "Pure helpers for reminder rules: validate a rule, check quiet hours across midnight and DST, find which reminders are due, and describe a rule in a sentence.\nRead the installed file before using it; use only the props it exports.\nDocs: __REGISTRY_ORIGIN__/docs/components/alert-rules.md\nVerify: run your typechecker.",
+      "files": [
+        { "path": "registry/crisp/lib/alert-rules.ts", "type": "registry:lib" }
+      ]
+    },
+    {
+      "name": "alert-rules",
+      "type": "registry:ui",
+      "title": "Alert rules",
+      "description": "An editor for reminder cadence, escalation and quiet hours, with inline validation and a plain-language summary under each rule. Edits a saved rule; it does not send or schedule.",
+      "categories": ["dashboard", "notifications"],
+      "meta": {
+        "stage": "decide",
+        "recipe": "__REGISTRY_ORIGIN__/docs/components/alert-rules.md"
+      },
+      "docs": "An editor for reminder cadence, escalation and quiet hours, with a plain-language summary of each rule.\nRead the installed file before using it; use only the props it exports.\nDocs: __REGISTRY_ORIGIN__/docs/components/alert-rules.md\nVerify: run your typechecker.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": [
+        "button",
+        "input",
+        "switch",
+        "__REGISTRY_ORIGIN__/r/alert-rules-lib.json"
+      ],
+      "files": [
+        { "path": "registry/crisp/ui/alert-rules.tsx", "type": "registry:ui" }
       ]
     },
     {
