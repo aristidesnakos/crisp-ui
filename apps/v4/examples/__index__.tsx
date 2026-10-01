@@ -36,5 +36,9 @@ export const ExamplesIndex: Record<string, Record<string, any>> = {
       name: "audit-timeline-demo",
       filePath: "examples/radix/audit-timeline-demo.tsx",
     },
+    "data-table-demo": {
+      name: "data-table-demo",
+      filePath: "examples/radix/data-table-demo.tsx",
+    },
   },
 }

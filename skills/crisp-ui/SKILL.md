@@ -1,6 +1,6 @@
 ---
 name: crisp-ui
-description: "Install and use crisp-ui, a shadcn registry of dashboard patterns for internal tools (status-strip, status-notify, recipient-roster, save-bar, confirm-send, approval, approval-step, notify-envelope, audit-event, audit-timeline). Use when building an admin or internal-tool screen that shows how a job is going, lets a person choose who is notified and sends a message, or when the user mentions crisp-ui or regularui.com. UI only: it does not provide a backend and does not make anything compliant."
+description: "Install and use crisp-ui, a shadcn registry of dashboard patterns for internal tools (status-strip, status-notify, table-view, data-table, recipient-roster, save-bar, confirm-send, approval, approval-step, notify-envelope, audit-event, audit-timeline). Use when building an admin or internal-tool screen that shows how a job is going, lets a person choose who is notified and sends a message, or when the user mentions crisp-ui or regularui.com. UI only: it does not provide a backend and does not make anything compliant."
 license: MIT
 ---
 
@@ -38,7 +38,7 @@ Pick items in this order. It is a recommended path for a workflow screen, not a 
 
 | Stage | Question | Items |
 | --- | --- | --- |
-| See | What is happening? | `status-strip`, `status-notify` |
+| See | What is happening? | `status-strip`, `status-notify`, `table-view`, `data-table` |
 | Decide | What needs me, and who hears? | `recipient-roster` |
 | Act | Do it safely. | `save-bar`, `confirm-send`, `approval`, `approval-step` |
 | Confirm | Did it work, who knows? | `notify-envelope` |
@@ -50,6 +50,8 @@ Pick items in this order. It is a recommended path for a workflow screen, not a 
 | --- | --- | --- | --- | --- |
 | `status-strip` | see | A headline number, a segmented bar and a legend for the stages of one whole, with a slot for the action that acts on it. | `npx shadcn@latest add https://regularui.com/r/status-strip.json` | https://regularui.com/docs/components/status-strip.md |
 | `status-notify` | see to confirm | A status headline, a confirm-then-send action, and one recipient roster with save/discard, wired together. | `npx shadcn@latest add https://regularui.com/r/status-notify.json` | https://regularui.com/docs/components/status-notify.md |
+| `table-view` | see | Pure helpers for a list of rows: named views with counts, a stable sort, and selection that drops rows that are no longer there. | `npx shadcn@latest add https://regularui.com/r/table-view.json` | https://regularui.com/docs/components/data-table.md |
+| `data-table` | see | A table of rows with named saved views and live counts, row selection, an action slot that receives the selected rows, and stale, empty, no-match and error states. | `npx shadcn@latest add https://regularui.com/r/data-table.json` | https://regularui.com/docs/components/data-table.md |
 | `recipient-roster` | decide | One list of people with a switch per channel, per-channel limits, paste-to-add and inline validation. | `npx shadcn@latest add https://regularui.com/r/recipient-roster.json` | https://regularui.com/docs/components/recipient-roster.md |
 | `save-bar` | act | An 'Unsaved changes' bar with Discard and Save that only renders when there is something to save. | `npx shadcn@latest add https://regularui.com/r/save-bar.json` | https://regularui.com/docs/components/save-bar.md |
 | `confirm-send` | act | Click, confirm with the recipient count, send, then a 'Sent to N' status line. Can be blocked with a reason. | `npx shadcn@latest add https://regularui.com/r/confirm-send.json` | https://regularui.com/docs/components/confirm-send.md |

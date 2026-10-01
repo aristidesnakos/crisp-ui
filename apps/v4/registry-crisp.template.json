@@ -133,6 +133,39 @@
       "dependencies": ["lucide-react"],
       "registryDependencies": ["button", "__REGISTRY_ORIGIN__/r/audit-event.json"],
       "files": [{ "path": "registry/crisp/ui/audit-timeline.tsx", "type": "registry:ui" }]
+    },
+    {
+      "name": "table-view",
+      "type": "registry:lib",
+      "title": "Table view",
+      "description": "Pure helpers for a list of rows: named views with counts, a stable sort, and selection that drops rows that are no longer there.",
+      "categories": ["dashboard", "utilities"],
+      "meta": {
+        "stage": "see",
+        "recipe": "__REGISTRY_ORIGIN__/docs/components/data-table.md"
+      },
+      "docs": "Pure helpers for a list of rows: filter by named view with live counts, sort with nulls last, and keep a selection correct as rows change.\nRead the installed file before using it; use only the props it exports.\nDocs: __REGISTRY_ORIGIN__/docs/components/data-table.md\nVerify: run your typechecker.",
+      "files": [{ "path": "registry/crisp/lib/table-view.ts", "type": "registry:lib" }]
+    },
+    {
+      "name": "data-table",
+      "type": "registry:ui",
+      "title": "Data table",
+      "description": "A table of rows with named saved views and live counts, row selection, an action slot that receives the selected rows, and stale, empty, no-match and error states.",
+      "categories": ["dashboard", "tables"],
+      "meta": {
+        "stage": "see",
+        "recipe": "__REGISTRY_ORIGIN__/docs/components/data-table.md"
+      },
+      "docs": "A table of rows with named saved views, selection, an as-of freshness line and an action slot fed the selected rows.\nRead the installed file before using it; use only the props it exports.\nDocs: __REGISTRY_ORIGIN__/docs/components/data-table.md\nVerify: run your typechecker.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": [
+        "button",
+        "checkbox",
+        "table",
+        "__REGISTRY_ORIGIN__/r/table-view.json"
+      ],
+      "files": [{ "path": "registry/crisp/ui/data-table.tsx", "type": "registry:ui" }]
     }
   ]
 }

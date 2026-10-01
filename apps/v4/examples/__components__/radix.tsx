@@ -69,4 +69,12 @@ export const Components: Record<string, any> = {
       ) || "audit-timeline-demo"
     return { default: mod.default || mod[exportName] }
   }),
+  "data-table-demo": React.lazy(async () => {
+    const mod = await import("@/examples/radix/data-table-demo")
+    const exportName =
+      Object.keys(mod).find(
+        (key) => typeof mod[key] === "function" || typeof mod[key] === "object"
+      ) || "data-table-demo"
+    return { default: mod.default || mod[exportName] }
+  }),
 }
