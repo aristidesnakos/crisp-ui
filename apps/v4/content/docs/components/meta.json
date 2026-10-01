@@ -9,5 +9,7 @@
     "save-bar",
     "notify-envelope",
     "approval-step"
+,
+    "audit-timeline"
   ]
 }

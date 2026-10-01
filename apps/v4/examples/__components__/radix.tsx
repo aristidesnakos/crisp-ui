@@ -61,4 +61,12 @@ export const Components: Record<string, any> = {
       ) || "approval-step-demo"
     return { default: mod.default || mod[exportName] }
   }),
+  "audit-timeline-demo": React.lazy(async () => {
+    const mod = await import("@/examples/radix/audit-timeline-demo")
+    const exportName =
+      Object.keys(mod).find(
+        (key) => typeof mod[key] === "function" || typeof mod[key] === "object"
+      ) || "audit-timeline-demo"
+    return { default: mod.default || mod[exportName] }
+  }),
 }

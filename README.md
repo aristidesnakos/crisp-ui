@@ -16,6 +16,8 @@ There is no package to upgrade: you install the source and own it.
 | `confirm-send`     | Click, confirm with the count, send, "Sent to N"                    |
 | `save-bar`         | "Unsaved changes" with Discard and Save, hidden when clean          |
 | `notify-envelope`  | Pure helpers: roster from lists, list comparison, one-message To/Cc |
+| `audit-timeline`   | Read-only "who did what, when, and why" list, grouped by day        |
+| `audit-event`      | The `AuditEvent` type and pure helpers for building and grouping    |
 
 ```bash
 npx shadcn@latest add https://<your-domain>/r/status-notify.json
