@@ -2,15 +2,15 @@
   "title": "Components",
   "pages": [
     "index",
-    "status-notify",
     "status-strip",
-    "recipient-roster",
-    "confirm-send",
-    "save-bar",
-    "notify-envelope",
-    "approval-step",
-    "audit-timeline",
     "data-table",
-    "alert-rules"
+    "recipient-roster",
+    "alert-rules",
+    "save-bar",
+    "approval-step",
+    "confirm-send",
+    "notify-envelope",
+    "audit-timeline",
+    "status-notify"
   ]
 }

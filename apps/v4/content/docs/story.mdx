@@ -1,0 +1,64 @@
+---
+title: "The story: See, Decide, Act, Confirm, Record"
+description: A recommended order for the screens of an internal tool, and which crisp-ui pattern belongs to each step.
+---
+
+An internal tool usually does one job over and over. Someone looks at what is going on, decides who needs to hear about it or sign off, does it, checks that it worked, and leaves a trace. crisp-ui orders its patterns along that path, so you, or the coding agent you work with, can pick them in a sensible order instead of from a flat list.
+
+**See, Decide, Act, Confirm, Record**, and back to See.
+
+This is a recommended path, not a standard. It is our own synthesis, drawn from how task-based design systems group their patterns; no one publishes it as a convention. Use it as a checklist for a workflow screen and skip what you do not need.
+
+## The five stages
+
+| Stage   | The question it answers       | Patterns                                                                                                                               | What it hands to the next stage                                                   |
+| ------- | ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| See     | What is happening?            | [Status strip](/docs/components/status-strip), [Data table](/docs/components/data-table)                                               | The rows or the status that need someone.                                         |
+| Decide  | What needs me, and who hears? | [Recipient roster](/docs/components/recipient-roster), [Alert rules](/docs/components/alert-rules)                                     | A chosen set of people and a rule for when and how often they hear.               |
+| Act     | Do it safely.                 | [Save bar](/docs/components/save-bar), [Approval step](/docs/components/approval-step), [Confirm send](/docs/components/confirm-send)  | A change that is saved, approved or sent.                                         |
+| Confirm | Did it work, who knows?       | [Notify envelope](/docs/components/notify-envelope) (helpers); the "Sent to N" result of [Confirm send](/docs/components/confirm-send) | A settled result: sent to N people, or failed.                                    |
+| Record  | Can I prove who did what?     | [Audit timeline](/docs/components/audit-timeline)                                                                                      | An entry that says who did what, when and why. It changes what you see next time. |
+
+Some items span several stages and are wired together for you. [Status and notify](/docs/components/status-notify) runs from See to Confirm in one block. They are listed on their own under "Whole screens" in the sidebar.
+
+## How the stages connect
+
+Each pattern page ends with what usually comes before it and what it leads to, so the site is a network with a recommended route rather than a rigid sequence.
+
+| Pattern                                               | Comes after                                                                                                                       | Leads to                                                                                         |
+| ----------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| [Status strip](/docs/components/status-strip)         | nothing; it is where you start                                                                                                    | [Data table](/docs/components/data-table), [Recipient roster](/docs/components/recipient-roster) |
+| [Data table](/docs/components/data-table)             | [Status strip](/docs/components/status-strip)                                                                                     | [Approval step](/docs/components/approval-step), [Confirm send](/docs/components/confirm-send)   |
+| [Recipient roster](/docs/components/recipient-roster) | [Status strip](/docs/components/status-strip), [Data table](/docs/components/data-table)                                          | [Alert rules](/docs/components/alert-rules), [Confirm send](/docs/components/confirm-send)       |
+| [Alert rules](/docs/components/alert-rules)           | [Recipient roster](/docs/components/recipient-roster)                                                                             | [Confirm send](/docs/components/confirm-send)                                                    |
+| [Save bar](/docs/components/save-bar)                 | [Recipient roster](/docs/components/recipient-roster), [Alert rules](/docs/components/alert-rules)                                | [Confirm send](/docs/components/confirm-send)                                                    |
+| [Approval step](/docs/components/approval-step)       | [Data table](/docs/components/data-table)                                                                                         | [Confirm send](/docs/components/confirm-send), [Audit timeline](/docs/components/audit-timeline) |
+| [Confirm send](/docs/components/confirm-send)         | [Data table](/docs/components/data-table), [Approval step](/docs/components/approval-step), [Save bar](/docs/components/save-bar) | [Audit timeline](/docs/components/audit-timeline)                                                |
+| [Notify envelope](/docs/components/notify-envelope)   | [Confirm send](/docs/components/confirm-send)                                                                                     | [Audit timeline](/docs/components/audit-timeline)                                                |
+| [Audit timeline](/docs/components/audit-timeline)     | [Confirm send](/docs/components/confirm-send), [Approval step](/docs/components/approval-step)                                    | [Status strip](/docs/components/status-strip): the loop closes                                   |
+| [Status and notify](/docs/components/status-notify)   | nothing; it is a whole screen                                                                                                     | [Audit timeline](/docs/components/audit-timeline)                                                |
+
+## One example per sector
+
+These are made-up examples to show the shape of each stage. They are example data, not a description of any real organisation or of how any of them must work.
+
+- **Education.** A school operations lead sees that 14 students are marked absent today (See), picks which families to email from the roster (Decide), confirms "Send to 14 families" (Act), sees "Sent to 14" (Confirm), and finds the entry in the timeline next week (Record).
+- **Manufacturing.** A shift supervisor sees three gauge calibrations overdue on line 3 (See), sets the reminder days and who is copied (Decide), has the quality lead sign off with a stated reason (Act), sees who was told (Confirm), and the sign-off appears in the timeline (Record).
+- **Engineering.** A project engineer sees six change requests waiting in a table with a saved view for "mine" (See), picks the people who must be told (Decide), submits one for approval with the reason and what the approval means (Act), sees that the approvers were emailed (Confirm), and the request's history shows each step (Record).
+- **Health.** A clinic manager sees that five staff licences expire in the next 60 days (See), sets the reminder days and quiet hours (Decide), confirms the reminder to those five people (Act), sees "Sent to 5" (Confirm), and the timeline shows the reminder was sent (Record). Staff licences only; no patient data in the example.
+
+## Using it with an agent
+
+Give your agent the order, not only the pieces. For example: "Build the screen in the order of https://regularui.com/docs/story.md: install the See pattern first, wire it to our data, run the typechecker, then move to the next stage." Each pattern page is also served as markdown by adding `.md` to its path. See [Use with AI agents](/docs/ai) for the install commands and a block to paste into your rules file.
+
+## What this is not
+
+- **A recommended path, not a standard.** The order is a convenience. Real screens loop, skip and repeat.
+- **Not every screen needs every stage.** A read-only dashboard may stop at See. A settings page may be only Act and Confirm.
+- **UI only.** The patterns render state and call handlers you supply. Sending, storage, access control and retention belong to your backend.
+- **crisp-ui does not make anything compliant.** The Record stage gives you a place to show an audit trail; it does not make a tool compliant with any law or standard, and it does not record anything by itself.
+- **Contacts are email only.** A person is an email address, validated as one. There is no phone or SMS contact in these patterns yet.
+
+## Where to go next
+
+Start with the first stage, [Status strip](/docs/components/status-strip), or browse [all patterns by stage](/docs/components).
