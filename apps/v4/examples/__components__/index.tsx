@@ -21,6 +21,7 @@ const shards: Record<
       "save-bar-demo",
       "notify-envelope-demo",
       "approval-step-demo",
+      "audit-timeline-demo",
     ]),
   },
 }

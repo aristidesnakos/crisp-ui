@@ -1,0 +1,291 @@
+---
+title: Audit timeline
+description: A read-only "who did what, when, and why" list of events your server has recorded, grouped by day, with honest empty, error and stale states.
+---
+
+<ComponentPreview styleName="radix-nova" name="audit-timeline-demo" />
+
+Use it wherever people need to see what happened and who did it: who sent the summary, which save failed, who approved a change and why. Each entry shows the person, what they did, what it acted on, the reason, how it ended, and the time with its time zone.
+
+It is the **Record** stage of the story See, Decide, Act, Confirm, Record.
+
+- **Comes after:** [`confirm-send`](/docs/components/confirm-send). "Sent to 3 people" becomes an audit entry, and so does every save and decision.
+- **Leads to:** nothing. It closes the loop back to [`status-strip`](/docs/components/status-strip), because the next number you look at is the result of what was recorded.
+
+<Callout>
+  **What this is not.** It only displays events. It does not create, store,
+  protect, retain or export them. An audit log is only as trustworthy as the
+  server that writes it, so the record has to be written there, when the action
+  happens. Using this component does not make a tool compliant with FERPA,
+  HIPAA, 21 CFR Part 11, ISO 9001 or anything else.
+</Callout>
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add https://<your-domain>/r/audit-timeline.json
+```
+
+Or, with the [`@crisp` namespace](/docs/installation) set up:
+
+```bash
+npx shadcn@latest add @crisp/audit-timeline
+```
+
+This also adds the shared [`audit-event`](#the-auditevent-type) helpers, the shadcn `button` and `lucide-react`.
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource
+  src="registry/crisp/ui/audit-timeline.tsx"
+  title="components/ui/audit-timeline.tsx"
+/>
+
+<Step>
+  Add the shared event type and helpers. They have no React and no dependencies,
+  so you can import them on your server too.
+</Step>
+
+<ComponentSource
+  src="registry/crisp/lib/audit-event.ts"
+  title="lib/audit-event.ts"
+/>
+
+<Step>
+  Add the shadcn `button` and install `lucide-react`. Update the import paths to
+  match your project setup.
+</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { AuditTimeline } from "@/components/ui/audit-timeline"
+```
+
+```tsx
+<AuditTimeline
+  events={events} // already recorded by your server
+  timeZone="America/New_York"
+  initialCount={10}
+  filterable
+/>
+```
+
+The page fetches the events and passes them in. Write them on the server, in the same handler that does the work:
+
+```ts
+import { buildAuditEvent } from "@/lib/audit-event"
+
+// Server only. Same handler that sends the summary.
+const sent = await sendSummary(recipients)
+await db.auditEvents.insert(
+  buildAuditEvent(
+    {
+      actor: { name: user.name, role: user.role },
+      action: "sent the attendance summary to",
+      target: `${sent} guardians`,
+      reason: "Weekly summary",
+      outcome: "succeeded",
+    },
+    { requireReason: true }
+  )
+)
+```
+
+`buildAuditEvent` takes the time from the clock and a fresh id, so the page never decides what time something happened.
+
+## Notes
+
+- **The UI never creates the record.** Write an event on the server for every send, save and decision, including the ones that fail or are blocked. If the only copy of a record is in the browser, it is not a record.
+- **Newest first, by day in your time zone.** `timeZone` is required, because a time with no zone is ambiguous. Days are calendar days in that zone, so a 23-hour or 25-hour day on a clock change is still one day. An unknown zone throws a `RangeError` that names it.
+- **Absolute time first.** Each entry shows a time with the zone, such as "10:12:00 AM EDT", in a `<time>` element whose `dateTime` is the full ISO string. The relative time ("5 minutes ago") sits under it as secondary text. It is left out of the server render and appears after the page loads, so it can never disagree between the two.
+- **A bad date does not break the list.** Entries whose `at` does not parse are shown last under "Date unknown", with "Time unknown" in place of a time, rather than being dropped.
+- **Outcome is text plus an icon.** "Succeeded", "Failed" and "Blocked" each have a different icon and a word. Colour only adds to it. Leave `outcome` out when an action has no pass or fail.
+- **The reason is its own line.** It reads "Reason: …" under the entry. If your policy needs one for approvals and overrides, enforce it on the server with `requireReason`.
+- **Keep sensitive details out.** Do not put message bodies, diagnoses, grades or other personal data in `target`, `reason` or `detail`. Say what was done and to how many, not the content.
+- **Truncation.** Only `initialCount` entries show, newest first, with a "Show N more" button that adds that many again. When that press shows the last entry and the button goes away, focus moves to the first entry that was added instead of being lost.
+- **Older events from the server.** Pass `onLoadMore`. When everything loaded is showing, the button becomes "Load older activity" and calls it. If it throws, the button says "Try again". Pass `hasMore={false}` once the server has no more.
+- **Filters.** `filterable` adds a Person and an Action select above the list, built from the events passed in, plus "Clear filters". They apply only to events already loaded, and the page says so when more can be loaded. A change is announced through the "Showing N of M events" line.
+- **Honest states.** With no events it says "No activity recorded yet" (change it with `emptyMessage`). While `loading` it says "Loading activity…", and with an `error` it says the activity could not be loaded. Neither claims there is no activity. `error` can sit above events that did load, and `stale` warns the list may be behind.
+- **Structure.** One heading per day (level 3 by default, set `headingLevel`), each followed by an ordered list. Controls are a native `select` with a label and standard buttons.
+- **Colour.** It uses the shadcn tokens (`border`, `muted-foreground`, `destructive`), so it follows your theme.
+
+## Props
+
+### AuditTimeline
+
+Also accepts the props of a `div` (except `children`), including `className` and `ref`. The prop types are exported as `AuditTimelineProps`.
+
+| Prop           | Type                          | Description                                                                             |
+| -------------- | ----------------------------- | --------------------------------------------------------------------------------------- |
+| `events`       | `AuditEvent[]`                | Recorded events, in any order. Shown newest first. Required.                            |
+| `timeZone`     | `string`                      | IANA zone for days and times, such as `"America/New_York"`. Required.                   |
+| `initialCount` | `number`                      | Entries shown before "Show N more", and how many each press adds. Default `10`.         |
+| `onLoadMore`   | `() => void \| Promise<void>` | Fetch older events from your server. Throw to show "Try again".                         |
+| `hasMore`      | `boolean`                     | Whether your server has older events. Defaults to `true` when `onLoadMore` is set.      |
+| `emptyMessage` | `string`                      | Shown when there are no events. Default "No activity recorded yet".                     |
+| `filterable`   | `boolean`                     | Show the Person and Action filters. Default `false`.                                    |
+| `loading`      | `boolean`                     | Says "Loading activity…" and does not claim the list is empty. Default `false`.         |
+| `error`        | `string`                      | Says activity could not be loaded, then your message. Does not claim the list is empty. |
+| `onRetry`      | `() => void`                  | Adds a Retry button beside `error`.                                                     |
+| `stale`        | `boolean \| string`           | The list may be behind. `true` uses a default message, a string replaces it.            |
+| `now`          | `Date \| string \| number`    | Pins the clock for relative times, for a demo or a test. Defaults to the real clock.    |
+| `locale`       | `string`                      | BCP 47 locale for labels. Default `"en-US"`.                                            |
+| `headingLevel` | `2 \| 3 \| 4`                 | Level of each day's heading. Default `3`.                                               |
+
+### The AuditEvent type
+
+Exported from `audit-event`, along with `AuditActor`, `AuditOutcome` and `AuditEventInput`.
+
+| Field     | Type                                        | Description                                                                                 |
+| --------- | ------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `id`      | `string`                                    | Unique and stable. Used as the React key.                                                   |
+| `at`      | `string`                                    | When it happened, as an ISO 8601 string, from the server's clock.                           |
+| `actor`   | `string \| { name: string; role?: string }` | Who did it.                                                                                 |
+| `action`  | `string`                                    | A short verb phrase that reads between actor and target: "approved", "sent the summary to". |
+| `target`  | `string`                                    | What it acted on: "ECO-2041", "3 guardians".                                                |
+| `reason`  | `string`                                    | Why. Shown on its own line.                                                                 |
+| `outcome` | `"succeeded" \| "failed" \| "blocked"`      | How it ended. Shown as a word and an icon.                                                  |
+| `detail`  | `string`                                    | Anything else worth reading. No sensitive details.                                          |
+
+## Helpers
+
+All of these are pure and are exported from `audit-event`, so they work on a server and are unit tested.
+
+### buildAuditEvent
+
+`(input: AuditEventInput, options?: { now?: () => Date; newId?: () => string; requireReason?: boolean }) => AuditEvent`
+
+Builds one entry with the clock's time and a fresh id. Defaults to `new Date()` and `crypto.randomUUID()`; pass your own in tests. Trims text and drops blank optional fields. Throws an `AuditEventError` with a plain message when there is no actor or action, when the clock returns an invalid date, or, with `requireReason: true`, when the reason is missing or blank.
+
+### groupByDay
+
+`(events: AuditEvent[], timeZone: string, options?: { locale?: string }) => AuditDay[]`
+
+Groups into calendar days in the zone, newest day first and newest entry first within a day. Entries with the same instant keep the order you gave them. Entries with a malformed `at` go in one "Date unknown" group at the end. It never changes the array it is given.
+
+### formatEventTime
+
+`(at: string, timeZone: string, options?: { locale?: string; timeOnly?: boolean }) => { label: string; iso: string | null }`
+
+The absolute label with the zone, and the ISO string for `<time dateTime>`. For a malformed date the label is "Time unknown" and `iso` is `null`.
+
+### Also exported
+
+`formatRelativeTime(at, now, locale?)`, `filterAuditEvents(events, { actor, action })`, `distinctActors(events)`, `distinctActions(events)`, `actorName(actor)` and `actorRole(actor)`.
+
+## Example events by sector
+
+Fictional data, to show the wording. Each is something the server wrote, not something the page made.
+
+```ts
+const events: AuditEvent[] = [
+  // Education: a record of a disclosure to a guardian.
+  {
+    id: "evt_2041",
+    at: "2026-10-02T14:12:00Z",
+    actor: { name: "Mara Lopez", role: "Registrar" },
+    action: "disclosed the attendance record of",
+    target: "student 0412 to their guardian",
+    reason: "Guardian asked for this week's attendance",
+    outcome: "succeeded",
+    detail: "Fields shared: dates and attendance marks only.",
+  },
+  // Manufacturing: overdue, then recalled.
+  {
+    id: "evt_2042",
+    at: "2026-09-30T19:40:00Z",
+    actor: "Calibration scheduler",
+    action: "marked calibration overdue on",
+    target: "Gauge G-114",
+    reason: "Due 15 Sep, no certificate on file",
+    outcome: "succeeded",
+  },
+  {
+    id: "evt_2043",
+    at: "2026-09-30T19:41:00Z",
+    actor: { name: "Dev Patel", role: "Quality engineer" },
+    action: "recalled",
+    target: "Gauge G-114",
+    reason: "Last calibration was 14 months ago",
+    outcome: "succeeded",
+  },
+  // Engineering: an approval with its reason and what the signature means.
+  {
+    id: "evt_2044",
+    at: "2026-10-01T20:20:00Z",
+    actor: { name: "Sam Okafor", role: "Project engineer" },
+    action: "approved",
+    target: "ECO-2041",
+    reason: "Rev C fixes the tolerance stack-up",
+    outcome: "succeeded",
+    detail: "Signature meaning: approval.",
+  },
+  // Health: a reminder with nothing about the patient in the body.
+  {
+    id: "evt_2045",
+    at: "2026-10-02T13:00:00Z",
+    actor: { name: "Priya Nair", role: "Clinic manager" },
+    action: "sent an appointment reminder to",
+    target: "1 patient",
+    reason: "Reminder 24 hours before the appointment",
+    outcome: "succeeded",
+    detail: "Message body: time and place only. No patient details.",
+  },
+]
+```
+
+## Why it exists
+
+Several rules and standards expect a record of who did what, when and why, for example the disclosure log in FERPA (34 CFR 99.32), audit controls in the HIPAA Security Rule (45 CFR 164.312), a name, time and meaning on a signed record in 21 CFR Part 11, and documented-information control in ISO 9001 (7.5.3). OWASP lists missing logging and monitoring as a top risk. Tools built quickly, by hand or with an AI agent, often leave the record out.
+
+Whether any of these applies to your tool is not something this page can tell you. crisp-ui is UI only: access control, retention, encryption and consent live in your backend, and nothing here makes a tool compliant.
+
+## Agent prompt
+
+Paste this into your coding agent (Claude Code, Cursor, Codex or similar) in your project.
+
+```text
+Goal: add a read-only audit timeline ("who did what, when, and why") to my internal tool. It comes after confirm-send: "Sent to 3 people" becomes an event.
+
+Install: npx shadcn@latest add https://regularui.com/r/audit-timeline.json
+Read the installed files (components/ui/audit-timeline.tsx, lib/audit-event.ts) before writing any code. Do not guess props.
+
+Contract:
+type AuditEvent = { id: string; at: string /* ISO */; actor: string | { name: string; role?: string }; action: string; target?: string; reason?: string; outcome?: "succeeded" | "failed" | "blocked"; detail?: string }
+<AuditTimeline events timeZone initialCount? onLoadMore? hasMore? emptyMessage? filterable? loading? error? onRetry? stale? />
+buildAuditEvent(input, { now?, newId?, requireReason? }) throws if requireReason is set and the reason is blank.
+
+Wiring rule: write an AuditEvent on the SERVER for every send, save and decision, in the same handler that does the work, with buildAuditEvent and the server clock. Record failed and blocked attempts too. The UI never creates the record; the page only fetches events and passes them in. Use requireReason for approvals and overrides. Never put message bodies or personal data in reason or detail.
+
+States to handle: loading, empty ("No activity recorded yet"), error with retry, stale, failed and blocked outcomes, and a long list (initialCount, Show more).
+
+Acceptance checks (run them and show me the output):
+1. Typecheck and lint pass.
+2. A send, a failed save and an approval each add one event with actor, time and reason visible.
+3. Approving without a reason is rejected by the server.
+4. Times show a time zone, and outcomes are readable without colour.
+5. Keyboard only: the filters and Show more can be reached and used.
+
+Do not build or claim tamper-proofing, retention, export, a log database or compliance. Reuse my existing storage; if there is none, keep events in memory and say so. No new dependencies or abstractions beyond this. If something is unclear, ask me.
+```

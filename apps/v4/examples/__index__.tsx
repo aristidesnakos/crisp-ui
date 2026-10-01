@@ -32,5 +32,9 @@ export const ExamplesIndex: Record<string, Record<string, any>> = {
       name: "approval-step-demo",
       filePath: "examples/radix/approval-step-demo.tsx",
     },
+    "audit-timeline-demo": {
+      name: "audit-timeline-demo",
+      filePath: "examples/radix/audit-timeline-demo.tsx",
+    },
   },
 }

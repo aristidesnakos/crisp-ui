@@ -24,6 +24,7 @@ export const DOCS_NAV = [
       { name: "Confirm send", href: "/docs/components/confirm-send" },
       { name: "Save bar", href: "/docs/components/save-bar" },
       { name: "Notify envelope", href: "/docs/components/notify-envelope" },
+      { name: "Audit timeline", href: "/docs/components/audit-timeline" },
     ],
   },
 ]

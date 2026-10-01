@@ -105,6 +105,34 @@
       "dependencies": ["lucide-react"],
       "registryDependencies": ["button", "__REGISTRY_ORIGIN__/r/approval.json"],
       "files": [{ "path": "registry/crisp/ui/approval-step.tsx", "type": "registry:ui" }]
+    },
+    {
+      "name": "audit-event",
+      "type": "registry:lib",
+      "title": "Audit event",
+      "description": "The shared AuditEvent type, plus pure helpers to build one on the server (reason can be required), group by day in a time zone, filter, and format times.",
+      "categories": ["audit", "utilities"],
+      "meta": {
+        "stage": "record",
+        "recipe": "__REGISTRY_ORIGIN__/docs/components/audit-timeline.md"
+      },
+      "docs": "The shared AuditEvent type and pure helpers: build an event on the server (reason can be required), group by day in a time zone, filter and format times.\nRead the installed file before using it; use only the props it exports.\nDocs: __REGISTRY_ORIGIN__/docs/components/audit-timeline.md\nVerify: run your typechecker.",
+      "files": [{ "path": "registry/crisp/lib/audit-event.ts", "type": "registry:lib" }]
+    },
+    {
+      "name": "audit-timeline",
+      "type": "registry:ui",
+      "title": "Audit timeline",
+      "description": "A read-only 'who did what, when, and why' list of recorded events, grouped by day, with outcome text and icon, a visible reason, filters, and honest empty, error and stale states.",
+      "categories": ["dashboard", "audit"],
+      "meta": {
+        "stage": "record",
+        "recipe": "__REGISTRY_ORIGIN__/docs/components/audit-timeline.md"
+      },
+      "docs": "A read-only who-did-what-when-and-why list of recorded events, grouped by day, with outcome text and a visible reason.\nRead the installed file before using it; use only the props it exports.\nDocs: __REGISTRY_ORIGIN__/docs/components/audit-timeline.md\nVerify: run your typechecker.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["button", "__REGISTRY_ORIGIN__/r/audit-event.json"],
+      "files": [{ "path": "registry/crisp/ui/audit-timeline.tsx", "type": "registry:ui" }]
     }
   ]
 }
