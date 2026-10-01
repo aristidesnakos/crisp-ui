@@ -1,0 +1,290 @@
+---
+title: Data table
+description: A table of rows with named saved views and live counts, row selection, an action slot that receives the selected rows, and stale, empty, no-match and error states.
+---
+
+<ComponentPreview styleName="radix-nova" name="data-table-demo" />
+
+Use it when someone needs to see a list of people, assets or records with a status, narrow it to the exceptions, and then act on those: calibrations that are overdue, staff who have not finished training, students absent today. It sits under a [`status-strip`](/docs/components/status-strip), which says "6 of 18 gauges in calibration". The table lists the 12 that are not, and its `actions` slot is where [`confirm-send`](/docs/components/confirm-send) goes.
+
+It reads left to right and top to bottom: **which view → how many → which rows → what to do with them.**
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add https://<your-domain>/r/data-table.json
+```
+
+Or, with the [`@crisp` namespace](/docs/installation) set up:
+
+```bash
+npx shadcn@latest add @crisp/data-table
+```
+
+This also adds `table-view` (the pure helpers), the shadcn `button`, `checkbox` and `table`, and `lucide-react`.
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource
+  src="registry/crisp/ui/data-table.tsx"
+  title="components/ui/data-table.tsx"
+/>
+
+<Step>Add the helpers it imports.</Step>
+
+<ComponentSource
+  src="registry/crisp/lib/table-view.ts"
+  title="lib/table-view.ts"
+/>
+
+<Step>
+  Add the shadcn `button`, `checkbox` and `table`, and install `lucide-react`.
+  Update the import paths to match your project setup.
+</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { ConfirmSend } from "@/components/ui/confirm-send"
+import {
+  DataTable,
+  type DataTableColumn,
+  type DataTableView,
+} from "@/components/ui/data-table"
+```
+
+```tsx
+const columns: DataTableColumn<Gauge>[] = [
+  {
+    key: "gauge",
+    header: "Gauge",
+    rowHeader: true,
+    sortValue: (g) => g.id,
+    cell: (g) => g.id,
+  },
+  {
+    key: "owner",
+    header: "Owner",
+    sortValue: (g) => g.owner,
+    cell: (g) => g.owner,
+  },
+  {
+    key: "due",
+    header: "Due date",
+    sortValue: (g) => g.due,
+    cell: (g) => formatDate(g.due),
+  },
+  { key: "status", header: "Status", cell: (g) => <StatusCell gauge={g} /> },
+]
+
+const views: DataTableView<Gauge>[] = [
+  { key: "all", label: "All", filter: () => true },
+  { key: "overdue", label: "Overdue", filter: (g) => g.status === "overdue" },
+]
+```
+
+```tsx
+<DataTable
+  caption="Gauges and when each is next due for calibration"
+  noun="gauge"
+  rows={gauges}
+  columns={columns}
+  views={views}
+  getRowId={(g) => g.id}
+  rowLabel={(g) => `Gauge ${g.id}`}
+  selectedIds={selectedIds}
+  onSelectionChange={setSelectedIds}
+  asOf={fetchedAt}
+  onRefresh={refetch}
+  error={loadFailed}
+  onRetry={refetch}
+  actions={(selected) => (
+    <ConfirmSend
+      count={selected.length}
+      noun="gauge owner"
+      label="Email a reminder"
+      emptyReason="Select at least one gauge first"
+      onSend={() => api.remind(selected.map((g) => g.id))}
+    />
+  )}
+/>
+```
+
+The table never fetches and never saves. You pass the rows, and `actions` hands back the selected ones. Selection can be controlled with `selectedIds` and `onSelectionChange`, or left out so the table keeps it.
+
+<Callout>
+  crisp-ui is UI only. Who may see these rows, and who may act on them, is the
+  job of your backend: check it on the server, not by hiding a button. Fetching,
+  saving and sending belong to you as well. Nothing here makes a tool compliant
+  with any regulation.
+</Callout>
+
+Requires Tailwind 3.4 or newer (the parts use `size-*`).
+
+## The pattern
+
+1. **Show the denominator.** "Showing 7 of 18 gauges", always. Each view button carries its own count, so nobody reads a filtered list as the whole of it.
+2. **Views, not a filter form.** Named presets such as All, Overdue and Due in 30 days answer the usual question in one click. One is active, and the active one is filled and pressed, not just a different colour.
+3. **Select what you can see.** The header checkbox selects every row in the active view, with a dash when only some are selected. Switching view or loading new data drops any selected row that is no longer on screen, so an action never reaches a row the person cannot see.
+4. **Say how many are selected, out loud.** "3 selected" is announced politely to screen readers, and shown with a Clear button.
+5. **The action receives the rows.** `actions` is called with the selected rows in table order. Put a [`confirm-send`](/docs/components/confirm-send) there so a bulk send still asks "Send to 3 owners?".
+6. **Say how old it is.** "As of 1 Oct 2026, 09:30", and when it is older than `staleAfterMinutes` an icon and a sentence: "May be out of date. Refresh before you act on it." Block your action while stale if the list drives a send.
+7. **Say why it is empty.** Three different states, each with its own wording: nothing at all, nothing in this view (with a button to another view), and a failed load (with Try again).
+
+## Notes
+
+- **States.** An empty `rows` shows "No gauges yet". A view that keeps nothing shows "No gauges in “Overdue”" and offers the first other view that has rows. `error` replaces the table with an alert, and nothing can be selected while it is showing. If a refresh fails and you would rather keep the old rows on screen, do not pass `error`: pass the old `asOf` and let the stale line warn. Override the first two with `emptyState` and `noMatchState`.
+- **Row ids.** Selection is kept by `getRowId`, so it must be stable and unique. If two rows share an id, only the first is shown.
+- **Sorting.** A column with `sortValue` gets a heading button: ascending, then descending, then back to the source order. Rows with no value (null, undefined, NaN, an invalid date) always sort last, and rows that tie keep their source order. The sorted column has `aria-sort`, and each change is announced, for example "Sorted by Due date, ascending."
+- **Accessibility.** It renders a real `table` with a hidden `caption`, `th scope="col"` headings and a `th scope="row"` on the first column (or the one marked `rowHeader`). Every row checkbox is named "Select `rowLabel`", the header checkbox "Select all 7 gauges shown". Focus rings come from the shadcn `button` and `checkbox`.
+- **Status is never colour alone.** `cell` is yours to render. Pair any colour with text or an icon, as the demo does ("Overdue by 3 days" with a warning icon).
+- **Controlled and uncontrolled.** `selectedIds` and `activeView` are controlled when you pass them, and `defaultSelectedIds` and `defaultActiveView` set a starting value when you do not. `onSelectionChange` also fires when rows disappear and the selection is trimmed.
+- **Freshness.** The stale check runs after the page loads and again every minute, so the server and browser render the same text first. An unreadable `asOf` counts as stale.
+- **Size.** Every row in `rows` is rendered and counted on each render, which suits lists up to a few hundred rows.
+
+## What it does not do
+
+- **No pagination.** Narrow with views, or page the data yourself and pass in the page.
+- **No column resizing or reordering.**
+- **No data fetching or saving.** Fetch in your own code and pass `rows`. It does not poll, and it does not write anything.
+- **No access control.** It shows the rows you give it.
+- **No search box or filter form.** Add a view for the case you need.
+- **No loading skeleton.** Render your own while you fetch.
+
+## Props
+
+### DataTable
+
+Also accepts the props of a `div` (except `children`), including `className` and `ref`. They are applied to the root element. The prop types are exported as `DataTableProps<T>`.
+
+| Prop                          | Type                               | Description                                                                           |
+| ----------------------------- | ---------------------------------- | ------------------------------------------------------------------------------------- |
+| `rows`                        | `T[]`                              | Every row, before any view is applied. Required.                                      |
+| `columns`                     | `DataTableColumn<T>[]`             | One entry per column. Required.                                                       |
+| `getRowId`                    | `(row: T) => string`               | A stable, unique id for a row. Required.                                              |
+| `rowLabel`                    | `(row: T) => string`               | What a person calls the row, for example "Gauge G-104". Names its checkbox. Required. |
+| `caption`                     | `string`                           | Names the table for screen readers. Not shown. Required.                              |
+| `noun` / `nounPlural`         | `string`                           | One row and its plural. Default "row" and "rows".                                     |
+| `views`                       | `DataTableView<T>[]`               | Named presets. Each button shows its live count.                                      |
+| `activeView`                  | `string`                           | Controlled: the key of the active view. An unknown key falls back to the first view.  |
+| `defaultActiveView`           | `string`                           | Uncontrolled starting view. Default: the first.                                       |
+| `onActiveViewChange`          | `(key: string) => void`            | Called when a view button is pressed.                                                 |
+| `selectable`                  | `boolean`                          | Set false to drop the checkbox column. Default `true`.                                |
+| `selectedIds`                 | `string[]`                         | Controlled selection, by row id.                                                      |
+| `defaultSelectedIds`          | `string[]`                         | Uncontrolled starting selection.                                                      |
+| `onSelectionChange`           | `(ids: string[]) => void`          | Called with the next ids. Never includes a row that is hidden or gone.                |
+| `actions`                     | `(selectedRows: T[]) => ReactNode` | Rendered beside the count. Receives the selected rows, in table order.                |
+| `defaultSort`                 | `SortState`                        | Starting sort: `{ key, direction }` or `null`. Default `null`.                        |
+| `onSortChange`                | `(sort: SortState) => void`        | Called when a heading is pressed.                                                     |
+| `asOf`                        | `Date \| string \| number`         | When the rows were fetched. Shows "As of …". Omit to hide the line.                   |
+| `staleAfterMinutes`           | `number`                           | How old `asOf` may get before the line warns. Default 60.                             |
+| `formatAsOf`                  | `(date: Date) => string`           | Format `asOf` for display. Default: locale date and time.                             |
+| `onRefresh`                   | `() => void`                       | Adds a Refresh button to the freshness line.                                          |
+| `error`                       | `boolean \| string`                | The load failed. `true` shows a default message, a string is used as the detail line. |
+| `onRetry`                     | `() => void`                       | Adds a "Try again" button to the error state.                                         |
+| `emptyState` / `noMatchState` | `ReactNode`                        | Replace the default message for no rows, and for a view that keeps none.              |
+
+### DataTableColumn
+
+| Field       | Type                    | Description                                                                         |
+| ----------- | ----------------------- | ----------------------------------------------------------------------------------- |
+| `key`       | `string`                | React key and the key `defaultSort` uses. Unique.                                   |
+| `header`    | `string`                | Column heading. Named in the "Sorted by …" announcement.                            |
+| `cell`      | `(row: T) => ReactNode` | What the cell shows.                                                                |
+| `sortValue` | `(row: T) => SortValue` | Makes the column sortable. A string, number, boolean or Date. Empty values go last. |
+| `align`     | `"left" \| "right"`     | Default "left". Use "right" for numbers.                                            |
+| `rowHeader` | `boolean`               | Renders this column as the row header. Default: the first column.                   |
+| `className` | `string`                | Merged onto the heading and every cell.                                             |
+
+### DataTableView
+
+An alias for `TableView<T>` from `table-view`.
+
+| Field    | Type                  | Description                               |
+| -------- | --------------------- | ----------------------------------------- |
+| `key`    | `string`              | Unique within the table.                  |
+| `label`  | `string`              | Shown on the view's button.               |
+| `filter` | `(row: T) => boolean` | Return true to keep the row in this view. |
+
+## Pure helpers
+
+`table-view` has no React and no network, so it is safe on a server and easy to unit test. The table is built from it, and you can use it on its own.
+
+| Function                                                                  | What it does                                                     |
+| ------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `countViews(rows, views)`                                                 | `{ key, label, count, total }` for each view: the "7 of 18".     |
+| `filterByView(rows, view)`                                                | The rows a view keeps, in source order.                          |
+| `formatShown(count, total, noun, nounPlural)`                             | "7 of 18 gauges". The noun follows the total.                    |
+| `sortRows(rows, getValue, direction)`                                     | A stable sort. Empty values last in both directions.             |
+| `nextSort(current, key)`                                                  | The next sort after a heading click: ascending, descending, off. |
+| `toggleId` / `selectAllVisible` / `deselectAllVisible` / `clearSelection` | Selection changes. Each returns a new list.                      |
+| `pruneSelection(selected, availableIds)`                                  | Keeps only ids that still exist.                                 |
+| `selectionState(selected, visibleIds)`                                    | `"none"`, `"some"` or `"all"`.                                   |
+| `selectedRows(rows, selected, getId)`                                     | The selected rows, in row order, one per id.                     |
+| `uniqueById(rows, getId)`                                                 | Drops repeated ids, keeping the first.                           |
+| `isStale(asOf, now, maxAgeMinutes)`                                       | Whether the data is older than the limit.                        |
+
+## Agent prompt
+
+Paste this into a coding agent in a project that already has shadcn set up. Replace the bracketed parts.
+
+```text
+Goal: show my [rows, e.g. gauges due for calibration] as a table with saved views ([e.g. All, Overdue, Due in 30 days]), let me select rows, and [act on the selected rows, e.g. email their owners].
+
+Install:
+npx shadcn@latest add https://regularui.com/r/data-table.json
+npx shadcn@latest add https://regularui.com/r/confirm-send.json
+Read components/ui/data-table.tsx and lib/table-view.ts in full before writing any code. Do not guess props.
+
+Props contract (DataTable<Row>):
+- rows: every row, unfiltered. getRowId: stable unique string. rowLabel: row => "Gauge G-104" (names its checkbox). caption: names the table.
+- columns: { key, header, cell, sortValue? (makes it sortable), rowHeader? }. Status cells use an icon plus words, never colour alone.
+- views: { key, label, filter }[]. The table shows each view's count and "7 of 18".
+- selectedIds + onSelectionChange(ids), or omit both. actions={(selectedRows) => <ConfirmSend .../>}.
+- asOf (fetch time), onRefresh, error (+ onRetry), emptyState, noMatchState.
+
+Wiring: fetch the rows in my own code and pass them in; the table never fetches. Reset ConfirmSend's sentCount when the selection changes. Do not send while the data is stale or failed to load.
+
+Cover these states: loaded, stale, empty, no match for the active view, error with retry, some selected, none selected (action disabled with a reason).
+
+Acceptance checks (run them and show the output):
+1. Typecheck and lint pass, and so do any tests for logic I add.
+2. Keyboard only: Tab to a row checkbox, Space selects it, "N selected" appears.
+3. Every checkbox has a name that includes its row's label.
+4. Changing the view never leaves a hidden row selected.
+
+Out of scope: pagination, column resizing, server-side fetching, access control. Use only what is installed. Add no dependencies and rebuild nothing the files already do.
+```
+
+## Examples by sector
+
+These are example data and wording only. The component is the same in each; only the rows, views and verbs change. Contacts stay as email addresses.
+
+- **Education.** An absent-today list. Rows are students, views are "Absent today", "Absent 3+ days" and "Unexcused", and the action emails the families of the selected students.
+- **Manufacturing.** Overdue calibrations. Rows are gauges, views are "Overdue" and "Due in 30 days", and the action emails each owner.
+- **Engineering.** ECOs awaiting review. Rows are engineering change orders, views are "Awaiting me", "Awaiting anyone" and "Past due date", and the action emails the reviewers.
+- **Health.** Licences expiring in 60 days. Rows are staff licences, views are "Expiring in 60 days" and "Expired", and the action emails each person a reminder.
+
+## Next
+
+Send a reminder to the selection with [`confirm-send`](/docs/components/confirm-send): it asks "Send to 3 people?" with the count before anything goes out.
