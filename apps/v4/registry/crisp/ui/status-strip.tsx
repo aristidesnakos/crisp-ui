@@ -5,8 +5,11 @@ import { cn } from "@/lib/utils"
 export type StatusTone = "done" | "active" | "pending"
 
 export interface StatusSegment {
+  /** React key. Unique within the strip. */
   key: string
+  /** Shown in the legend and the bar's accessible label. */
   label: string
+  /** How many fall in this stage. Sizes the bar. */
   count: number
   /** done = solid, active = tinted, pending = hatched (not started or unreachable). */
   tone: StatusTone
@@ -25,7 +28,7 @@ const TONE_DOT: Record<StatusTone, string> = {
   pending: "ring-1 ring-muted-foreground/50",
 }
 
-interface StatusStripProps extends React.ComponentProps<"div"> {
+export interface StatusStripProps extends React.ComponentProps<"div"> {
   /** Stages of ONE whole. They must not overlap, and their counts sum to the total. */
   segments: StatusSegment[]
   /** Completes the headline sentence: "11 of 18 <noun>". Segments with tone "done" are counted. */

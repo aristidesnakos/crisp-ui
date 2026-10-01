@@ -3,7 +3,11 @@
  * are safe to unit test and to reuse on a server.
  */
 
-/** One person and which channels they are switched on for. */
+/**
+ * One person and which channels they are switched on for. Same shape as
+ * `RosterPerson` in `recipient-roster`, so the two fit together without a
+ * conversion.
+ */
 export interface RosterPerson {
   email: string
   channels: Record<string, boolean>

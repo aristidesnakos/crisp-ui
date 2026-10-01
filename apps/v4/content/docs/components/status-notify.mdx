@@ -129,11 +129,13 @@ Each part is its own item and works alone.
 
 ### StatusNotify
 
+Also accepts the props of the shadcn `card` it renders (except `title` and `onError`, which are the block's own), including `className` and `ref`. The prop types are exported as `StatusNotifyProps`, and `NotifyChannelName` is `"automatic" | "onDemand"`, the `channel` your `onSave` and `onError` receive.
+
 | Prop                                    | Type                                          | Description                                                                               |
 | --------------------------------------- | --------------------------------------------- | ----------------------------------------------------------------------------------------- |
 | `segments`                              | `StatusSegment[]`                             | Stages of one whole. `tone` is `done`, `active` or `pending`.                             |
 | `headlineNoun`                          | `string`                                      | Completes the headline: "11 of 18 `<noun>`".                                              |
-| `automatic` / `onDemand`                | `{ label, hint, limit? }`                     | The two channels.                                                                         |
+| `automatic` / `onDemand`                | `{ label, hint?, limit?, switchLabel? }`      | The two channels.                                                                         |
 | `saved`                                 | `{ automatic: string[]; onDemand: string[] }` | The saved lists.                                                                          |
 | `onSave`                                | `(channel, emails) => Promise<void>`          | Called only for lists that changed. Throw to fail. Must lead to `saved` updating.         |
 | `onSend`                                | `() => Promise<number \| void>`               | Sends the on-demand summary to the saved list. Return the real sent count if you have it. |

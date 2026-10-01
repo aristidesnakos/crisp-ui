@@ -80,14 +80,14 @@ import { StatusStrip } from "@/components/ui/status-strip"
 - **Segments are stages of one whole.** They must not overlap. The total is their sum, so a person who is in two segments is counted twice.
 - **Tones.** `done` is solid, `active` is tinted, and `pending` is hatched, which reads as "not started or unreachable". The headline counts only `done` segments, so with more than one `done` segment they are added together.
 - **Zero counts.** A segment with a count of 0 is left out of the bar but still appears in the legend. If the total is 0 there is no bar.
-- **Accessibility.** The bar is an image with a label that lists every segment, for example "11 completed, 4 signed in, not trained, 3 not signed in yet". The legend is a description list.
+- **Accessibility.** The bar is an image with a label that lists every segment, for example "11 completed, 4 signed in, not trained, 3 not signed in yet". The legend is a list.
 - **Colour.** The tones use `primary` and `muted-foreground`, so they follow your theme.
 
 ## Props
 
 ### StatusStrip
 
-Also accepts the props of a `div`.
+Also accepts the props of a `div`, including `className` and `ref`.
 
 | Prop           | Type              | Description                                                                                          |
 | -------------- | ----------------- | ---------------------------------------------------------------------------------------------------- |
@@ -96,6 +96,8 @@ Also accepts the props of a `div`.
 | `action`       | `ReactNode`       | Rendered on the right of the headline, wrapping below it on narrow screens. Omitted when not passed. |
 
 ### StatusSegment
+
+Exported from the same file, along with `StatusTone` and `StatusStripProps`.
 
 | Field   | Type                              | Description                                   |
 | ------- | --------------------------------- | --------------------------------------------- |

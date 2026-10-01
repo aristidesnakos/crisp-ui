@@ -5,11 +5,14 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/registry/new-york-v4/ui/button"
 
-interface SaveBarProps extends React.ComponentProps<"div"> {
+export interface SaveBarProps extends React.ComponentProps<"div"> {
   /** The bar renders nothing until there is something to save. */
   dirty: boolean
+  /** Disables both buttons and shows "Saving…". */
   saving?: boolean
+  /** Called when Save is pressed. */
   onSave: () => void
+  /** Called when Discard is pressed. */
   onDiscard: () => void
 }
 

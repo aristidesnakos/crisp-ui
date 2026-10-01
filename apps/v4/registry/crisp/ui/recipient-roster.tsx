@@ -9,6 +9,7 @@ import { Input } from "@/registry/new-york-v4/ui/input"
 import { Switch } from "@/registry/new-york-v4/ui/switch"
 
 export interface RosterChannel {
+  /** Matches a key in each person's `channels`. */
   key: string
   /** Column heading, e.g. "Each finish". */
   label: string
@@ -20,8 +21,11 @@ export interface RosterChannel {
   switchLabel?: (email: string) => string
 }
 
+/** Same shape as `RosterPerson` in `notify-envelope`, so the two fit together. */
 export interface RosterPerson {
+  /** The person's address, lowercase. */
   email: string
+  /** Whether they are on each channel, by key. A missing key counts as off. */
   channels: Record<string, boolean>
 }
 
@@ -31,17 +35,21 @@ export interface RosterPerson {
 const EMAIL =
   /^(?!\.)(?!.*\.\.)[^\s@,;]+(?<!\.)@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$/i
 
-interface RecipientRosterProps {
+export interface RecipientRosterProps
+  extends Omit<React.ComponentProps<"div">, "onChange"> {
+  /** The current list, including unsaved edits. Addresses must be lowercase. */
   people: RosterPerson[]
+  /** One column and one switch per entry. */
   channels: RosterChannel[]
+  /** Called with the full next list after an add, remove or toggle. */
   onChange: (people: RosterPerson[]) => void
+  /** Disables the switches, the remove buttons and the input, e.g. while saving. */
   disabled?: boolean
   /** Return true if the address is acceptable. Defaults to a simple shape check. */
   validate?: (email: string) => boolean
   emptyMessage?: React.ReactNode
   /** One line under the list, e.g. what happens when nobody is set. */
   footnote?: React.ReactNode
-  className?: string
 }
 
 /**
@@ -57,6 +65,8 @@ function RecipientRoster({
   emptyMessage = "Add an address below, then choose what each person receives.",
   footnote,
   className,
+  ref,
+  ...props
 }: RecipientRosterProps) {
   const [draft, setDraft] = React.useState("")
   const [error, setError] = React.useState("")
@@ -65,6 +75,7 @@ function RecipientRoster({
   const errorId = React.useId()
   const limitId = React.useId()
   const rootRef = React.useRef<HTMLDivElement>(null)
+  React.useImperativeHandle(ref, () => rootRef.current as HTMLDivElement)
   const inputRef = React.useRef<HTMLInputElement>(null)
   // Position and address of a row just removed, so focus is not lost with it.
   const removed = React.useRef<{ index: number; email: string } | null>(null)
@@ -134,6 +145,7 @@ function RecipientRoster({
         "[--roster-col:3.5rem] sm:[--roster-col:6.75rem]",
         className
       )}
+      {...props}
     >
       <div
         role="group"

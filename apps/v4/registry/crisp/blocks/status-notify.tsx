@@ -2,6 +2,7 @@
 
 import * as React from "react"
 
+import { cn } from "@/lib/utils"
 import {
   applySavedChannel,
   listForChannel,
@@ -20,14 +21,17 @@ import {
 } from "@/registry/crisp/ui/status-strip"
 import { Card } from "@/registry/new-york-v4/ui/card"
 
-type ChannelName = "automatic" | "onDemand"
+/** The two channels the block manages. */
+export type NotifyChannelName = "automatic" | "onDemand"
 
 /** Column heading, cadence hint, optional limit and per-person switch label. */
 export type NotifyChannelConfig = Omit<RosterChannel, "key">
 
-export interface StatusNotifyProps {
+export interface StatusNotifyProps
+  extends Omit<React.ComponentProps<typeof Card>, "title" | "onError"> {
   /** Stages of one whole, e.g. completed / in progress / not started. */
   segments: StatusSegment[]
+  /** Completes the headline: "11 of 18 <noun>". Defaults to "done". */
   headlineNoun?: string
   /** Emailed as things happen. */
   automatic: NotifyChannelConfig
@@ -40,7 +44,7 @@ export interface StatusNotifyProps {
    */
   saved: { automatic: string[]; onDemand: string[] }
   /** Persist one channel's list. Called only for lists that changed. Throw to fail. */
-  onSave: (channel: ChannelName, emails: string[]) => Promise<void>
+  onSave: (channel: NotifyChannelName, emails: string[]) => Promise<void>
   /**
    * Send the on-demand summary to the SAVED list. Return how many were actually
    * sent if your API tells you; otherwise the saved list length is shown.
@@ -49,7 +53,7 @@ export interface StatusNotifyProps {
   /** Called when a save or send throws, so you can toast or log it. */
   onError?: (
     error: unknown,
-    context: { action: "save" | "send"; channel?: ChannelName }
+    context: { action: "save" | "send"; channel?: NotifyChannelName }
   ) => void
   /** What happens when the automatic list is empty. */
   automaticFallback?: React.ReactNode
@@ -60,7 +64,9 @@ export interface StatusNotifyProps {
   /** One recipient, and its plural. Default "person" / "people". */
   recipientNoun?: string
   recipientNounPlural?: string
+  /** Heading above the roster. */
   title?: string
+  /** One-line help under the heading. */
   description?: string
 }
 
@@ -81,6 +87,8 @@ function StatusNotify({
   recipientNounPlural,
   title = "Who hears about it",
   description = "One list. Each person can get an email as things happen, the overview, both, or neither.",
+  className,
+  ...props
 }: StatusNotifyProps) {
   const channelKeys = React.useMemo(() => ["automatic", "onDemand"], [])
   const [people, setPeople] = React.useState(() =>
@@ -132,7 +140,7 @@ function StatusNotify({
   async function save() {
     setSaving(true)
     // Independent full-list writes: one failing must not discard the other.
-    const jobs: Array<{ channel: ChannelName; run: Promise<void> }> = []
+    const jobs: Array<{ channel: NotifyChannelName; run: Promise<void> }> = []
     if (autoChanged)
       jobs.push({ channel: "automatic", run: onSave("automatic", autoList) })
     if (demandChanged)
@@ -166,7 +174,7 @@ function StatusNotify({
   }
 
   return (
-    <Card className="gap-0 overflow-hidden py-0">
+    <Card className={cn("gap-0 overflow-hidden py-0", className)} {...props}>
       <div className="space-y-4 p-4 sm:p-6">
         <StatusStrip
           segments={segments}
