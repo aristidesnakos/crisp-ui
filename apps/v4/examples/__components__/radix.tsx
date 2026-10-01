@@ -85,4 +85,12 @@ export const Components: Record<string, any> = {
       ) || "alert-rules-demo"
     return { default: mod.default || mod[exportName] }
   }),
+  "calibration-desk-demo": React.lazy(async () => {
+    const mod = await import("@/examples/radix/calibration-desk-demo")
+    const exportName =
+      Object.keys(mod).find(
+        (key) => typeof mod[key] === "function" || typeof mod[key] === "object"
+      ) || "calibration-desk-demo"
+    return { default: mod.default || mod[exportName] }
+  }),
 }

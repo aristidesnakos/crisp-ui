@@ -1,0 +1,194 @@
+---
+title: Calibration desk
+description: One worked example of the whole arc on one screen. Gauges due for calibration, a rule, a two-role approval, a confirm-then-send to owners, and an audit timeline, handing off to one another.
+---
+
+<ComponentPreview styleName="radix-nova" name="calibration-desk-demo" />
+
+This is not a new pattern. It is the six patterns wired together so you, or your coding agent, can see how they hand off: **See → Decide → Act → Confirm → Record**. The scenario is manufacturing quality. Gauges are due or overdue for calibration, and Quality and Manufacturing must both approve a recall before the owners are emailed. The gauges, people and roles are made up.
+
+Try it in the preview. Select overdue rows, request approval, switch **View as** between the two approvers and approve with a reason, then send. Turn on "Make the next sends fail" to see a failed send recorded and retried. Nothing is saved or sent, and the page forgets everything on reload.
+
+<Callout>
+  **This is a UI. The server behind the preview is a stand-in kept in memory.**
+  Hiding a button is not access control. Your server must verify who the user is
+  and what role they hold, write the audit events, and enforce quiet hours.
+  crisp-ui does not make a tool compliant with any regulation, and none of this
+  is legal or compliance advice.
+</Callout>
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add https://regularui.com/r/calibration-desk.json
+```
+
+Or, with the [`@crisp` namespace](/docs/installation) set up:
+
+```bash
+npx shadcn@latest add @crisp/calibration-desk
+```
+
+This also adds the six patterns it is built from ([`status-strip`](/docs/components/status-strip), [`data-table`](/docs/components/data-table), [`alert-rules`](/docs/components/alert-rules), [`approval-step`](/docs/components/approval-step), [`confirm-send`](/docs/components/confirm-send) and [`audit-timeline`](/docs/components/audit-timeline)), their helpers, `lucide-react`, and the shadcn `button`, `checkbox`, `table` and `switch`. Read the installed files before you change anything.
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Copy and paste the block into your project.</Step>
+
+<ComponentSource
+  src="registry/crisp/blocks/calibration-desk.tsx"
+  title="components/calibration-desk.tsx"
+/>
+
+<Step>
+  The pure logic: gauge status, what a selection would recall, and whether a
+  send is allowed.
+</Step>
+
+<ComponentSource
+  src="registry/crisp/lib/calibration-desk.ts"
+  title="lib/calibration-desk.ts"
+/>
+
+<Step>The in-memory server. This is the one file you replace.</Step>
+
+<ComponentSource
+  src="registry/crisp/lib/calibration-desk-server.ts"
+  title="lib/calibration-desk-server.ts"
+/>
+
+<Step>
+  Add the six patterns above, the shadcn `button` and `switch`, and
+  `lucide-react`. Update the import paths to match your project setup.
+</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { CalibrationDesk } from "@/components/calibration-desk"
+```
+
+With no props it runs on the in-memory server, as in the preview. For your own data, pass your own server and the signed-in user:
+
+```tsx
+<CalibrationDesk
+  server={myServer} // four methods that call your API
+  currentUser={session.user} // { id, name, role } from your session
+  timeZone="America/Chicago"
+/>
+```
+
+| Prop           | Type                    | Description                                                                         |
+| -------------- | ----------------------- | ----------------------------------------------------------------------------------- |
+| `server`       | `CalibrationDeskServer` | Your four calls. Omit it to use the in-memory demo server and its demo controls.    |
+| `currentUser`  | `DeskUser`              | `{ id, name, role }` from your session. Omit it in the demo to pick who to view as. |
+| `initialState` | `DeskState`             | The first state, if you already fetched it. Otherwise the screen calls `load()`.    |
+| `timeZone`     | `string`                | IANA zone for the record. Default `"UTC"`.                                          |
+
+It also takes the props of a `div`, including `className`.
+
+### How each stage hands to the next
+
+| Stage   | Pattern                                                                                      | It takes                              | It hands on                                                                         |
+| ------- | -------------------------------------------------------------------------------------------- | ------------------------------------- | ----------------------------------------------------------------------------------- |
+| See     | [`status-strip`](/docs/components/status-strip), [`data-table`](/docs/components/data-table) | The gauges from `load()`              | The selected rows. The strip counts come from the same gauges.                      |
+| Decide  | [`alert-rules`](/docs/components/alert-rules) (`summarizeRule`) and `planRecall`             | The selected rows                     | A plan: the gauges that can be recalled, each owner's email once, what was left out |
+| Act     | [`approval-step`](/docs/components/approval-step)                                            | A request for exactly those gauges    | A request that is approved, rejected or waiting, with each decision's reason        |
+| Confirm | [`confirm-send`](/docs/components/confirm-send)                                              | The owner count and `checkRecallSend` | One send that succeeds or fails, and can be retried                                 |
+| Record  | [`audit-timeline`](/docs/components/audit-timeline)                                          | The events your server wrote          | Nothing, except that the counts above now include what was just recorded            |
+
+Four rules make the hand-offs hold:
+
+- **Selecting rows changes the send count.** The button says "Send to N owners", where N is the distinct owner emails of the gauges that can be recalled. Gauges that are in date, already recalled or without a valid owner email are left out, and the screen says so.
+- **Approval is for a set of gauges.** If the selection changes after approval, the send is blocked until a new request is made. The server checks the same rule, because the browser's check is only a convenience.
+- **Approval enables the send.** Both roles must approve, each with a reason. One rejection settles it, and a rejected request cannot be sent.
+- **Everything is recorded by the server.** Each request, decision, send, refusal and failure is one `AuditEvent`. A failed send adds a `failed` event, changes nothing else, and the same button retries it. When a send succeeds the gauges become "recalled" and the status strip moves.
+
+### Replace the in-memory server
+
+The screen talks to a `CalibrationDeskServer` and to nothing else. Change one place: pass your own object with the same four methods, then delete `calibration-desk-server.ts`.
+
+```ts
+const myServer: CalibrationDeskServer = {
+  load: () => fetch("/api/calibration").then(read), // gauges, request, rule, events
+  requestRecall: ({ gaugeIds }) => post("/api/recalls", { gaugeIds }),
+  decide: ({ requestId, outcome, reason }) =>
+    post(`/api/recalls/${requestId}/decisions`, { outcome, reason }),
+  sendRecall: ({ requestId, gaugeIds }) =>
+    post(`/api/recalls/${requestId}/send`, { gaugeIds }), // -> { sent: number }
+}
+```
+
+`read` and `post` are yours: they throw an `Error` with a readable message on a non-2xx answer, which is what the screen shows. The `userId` argument the demo passes exists only because it has no session; a real server takes the user from the session and ignores any id in the body. The screen refetches with `load()` after every call, so what you see is what the server holds.
+
+## What it does not do
+
+- **It is a UI only.** It shows state and asks for decisions. It sends nothing, stores nothing and checks no one.
+- **Hiding a button is not access control.** Your server must verify the user and the role, that it is their turn, and that they have not already decided, then refuse otherwise.
+- **The server writes the audit events.** The in-memory server does it in the same step as each action, so a record exists even if the page is closed. A browser that records its own actions can be closed or edited. The timeline only displays.
+- **The server enforces quiet hours.** The rule is shown as a sentence, not applied. The server that sends must call `isQuietTime` or `nextAllowedSendTime` from `alert-rules` itself.
+- **The in-memory server is a stand-in.** It forgets everything on reload, has no email, and the "View as" switch is not a login.
+- **One notice per owner.** Owners must not see each other, so do not put them on one To line. The send is all or nothing: there is no per-recipient delivery log and no partial failure.
+- **One request at a time, and only this scenario.** The nouns (gauge, recall) and the rules in `planRecall` are this example's. Rename them and change the rules for your own, and keep the hand-offs.
+- **It is not compliance.** crisp-ui does not make a tool compliant with ISO 9001, FDA, FERPA, HIPAA or anything else.
+- **Not tested with a screen reader.** This composition has not been checked with one. Run your own keyboard and screen reader check before relying on it.
+
+## Agent prompt
+
+Paste this into your coding agent. Replace the bracketed part with your own scenario.
+
+```text
+Goal: build a "recall these items" screen for my internal tool, on my own data and my own API. [Describe: what is due, who owns each item, who must approve, who is told.] It runs See, Decide, Act, Confirm, Record on one screen.
+
+Install, then READ the installed files before writing any code. Do not guess props.
+npx shadcn@latest add https://regularui.com/r/calibration-desk.json
+Read components/calibration-desk.tsx, lib/calibration-desk.ts and lib/calibration-desk-server.ts, then the files of the six patterns it uses. Do not rewrite them.
+
+Contract: CalibrationDesk takes server (CalibrationDeskServer: load, requestRecall, decide, sendRecall), currentUser ({ id, name, role }), optional initialState and timeZone. Contacts are email addresses only; never phone.
+
+Wiring rule: change one place. Write my own server object with those four methods calling my API, pass it as server, then delete calibration-desk-server.ts and the demo controls. Each method rejects with a readable message on refusal or failure. The UI only shows and asks; hiding a button is not access control. My server must: take the user from the session; check role and turn; refuse a second decision; require a reason on every approval; use its own clock and ids; refuse a send unless the request is approved for exactly those gauges (reuse checkRecallSend); enforce quiet hours; and write one audit event for every decision, send, refusal and failure, in the same step as the action.
+
+States to cover: loading; load failed with retry; empty list; nothing selected; waiting for approval; rejected; approved; sending; send failed and retryable; sent; viewer cannot decide.
+
+Acceptance checks, run them and show me the output:
+1. typecheck and lint pass.
+2. Selecting rows changes "Send to N owners"; rows that are not recallable are left out and said so.
+3. Approving needs a reason; Send stays off until both roles approve.
+4. One send adds one audit event; a failed send adds a failed event and can be retried.
+5. The server, not the UI, refuses a send that is not approved for those exact items.
+6. The status counts change after a completed recall.
+7. Keyboard only: reach the table, Approve and Send; Cancel returns focus.
+
+Limits: UI only, not compliance. No new dependencies or abstractions beyond this. If something is unclear, ask me.
+```
+
+## Examples by sector
+
+Example data only. Each is the same arc with the nouns changed: rename `Gauge` and "recall", change the rules in `planRecall`, keep the hand-offs.
+
+- **Education: attendance follow-up.** Rows are students with three or more unexcused absences in ten days. Decide: the reminder rule, with quiet hours from 9 pm to 8 am. Act: the attendance officer approves the batch (policy `"any"`). Confirm: "Send to N guardians?", first names only, no reasons for absence in the text. Record: each send.
+- **Manufacturing: this one.** Gauges overdue or due in 30 days. Quality and Manufacturing approve a recall; the gauge owners are emailed; the strip moves from overdue to recalled.
+- **Engineering: ECO release.** Rows are engineering change orders waiting for release. Quality, Manufacturing and the engineering manager approve (`"all"`). Confirm: tell the people who build from the drawing. Record: who approved which revision, and why.
+- **Health: licence expiry.** Rows are staff licences expiring within 60 days. The compliance lead approves a reminder batch. Confirm: "Your licence needs renewing", with no licence numbers or details in the message. Record: each send.
+
+## Next
+
+Comes after: [Status strip](/docs/components/status-strip). Leads to: nothing; it closes the loop.

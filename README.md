@@ -20,6 +20,7 @@ There is no package to upgrade: you install the source and own it.
 | `audit-event`      | The `AuditEvent` type and pure helpers for building and grouping    |
 | `alert-rules`      | Editor for reminder cadence, escalation and quiet hours             |
 | `alert-rules-lib`  | Pure helpers: validate a rule, quiet-hours check, reminders due     |
+| `calibration-desk` | The whole See to Record arc on one screen, as a worked example      |
 
 ```bash
 npx shadcn@latest add https://regularui.com/r/status-notify.json

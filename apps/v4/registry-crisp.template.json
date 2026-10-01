@@ -203,6 +203,44 @@
       "files": [
         { "path": "registry/crisp/ui/alert-rules.tsx", "type": "registry:ui" }
       ]
+    },
+    {
+      "name": "calibration-desk",
+      "type": "registry:block",
+      "title": "Calibration desk",
+      "description": "The whole arc on one screen, as a worked example: gauges due for calibration (status strip and data table), a reminder rule, a two-role approval, a confirm-then-send to owners, and an audit timeline of every decision, send and failure. Runs on an in-memory server you replace with real calls.",
+      "categories": ["dashboard", "workflow"],
+      "meta": {
+        "stage": "see",
+        "stageEnd": "record",
+        "recipe": "__REGISTRY_ORIGIN__/docs/components/calibration-desk.md"
+      },
+      "docs": "The whole arc on one screen: a table of gauges due, a rule, a two-role approval, a confirm-then-send and an audit timeline, on an in-memory server.\nRead the installed file before using it; use only the props it exports.\nReplace createMemoryServer() with real calls in one place: pass your own server prop. Your server must check the user and role, write the audit events and enforce quiet hours.\nDocs: __REGISTRY_ORIGIN__/docs/components/calibration-desk.md\nVerify: run your typechecker.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": [
+        "button",
+        "switch",
+        "__REGISTRY_ORIGIN__/r/status-strip.json",
+        "__REGISTRY_ORIGIN__/r/data-table.json",
+        "__REGISTRY_ORIGIN__/r/alert-rules.json",
+        "__REGISTRY_ORIGIN__/r/approval-step.json",
+        "__REGISTRY_ORIGIN__/r/confirm-send.json",
+        "__REGISTRY_ORIGIN__/r/audit-timeline.json"
+      ],
+      "files": [
+        {
+          "path": "registry/crisp/blocks/calibration-desk.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "registry/crisp/lib/calibration-desk.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "registry/crisp/lib/calibration-desk-server.ts",
+          "type": "registry:lib"
+        }
+      ]
     }
   ]
 }

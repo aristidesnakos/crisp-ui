@@ -1,6 +1,6 @@
 ---
 name: crisp-ui
-description: "Install and use crisp-ui, a shadcn registry of dashboard patterns for internal tools (status-strip, status-notify, table-view, data-table, recipient-roster, alert-rules-lib, alert-rules, save-bar, confirm-send, approval, approval-step, notify-envelope, audit-event, audit-timeline). Use when building an admin or internal-tool screen that shows how a job is going, lets a person choose who is notified and sends a message, or when the user mentions crisp-ui or regularui.com. UI only: it does not provide a backend and does not make anything compliant."
+description: "Install and use crisp-ui, a shadcn registry of dashboard patterns for internal tools (status-strip, status-notify, table-view, data-table, calibration-desk, recipient-roster, alert-rules-lib, alert-rules, save-bar, confirm-send, approval, approval-step, notify-envelope, audit-event, audit-timeline). Use when building an admin or internal-tool screen that shows how a job is going, lets a person choose who is notified and sends a message, or when the user mentions crisp-ui or regularui.com. UI only: it does not provide a backend and does not make anything compliant."
 license: MIT
 ---
 
@@ -38,7 +38,7 @@ Pick items in this order. It is a recommended path for a workflow screen, not a 
 
 | Stage | Question | Items |
 | --- | --- | --- |
-| See | What is happening? | `status-strip`, `status-notify`, `table-view`, `data-table` |
+| See | What is happening? | `status-strip`, `status-notify`, `table-view`, `data-table`, `calibration-desk` |
 | Decide | What needs me, and who hears? | `recipient-roster`, `alert-rules-lib`, `alert-rules` |
 | Act | Do it safely. | `save-bar`, `confirm-send`, `approval`, `approval-step` |
 | Confirm | Did it work, who knows? | `notify-envelope` |
@@ -52,6 +52,7 @@ Pick items in this order. It is a recommended path for a workflow screen, not a 
 | `status-notify` | see to confirm | A status headline, a confirm-then-send action, and one recipient roster with save/discard, wired together. | `npx shadcn@latest add https://regularui.com/r/status-notify.json` | https://regularui.com/docs/components/status-notify.md |
 | `table-view` | see | Pure helpers for a list of rows: named views with counts, a stable sort, and selection that drops rows that are no longer there. | `npx shadcn@latest add https://regularui.com/r/table-view.json` | https://regularui.com/docs/components/data-table.md |
 | `data-table` | see | A table of rows with named saved views and live counts, row selection, an action slot that receives the selected rows, and stale, empty, no-match and error states. | `npx shadcn@latest add https://regularui.com/r/data-table.json` | https://regularui.com/docs/components/data-table.md |
+| `calibration-desk` | see to record | The whole arc on one screen, as a worked example: gauges due for calibration (status strip and data table), a reminder rule, a two-role approval, a confirm-then-send to owners, and an audit timeline of every decision, send and failure. Runs on an in-memory server you replace with real calls. | `npx shadcn@latest add https://regularui.com/r/calibration-desk.json` | https://regularui.com/docs/components/calibration-desk.md |
 | `recipient-roster` | decide | One list of people with a switch per channel, per-channel limits, paste-to-add and inline validation. | `npx shadcn@latest add https://regularui.com/r/recipient-roster.json` | https://regularui.com/docs/components/recipient-roster.md |
 | `alert-rules-lib` | decide | Pure helpers for reminder rules: validate a rule, test and move past quiet hours in any time zone (DST-safe), list which reminders are due, and describe a rule in a sentence. | `npx shadcn@latest add https://regularui.com/r/alert-rules-lib.json` | https://regularui.com/docs/components/alert-rules.md |
 | `alert-rules` | decide | An editor for reminder cadence, escalation and quiet hours, with inline validation and a plain-language summary under each rule. Edits a saved rule; it does not send or schedule. | `npx shadcn@latest add https://regularui.com/r/alert-rules.json` | https://regularui.com/docs/components/alert-rules.md |

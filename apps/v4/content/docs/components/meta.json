@@ -11,6 +11,7 @@
     "confirm-send",
     "notify-envelope",
     "audit-timeline",
-    "status-notify"
+    "status-notify",
+    "calibration-desk"
   ]
 }
