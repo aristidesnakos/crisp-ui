@@ -5,7 +5,7 @@ import { CheckCircle2 } from "lucide-react"
 
 import { Button } from "@/registry/new-york-v4/ui/button"
 
-interface ConfirmSendProps {
+export interface ConfirmSendProps {
   /** How many recipients the SAVED list reaches. */
   count: number
   /** One recipient, e.g. "person". */
@@ -16,11 +16,13 @@ interface ConfirmSendProps {
   blockedReason?: string
   /** Shown as the reason when `count` is 0. */
   emptyReason?: string
+  /** Disables the button while your send runs. */
   sending?: boolean
   /** Set after a successful send to show "Sent to N". */
   sentCount?: number | null
   /** Label for the idle button. Defaults to "Send now". */
   label?: string
+  /** Called after the person confirms. */
   onSend: () => void | Promise<void>
 }
 

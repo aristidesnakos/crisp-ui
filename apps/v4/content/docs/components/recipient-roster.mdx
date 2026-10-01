@@ -106,6 +106,8 @@ The roster is controlled. It never saves anything. It calls `onChange` with the 
 
 ### RecipientRoster
 
+Also accepts the props of a `div` (except `onChange`, which is the roster's own), including `ref`. They are applied to the root element. The prop types are exported as `RecipientRosterProps`.
+
 | Prop           | Type                               | Description                                                                        |
 | -------------- | ---------------------------------- | ---------------------------------------------------------------------------------- |
 | `people`       | `RosterPerson[]`                   | The current list, including unsaved edits. Required.                               |
