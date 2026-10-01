@@ -8,8 +8,7 @@
     "confirm-send",
     "save-bar",
     "notify-envelope",
-    "approval-step"
-,
+    "approval-step",
     "audit-timeline"
   ]
 }
