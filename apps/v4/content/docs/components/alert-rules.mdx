@@ -1,0 +1,362 @@
+---
+title: Alert rules
+description: An editor for reminder cadence, escalation and quiet hours, with a plain-language summary under each rule. It edits the saved rule; it does not send or schedule anything.
+---
+
+<ComponentPreview styleName="radix-nova" name="alert-rules-demo" />
+
+Use it when something has a due date and people need reminding: a gauge calibration, a training certificate, a licence, a review. It lets a person read and change three things for each kind of reminder: **which days before the due date** it goes, **who hears about it if it is still open afterwards**, and **the hours when nothing is sent**. Under every rule it writes the result as a sentence, so the rule can be checked at a glance instead of by reading switches.
+
+It is the **Decide** stage of See, Decide, Act, Confirm, Record: it settles _when_ and _to whom_ a notice goes, before [`confirm-send`](/docs/components/confirm-send) acts. It comes after [`status-strip`](/docs/components/status-strip) and `data-table` (a separate pattern), where you see what is due. Who the people are is the job of [`recipient-roster`](/docs/components/recipient-roster).
+
+<Callout>
+  A setting in this editor is not enforcement. It edits a saved rule and nothing
+  more. The server that sends the messages must read the saved rule and apply
+  quiet hours and escalation itself, with the helpers below or its own code. If
+  only the screen knows about quiet hours, a script, a retry or a second tool
+  will send at 3 am. crisp-ui does not make anything compliant: it gives you a
+  clear way to set and review the rule, and the rest is your backend and your
+  own legal advice.
+</Callout>
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add https://<your-domain>/r/alert-rules.json
+```
+
+Or, with the [`@crisp` namespace](/docs/installation) set up:
+
+```bash
+npx shadcn@latest add @crisp/alert-rules
+```
+
+This also adds `alert-rules-lib` (the helpers), the shadcn `button`, `input` and `switch`, and `lucide-react`.
+
+To get only the helpers, for example in server code with no screen:
+
+```bash
+npx shadcn@latest add https://<your-domain>/r/alert-rules-lib.json
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource
+  src="registry/crisp/ui/alert-rules.tsx"
+  title="components/ui/alert-rules.tsx"
+/>
+
+<Step>And the helpers it imports.</Step>
+
+<ComponentSource
+  src="registry/crisp/lib/alert-rules.ts"
+  title="lib/alert-rules.ts"
+/>
+
+<Step>
+  Add the shadcn `button`, `input` and `switch`, and install `lucide-react`.
+  Update the import paths to match your project setup.
+</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import {
+  isRuleValid,
+  normalizeRule,
+  sameRules,
+  validateRule,
+  type AlertRule,
+} from "@/lib/alert-rules"
+import { AlertRules } from "@/components/ui/alert-rules"
+import { SaveBar } from "@/components/ui/save-bar"
+```
+
+```tsx
+const [saved, setSaved] = React.useState<AlertRule[]>(rulesFromYourApi)
+const [rules, setRules] = React.useState(saved)
+const [saving, setSaving] = React.useState(false)
+```
+
+```tsx
+<AlertRules
+  rules={rules}
+  onChange={setRules}
+  timeZone="America/Chicago"
+  disabled={saving}
+/>
+<SaveBar
+  dirty={!sameRules(rules, saved)}
+  saving={saving}
+  onDiscard={() => setRules(saved)}
+  onSave={async () => {
+    if (!rules.every((rule) => isRuleValid(validateRule(rule)))) return
+    setSaving(true)
+    try {
+      const next = rules.map(normalizeRule)
+      await api.saveRules(next) // throw to fail
+      setSaved(next) // <- required
+      setRules(next)
+    } finally {
+      setSaving(false)
+    }
+  }}
+/>
+```
+
+The editor is controlled. It never saves anything. It calls `onChange` with the next list of rules and you keep the state, so you decide when a change is saved. Pair it with [`save-bar`](/docs/components/save-bar), as above. `save-bar` has no way to be switched off, so check the rules in `onSave` and show your own message when one is not valid. The fields already show what is wrong.
+
+## How a rule reads
+
+- **Cadence is days before the due date.** `[30, 14, 7, 1]` means one reminder 30 days before, one 14 days before, and so on. Days are whole numbers, each at most once, shown largest first after `normalizeRule`.
+- **Escalation is days after the due date.** `escalateAfterDays: 3` with `escalateTo: "supervisor@example.org"` means: if the item is still open three days after it was due, tell that address. Days and address come as a pair.
+- **Escalation goes to an email address.** Contacts in crisp-ui are email only, as in [`recipient-roster`](/docs/components/recipient-roster). There are no phone numbers.
+- **Quiet hours are a daily window on a wall clock.** `{ start: "21:00", end: "08:00", timeZone: "America/New_York" }` means nothing is sent from 9:00 pm up to, but not including, 8:00 am in New York. The window may cross midnight. The start minute is quiet and the end minute is not.
+- **The time zone is a name, not an offset.** `America/New_York` follows daylight saving, so on the night the clocks go forward the window is 10 real hours and on the night they go back it is 12. `+05:30` style offsets are refused. Zones with half-hour offsets, such as `Asia/Kolkata`, work.
+- **Quiet hours off means any hour,** and the summary says so: "Can send at any hour."
+
+## On the server
+
+The helpers in `lib/alert-rules.ts` have no React and no clock, so the code that sends can use them. Every function takes the instant to look at, so tests need no mocking.
+
+```ts
+import {
+  nextAllowedSendTime,
+  remindersDue,
+  validateRule,
+} from "@/lib/alert-rules"
+
+// 1. Never trust the screen: validate what you are about to save.
+const errors = validateRule(rule)
+
+// 2. Which reminders have come due for this item?
+const { passed, next, pastDue } = remindersDue(
+  item.dueAt,
+  new Date(),
+  rule.cadenceDays
+)
+
+// 3. Before sending, ask whether now is allowed. If not, hold it until it is.
+const sendAt = nextAllowedSendTime(new Date(), rule.quietHours)
+if (sendAt.getTime() > Date.now()) {
+  holdUntil(sendAt) // your scheduler, not part of crisp-ui
+} else {
+  send()
+}
+```
+
+`remindersDue` does not know what you already sent. Keep that record yourself and send only the steps that are missing, or a late deploy will send every step at once.
+
+## Sector examples
+
+Example data only. The component is the same in every sector; the words and the numbers change. The `dueAt` for each item lives in your own data.
+
+**Manufacturing: gauge calibration due**, reminders 30, 14, 7 and 1 days before, and the supervisor hears three days after it is overdue.
+
+```ts
+{
+  id: "calibration-due",
+  label: "Gauge calibration due",
+  enabled: true,
+  cadenceDays: [30, 14, 7, 1],
+  escalateAfterDays: 3,
+  escalateTo: "supervisor@example.org",
+  quietHours: { start: "21:00", end: "08:00", timeZone: "America/Chicago" },
+}
+```
+
+**Education: attendance notices.** A reminder to send the absence note to the school, nothing between 9 pm and 8 am, and the attendance office hears after two days. The 9 pm to 8 am window is borrowed from an attendance-texting guide published by the US Department of Education's IES; whether it applies to you is for you to decide.
+
+```ts
+{
+  id: "absence-note",
+  label: "Absence note due",
+  enabled: true,
+  cadenceDays: [3, 1],
+  escalateAfterDays: 2,
+  escalateTo: "attendance@example.org",
+  quietHours: { start: "21:00", end: "08:00", timeZone: "America/New_York" },
+}
+```
+
+**Engineering: ECO review reminders.** Reviewers hear five, two and one days before the review closes, and the engineering manager hears a day after.
+
+```ts
+{
+  id: "eco-review",
+  label: "ECO review due",
+  enabled: true,
+  cadenceDays: [5, 2, 1],
+  escalateAfterDays: 1,
+  escalateTo: "engineering-manager@example.org",
+  quietHours: null,
+}
+```
+
+**Health: licence expiry** at 60, 30 and 7 days, and the practice manager hears a day after it lapses.
+
+```ts
+{
+  id: "licence-expiry",
+  label: "Staff licence expires",
+  enabled: true,
+  cadenceDays: [60, 30, 7],
+  escalateAfterDays: 1,
+  escalateTo: "practice-manager@example.org",
+  quietHours: { start: "20:00", end: "07:00", timeZone: "America/Denver" },
+}
+```
+
+Appointment-reminder **texting is out of scope.** Contacts here are email addresses, so a rule can reach a person by email only. Patient and family texts need phone numbers, consent and opt-out handling that this pattern does not have.
+
+## Agent prompt
+
+Paste this into your coding agent in your project. Replace the last line with your own items.
+
+```text
+GOAL: Add a reminder-rules editor (cadence, escalation, quiet hours) to my internal tool so a person can review and save WHEN and to WHOM reminders go. It edits saved rules. It never sends anything.
+
+INSTALL (run exactly):
+npx shadcn@latest add https://regularui.com/r/alert-rules.json
+npx shadcn@latest add https://regularui.com/r/save-bar.json
+Read the installed files before writing code: components/ui/alert-rules.tsx, lib/alert-rules.ts, components/ui/save-bar.tsx. Do not guess props.
+
+PROPS:
+<AlertRules rules={AlertRule[]} onChange={(rules) => void} validateEmail?={(email) => boolean} timeZone?={IANA name, default for new quiet hours} disabled?={boolean} />
+AlertRule = { id, label, enabled, cadenceDays: number[] (days BEFORE due), escalateAfterDays?: number (days AFTER due), escalateTo?: string (an email), quietHours?: { start: "HH:MM", end: "HH:MM", timeZone: string } | null }
+Helpers in lib/alert-rules: validateRule, normalizeRule, sameRules, isQuietTime, nextAllowedSendTime, remindersDue, summarizeRule.
+
+WIRING: AlertRules is controlled and does not save. Keep `saved` and `rules` in state and render <SaveBar dirty={!sameRules(rules, saved)} />. On Save: validateRule every rule, stop if any has errors, send normalizeRule(rule) to my own API, and set `saved` only after it succeeds. The SERVER must validate again and must enforce quiet hours (isQuietTime or nextAllowedSendTime) and escalation when it sends; a UI setting is not enforcement. Contacts are email only. No phone numbers, no texting.
+
+STATES: clean (no save bar), dirty, saving, save failed (stay dirty, show why), invalid field (message tied to its input), rule off, no quiet hours, empty cadence.
+
+ACCEPTANCE (show me each result):
+1. pnpm typecheck and pnpm lint pass.
+2. A test: with quietHours 21:00-08:00 America/New_York, isQuietTime is true at 2026-01-16T02:00:00Z and false at 2026-01-16T13:00:00Z.
+3. Cadence 7 twice shows an error that names it. Escalation days with no email puts an error on the email field.
+4. Keyboard only: Tab reaches every control, Enter adds a day, and the remove buttons are named like "Remove 7 days before".
+
+Do not add scheduling, a job queue, SMS or new packages. Build only the settings screen and the server check. If something is unclear, ask.
+
+MY ITEMS: <what has a due date, who owns it, who should hear if it is overdue>
+```
+
+## Notes
+
+- **You decide when it is saved.** The editor only reads `rules`. Compare with the saved copy using `sameRules`, which ignores the order of the reminder days and the case of an address, so those are not changes worth saving. After a failed save, leave `saved` alone and the save bar stays.
+- **Rules are fixed by you.** The editor edits the rules you pass. It does not add or delete a rule or change its name. Each rule's name is shown as an `h3`.
+- **Normalize before you store.** `normalizeRule` sorts the days largest first, drops repeats, and lowercases and trims the address. The editor adds days in order and tidies the address when the field loses focus, but it keeps what was typed while it is being edited so that `validateRule` can show what is wrong.
+- **Errors are shown beside the field.** Each message is tied to its input and the input is marked invalid. A message names what to do, for example "Add who to escalate to, or clear the days." An enabled rule with no reminder days is an error. A disabled one may be empty while someone drafts it.
+- **A rule that is off says so.** The switch has a text label and the summary begins "This rule is off, so nothing is sent." The other fields stay editable.
+- **Adding a day.** The input adds on Enter or the Add button. A day that is not a whole number, is above 3650, or is already there is refused with a message and the field keeps focus. Removing a day moves focus to the next one, or to the input when none are left.
+- **Time zones.** The field suggests zone names from the browser once the page has loaded, and accepts any name the runtime knows. Turning quiet hours on uses the `timeZone` prop, else the browser's zone, else UTC, with 21:00 to 08:00 as the starting window.
+- **The summary names what is missing.** An unfinished escalation reads "Escalation is not finished." A rule with no quiet hours reads "Can send at any hour." Pass `includeTimeZone` to `summarizeRule` to add the zone, as the editor does.
+- **Quiet hours follow the wall clock.** `isQuietTime` and `nextAllowedSendTime` read the local time in the rule's zone with `Intl`, so they follow daylight saving. A window that falls inside the hour the clocks skip never matches, and one inside the hour they repeat matches both times. They throw a `RangeError` for an invalid zone, time or date, or when start equals end, rather than guessing, so run `validateRule` first.
+- **Reminder steps are 24-hour days.** `remindersDue` counts back whole 24-hour days from the due instant, not calendar days, so across a clock change a step can sit an hour off local time. Choose the send time with `nextAllowedSendTime`.
+- **Built to be used by keyboard.** Every control is a native input, button or switch with a visible label or an accessible name, remove buttons say what they remove ("Remove 7 days before"), and focus rings come from the shadcn parts. State is always written as well as shown: the switch has an On or Off label and errors are text. This has not been tested with assistive technology, so test it in your own screens.
+- **No theme work.** It uses the shadcn tokens (`border`, `muted`, `destructive`), so it follows your theme.
+
+## Props
+
+### AlertRules
+
+Also accepts the props of a `div` (except `onChange`, which is the editor's own), including `className` and `ref`. They are applied to the root element. The prop types are exported as `AlertRulesProps`. `AlertRule` and `QuietHours` come from `lib/alert-rules`.
+
+| Prop            | Type                           | Description                                                                                  |
+| --------------- | ------------------------------ | -------------------------------------------------------------------------------------------- |
+| `rules`         | `AlertRule[]`                  | The current rules, including unsaved edits. One row each. Required.                          |
+| `onChange`      | `(rules: AlertRule[]) => void` | Called with the full next list after any edit. Required.                                     |
+| `validateEmail` | `(email: string) => boolean`   | Return true if the address is acceptable. It receives the lowercased address. Has a default. |
+| `timeZone`      | `string`                       | Zone given to quiet hours when someone turns them on. Defaults to the browser's.             |
+| `disabled`      | `boolean`                      | Disables every control, for example while saving.                                            |
+| `className`     | `string`                       | Merged onto the root element.                                                                |
+
+### AlertRule
+
+| Field               | Type                 | Description                                                               |
+| ------------------- | -------------------- | ------------------------------------------------------------------------- |
+| `id`                | `string`             | Stable and unique in the list. Used as the React key.                     |
+| `label`             | `string`             | What the rule is for. Shown as the rule's heading.                        |
+| `enabled`           | `boolean`            | Whether the rule is on.                                                   |
+| `cadenceDays`       | `number[]`           | Days before the due date to remind. Whole numbers, 1 to 3650, no repeats. |
+| `escalateAfterDays` | `number`             | Days after the due date, if still open. Needs `escalateTo`.               |
+| `escalateTo`        | `string`             | Email address to tell. Needs `escalateAfterDays`.                         |
+| `quietHours`        | `QuietHours \| null` | When nothing is sent. `null` or missing means any hour.                   |
+
+### QuietHours
+
+| Field      | Type     | Description                                                                      |
+| ---------- | -------- | -------------------------------------------------------------------------------- |
+| `start`    | `string` | "HH:MM", 24-hour. The window includes this minute.                               |
+| `end`      | `string` | "HH:MM", 24-hour. The window ends just before this minute. Not equal to `start`. |
+| `timeZone` | `string` | An IANA zone name such as `America/New_York`.                                    |
+
+## Reference
+
+All in `lib/alert-rules.ts`. No React, no network, no clock: every instant is passed in.
+
+### validateRule
+
+`(rule: AlertRule, options?: { validateEmail?: (email: string) => boolean }) => RuleErrors`
+
+Returns an object keyed by field (`cadenceDays`, `escalateAfterDays`, `escalateTo`, `quietHours.start`, `quietHours.end`, `quietHours.timeZone`), each with a `code` and a `message`. An empty object means the rule is valid. `isRuleValid(errors)` tells you which.
+
+### normalizeRule
+
+`(rule: AlertRule) => AlertRule`
+
+The form to save. It does not change the rule you pass in.
+
+### sameRules
+
+`(a: AlertRule[], b: AlertRule[]) => boolean`
+
+True when the lists hold the same rules in the same order, compared in normalized form. Use it for `dirty`.
+
+### isQuietTime
+
+`(instant: Date, quietHours: QuietHours | null | undefined) => boolean`
+
+Whether `instant` is inside the window, by the wall clock in the window's zone. `null` is never quiet.
+
+### nextAllowedSendTime
+
+`(instant: Date, quietHours: QuietHours | null | undefined) => Date`
+
+`instant` itself when sending is allowed, otherwise the first minute after the window ends.
+
+### remindersDue
+
+`(dueDate: Date, now: Date, cadenceDays: number[]) => { passed: ReminderStep[]; next: ReminderStep | null; pastDue: boolean }`
+
+The steps whose time has come, the next one ahead, and whether the due date has passed. A `ReminderStep` is `{ days, at }`.
+
+### summarizeRule
+
+`(rule: AlertRule, options?: { includeTimeZone?: boolean }) => string`
+
+The sentence shown under each rule, for example "Reminds 30, 14, 7 and 1 days before. Escalates to ops@example.org after 3 days. Never sends between 9:00 pm and 8:00 am."
+
+### Also exported
+
+`isEmailAddress`, `isValidTimeZone`, `parseTimeOfDay`, `formatTimeOfDay`, `MAX_CADENCE_DAYS`, and the types `RuleError`, `RuleErrors`, `RuleField`, `RuleErrorCode`, `ReminderStep` and `RemindersDue`.

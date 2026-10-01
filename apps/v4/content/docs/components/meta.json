@@ -10,6 +10,7 @@
     "notify-envelope",
     "approval-step",
     "audit-timeline",
-    "data-table"
+    "data-table",
+    "alert-rules"
   ]
 }

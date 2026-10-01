@@ -166,6 +166,43 @@
         "__REGISTRY_ORIGIN__/r/table-view.json"
       ],
       "files": [{ "path": "registry/crisp/ui/data-table.tsx", "type": "registry:ui" }]
+    },
+    {
+      "name": "alert-rules-lib",
+      "type": "registry:lib",
+      "title": "Alert rules helpers",
+      "description": "Pure helpers for reminder rules: validate a rule, test and move past quiet hours in any time zone (DST-safe), list which reminders are due, and describe a rule in a sentence.",
+      "categories": ["notifications", "utilities"],
+      "meta": {
+        "stage": "decide",
+        "recipe": "__REGISTRY_ORIGIN__/docs/components/alert-rules.md"
+      },
+      "docs": "Pure helpers for reminder rules: validate a rule, check quiet hours across midnight and DST, find which reminders are due, and describe a rule in a sentence.\nRead the installed file before using it; use only the props it exports.\nDocs: __REGISTRY_ORIGIN__/docs/components/alert-rules.md\nVerify: run your typechecker.",
+      "files": [
+        { "path": "registry/crisp/lib/alert-rules.ts", "type": "registry:lib" }
+      ]
+    },
+    {
+      "name": "alert-rules",
+      "type": "registry:ui",
+      "title": "Alert rules",
+      "description": "An editor for reminder cadence, escalation and quiet hours, with inline validation and a plain-language summary under each rule. Edits a saved rule; it does not send or schedule.",
+      "categories": ["dashboard", "notifications"],
+      "meta": {
+        "stage": "decide",
+        "recipe": "__REGISTRY_ORIGIN__/docs/components/alert-rules.md"
+      },
+      "docs": "An editor for reminder cadence, escalation and quiet hours, with a plain-language summary of each rule.\nRead the installed file before using it; use only the props it exports.\nDocs: __REGISTRY_ORIGIN__/docs/components/alert-rules.md\nVerify: run your typechecker.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": [
+        "button",
+        "input",
+        "switch",
+        "__REGISTRY_ORIGIN__/r/alert-rules-lib.json"
+      ],
+      "files": [
+        { "path": "registry/crisp/ui/alert-rules.tsx", "type": "registry:ui" }
+      ]
     }
   ]
 }

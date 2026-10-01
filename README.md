@@ -18,6 +18,8 @@ There is no package to upgrade: you install the source and own it.
 | `notify-envelope`  | Pure helpers: roster from lists, list comparison, one-message To/Cc |
 | `audit-timeline`   | Read-only "who did what, when, and why" list, grouped by day        |
 | `audit-event`      | The `AuditEvent` type and pure helpers for building and grouping    |
+| `alert-rules`      | Editor for reminder cadence, escalation and quiet hours             |
+| `alert-rules-lib`  | Pure helpers: validate a rule, quiet-hours check, reminders due     |
 
 ```bash
 npx shadcn@latest add https://<your-domain>/r/status-notify.json

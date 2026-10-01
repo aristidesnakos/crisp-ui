@@ -13,6 +13,8 @@ Story order: See, Decide, Act, Confirm, Record. Items:
 - `table-view` (see): Pure helpers for a list of rows: named views with counts, a stable sort, and selection that drops rows that are no longer there.
 - `data-table` (see): A table of rows with named saved views and live counts, row selection, an action slot that receives the selected rows, and stale, empty, no-match and error states.
 - `recipient-roster` (decide): One list of people with a switch per channel, per-channel limits, paste-to-add and inline validation.
+- `alert-rules-lib` (decide): Pure helpers for reminder rules: validate a rule, test and move past quiet hours in any time zone (DST-safe), list which reminders are due, and describe a rule in a sentence.
+- `alert-rules` (decide): An editor for reminder cadence, escalation and quiet hours, with inline validation and a plain-language summary under each rule. Edits a saved rule; it does not send or schedule.
 - `save-bar` (act): An 'Unsaved changes' bar with Discard and Save that only renders when there is something to save.
 - `confirm-send` (act): Click, confirm with the recipient count, send, then a 'Sent to N' status line. Can be blocked with a reason.
 - `approval` (act): Pure helpers: settle an approval from its approvers' decisions under an all, any or minimum policy, check who can decide, and validate a decision's reason.

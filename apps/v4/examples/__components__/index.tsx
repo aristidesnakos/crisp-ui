@@ -23,6 +23,7 @@ const shards: Record<
       "approval-step-demo",
       "audit-timeline-demo",
       "data-table-demo",
+      "alert-rules-demo",
     ]),
   },
 }

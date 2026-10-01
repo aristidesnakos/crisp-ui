@@ -77,4 +77,12 @@ export const Components: Record<string, any> = {
       ) || "data-table-demo"
     return { default: mod.default || mod[exportName] }
   }),
+  "alert-rules-demo": React.lazy(async () => {
+    const mod = await import("@/examples/radix/alert-rules-demo")
+    const exportName =
+      Object.keys(mod).find(
+        (key) => typeof mod[key] === "function" || typeof mod[key] === "object"
+      ) || "alert-rules-demo"
+    return { default: mod.default || mod[exportName] }
+  }),
 }
