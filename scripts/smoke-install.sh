@@ -37,9 +37,12 @@ npx --yes shadcn@latest init --defaults --yes
 # JSON, which must carry the agent-facing metadata, and `add --dry-run` resolves
 # each item and its dependencies without writing anything.
 echo "--- registry metadata and dry-run for: $ITEMS"
-VIEW_JSON="$(npx --yes shadcn@latest view "${URLS[@]}")"
-printf '%s' "$VIEW_JSON" | ORIGIN="$ORIGIN" EXPECTED="$ITEMS" node -e '
-const items = JSON.parse(require("fs").readFileSync(0, "utf8"))
+# Redirect to a file, not a pipe: the CLI can exit before a pipe is flushed, which
+# cut the output at 64 KiB (65,600 characters) once there were ten items.
+VIEW_FILE="$WORKDIR/view.json"
+npx --yes shadcn@latest view "${URLS[@]}" >"$VIEW_FILE"
+ORIGIN="$ORIGIN" EXPECTED="$ITEMS" node -e '
+const items = JSON.parse(require("fs").readFileSync(process.argv[1], "utf8"))
 const origin = process.env.ORIGIN
 const stages = ["see", "decide", "act", "confirm", "record"]
 const problems = []
@@ -62,7 +65,7 @@ if (problems.length) {
   process.exit(1)
 }
 console.log("registry metadata ok for " + items.length + " items")
-'
+' "$VIEW_FILE"
 npx --yes shadcn@latest add "${URLS[@]}" --dry-run --yes
 
 npx --yes shadcn@latest add "$ORIGIN/r/$ITEM.json" --yes
