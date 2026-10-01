@@ -53,4 +53,12 @@ export const Components: Record<string, any> = {
       ) || "notify-envelope-demo"
     return { default: mod.default || mod[exportName] }
   }),
+  "approval-step-demo": React.lazy(async () => {
+    const mod = await import("@/examples/radix/approval-step-demo")
+    const exportName =
+      Object.keys(mod).find(
+        (key) => typeof mod[key] === "function" || typeof mod[key] === "object"
+      ) || "approval-step-demo"
+    return { default: mod.default || mod[exportName] }
+  }),
 }

@@ -51,7 +51,10 @@ for (const i of items) {
   const lines = (i.docs ?? "").split("\n").filter(Boolean).length
   if (!Array.isArray(i.categories) || i.categories.length === 0) problems.push(i.name + ": categories")
   if (!stages.includes(i.meta?.stage)) problems.push(i.name + ": meta.stage")
-  if (i.meta?.recipe !== origin + "/docs/components/" + i.name + ".md") problems.push(i.name + ": meta.recipe")
+  // Usually the item own page; a helper library points at the page of its parent item.
+  const recipe = i.meta?.recipe ?? ""
+  const prefix = origin + "/docs/components/"
+  if (!(recipe.startsWith(prefix) && /^[a-z-]+\.md$/.test(recipe.slice(prefix.length)))) problems.push(i.name + ": meta.recipe")
   if (lines < 3 || lines > 8) problems.push(i.name + ": docs should be 3 to 8 lines, has " + lines)
 }
 if (problems.length) {
