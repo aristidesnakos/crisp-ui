@@ -32,7 +32,13 @@ const nextConfig = {
     ]
   },
   rewrites() {
+    // Every docs page has a Markdown twin at its URL plus ".md". The docs
+    // index lives at /docs, so its twin is /docs.md.
     return [
+      {
+        source: "/docs.md",
+        destination: "/llm",
+      },
       {
         source: "/docs/:path*.md",
         destination: "/llm/:path*",
