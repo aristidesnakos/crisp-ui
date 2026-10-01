@@ -147,3 +147,53 @@ describe("template metadata", () => {
     }
   )
 })
+
+describe("root registry.json (GitHub registry)", () => {
+  const root = JSON.parse(read(repoRoot, "registry.json")) as {
+    homepage: string
+    items: {
+      name: string
+      registryDependencies?: string[]
+      files: { path: string }[]
+      meta?: { recipe?: string }
+    }[]
+  }
+
+  it("has exactly the items in the template", () => {
+    expect(root.items.map((i) => i.name)).toEqual(templateNames)
+  })
+
+  it("points every file at a source file that exists in the repository", () => {
+    for (const item of root.items) {
+      for (const file of item.files) {
+        expect(existsSync(path.join(repoRoot, file.path)), file.path).toBe(true)
+      }
+    }
+  })
+
+  it("refers to sibling items as owner/repo/item, never a URL or a template token", () => {
+    const names = new Set(templateNames)
+    for (const item of root.items) {
+      for (const dep of item.registryDependencies ?? []) {
+        if (!dep.startsWith("aristidesnakos/crisp-ui/")) continue // stock shadcn item, e.g. "button"
+        expect(
+          names.has(dep.split("/").pop() ?? ""),
+          `${item.name} -> ${dep}`
+        ).toBe(true)
+      }
+    }
+    const text = JSON.stringify(root)
+    expect(text).not.toContain("__REGISTRY_ORIGIN__")
+    expect(text).not.toContain("localhost")
+    expect(text).not.toMatch(/\/r\/[a-z-]+\.json/)
+  })
+
+  it("links its docs at production", () => {
+    expect(root.homepage).toBe("https://regularui.com")
+    for (const item of root.items) {
+      expect(item.meta?.recipe?.startsWith("https://regularui.com/docs/")).toBe(
+        true
+      )
+    }
+  })
+})

@@ -6,6 +6,9 @@
 //                                      also served at /agents-snippet.md
 //   apps/v4/content/docs/ai.mdx        only the copy of that block between its
 //                                      agents-snippet:start/end markers
+//   registry.json                      the same items as a GitHub registry, so
+//                                      `shadcn add owner/repo/item` works with no
+//                                      hosting (https://ui.shadcn.com/docs/registry/github)
 //
 //   pnpm agent:build            write both files
 //   node scripts/build-agent-files.mjs --check   exit 1 if they are out of date
@@ -28,12 +31,19 @@ import { fileURLToPath } from "node:url"
 // to build the registry.
 export const PRODUCTION_ORIGIN = "https://regularui.com"
 
+// The placeholder the template uses wherever the registry origin goes.
+const ORIGIN_TOKEN = "__REGISTRY_ORIGIN__"
+
 const appRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..")
 const repoRoot = path.resolve(appRoot, "../..")
 export const TEMPLATE_PATH = path.join(appRoot, "registry-crisp.template.json")
 export const SKILL_PATH = path.join(repoRoot, "skills/crisp-ui/SKILL.md")
 export const SNIPPET_PATH = path.join(appRoot, "public/agents-snippet.md")
 export const DOC_PATH = path.join(appRoot, "content/docs/ai.mdx")
+export const ROOT_REGISTRY_PATH = path.join(repoRoot, "registry.json")
+
+// Where the GitHub registry lives: `shadcn add <GITHUB_REPO>/<item>`.
+export const GITHUB_REPO = "aristidesnakos/crisp-ui"
 
 // The story that orders the items. A recommended path, not a standard.
 export const STAGES = [
@@ -205,6 +215,28 @@ export function syncDoc(doc, snippet) {
   return `${doc.slice(0, from + start.length)}\n\n\`\`\`markdown\n${snippet.trimEnd()}\n\`\`\`\n\n${doc.slice(to)}`
 }
 
+/**
+ * The template as a root registry.json for GitHub installs. Differences from the
+ * hosted registry: file paths are relative to the repository root, and sibling
+ * dependencies are `owner/repo/item` (resolved on the default branch) instead of
+ * URLs on the registry origin. Links to the docs point at production.
+ */
+export function renderRootRegistry(templateText) {
+  const registry = JSON.parse(
+    templateText
+      .replaceAll(`${ORIGIN_TOKEN}/docs`, `${PRODUCTION_ORIGIN}/docs`)
+      .replace(
+        new RegExp(`${ORIGIN_TOKEN}/r/([a-z0-9-]+)\\.json`, "g"),
+        `${GITHUB_REPO}/$1`
+      )
+      .replaceAll(ORIGIN_TOKEN, PRODUCTION_ORIGIN)
+  )
+  for (const item of registry.items) {
+    for (const file of item.files) file.path = `apps/v4/${file.path}`
+  }
+  return `${JSON.stringify(registry, null, 2)}\n`
+}
+
 export function buildAll(templateText = readFileSync(TEMPLATE_PATH, "utf8")) {
   const items = loadItems(templateText)
   const snippet = renderSnippet(items)
@@ -215,6 +247,7 @@ export function buildAll(templateText = readFileSync(TEMPLATE_PATH, "utf8")) {
       file: DOC_PATH,
       content: syncDoc(readFileSync(DOC_PATH, "utf8"), snippet),
     },
+    { file: ROOT_REGISTRY_PATH, content: renderRootRegistry(templateText) },
   ]
 }
 
