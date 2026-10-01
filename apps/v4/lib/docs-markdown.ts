@@ -2,7 +2,7 @@ import { formatCode } from "@/lib/format-code"
 import { renderPage, type MarkdownResolvers } from "@/lib/mdx-to-markdown"
 import { readFileFromRoot } from "@/lib/read-file"
 import { getDemoItem } from "@/lib/registry"
-import { source } from "@/lib/source"
+import type { source } from "@/lib/source"
 import { getSiteUrl } from "@/app/site-url"
 
 export type DocsPage = NonNullable<ReturnType<typeof source.getPage>>
