@@ -6,6 +6,7 @@ import { findNeighbour } from "fumadocs-core/page-tree"
 
 import { siteConfig } from "@/lib/config"
 import { getPageMarkdown } from "@/lib/docs-markdown"
+import { twinPath } from "@/lib/mdx-to-markdown"
 import { source } from "@/lib/source"
 import { absoluteUrl } from "@/lib/utils"
 import { DevFeedback } from "@/components/dev/dev-feedback"
@@ -42,6 +43,8 @@ export async function generateMetadata(props: {
     description: doc.description,
     alternates: {
       canonical: page.url,
+      // <link rel="alternate" type="text/markdown"> for agents and crawlers.
+      types: { "text/markdown": twinPath(page.url) },
     },
     openGraph: {
       title: doc.title,
