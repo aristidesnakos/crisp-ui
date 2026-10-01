@@ -3618,6 +3618,14 @@ export const Components: Record<string, any> = {
       ) || "spinner-size"
     return { default: mod.default || mod[exportName] }
   }),
+  "status-notify-demo": React.lazy(async () => {
+    const mod = await import("@/examples/radix/status-notify-demo")
+    const exportName =
+      Object.keys(mod).find(
+        (key) => typeof mod[key] === "function" || typeof mod[key] === "object"
+      ) || "status-notify-demo"
+    return { default: mod.default || mod[exportName] }
+  }),
   "switch-choice-card": React.lazy(async () => {
     const mod = await import("@/examples/radix/switch-choice-card")
     const exportName =

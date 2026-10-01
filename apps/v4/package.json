@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "pnpm icons:dev & next dev --turbopack --port 4000",
-    "build": "pnpm registry:build && next build",
+    "build": "pnpm registry:build && pnpm crisp:build && next build",
     "start": "next start --port 4000",
     "preview": "pnpm registry:build && next build && next start --port 4000",
     "lint": "eslint . --cache --cache-location .eslintcache",
@@ -24,7 +24,8 @@
     "registry:health:publish": "tsx --tsconfig ./tsconfig.scripts.json ./scripts/monitor-registries.mts --phase publish",
     "validate:registries": "tsx --tsconfig ./tsconfig.scripts.json ./scripts/validate-registries.mts",
     "test:apps": "bun run ./scripts/build-test-app.mts",
-    "postinstall": "fumadocs-mdx"
+    "postinstall": "fumadocs-mdx",
+    "crisp:build": "pnpm --filter=shadcn build && node ./scripts/build-crisp-registry.mjs"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "4.0.0-canary.66",
