@@ -39,6 +39,7 @@ Story order: See, Decide, Act, Confirm, Record. Items:
 - `status-notify` (see to confirm): A status headline, a confirm-then-send action, and one recipient roster with save/discard, wired together.
 - `table-view` (see): Pure helpers for a list of rows: named views with counts, a stable sort, and selection that drops rows that are no longer there.
 - `data-table` (see): A table of rows with named saved views and live counts, row selection, an action slot that receives the selected rows, and stale, empty, no-match and error states.
+- `calibration-desk` (see to record): The whole arc on one screen, as a worked example: gauges due for calibration (status strip and data table), a reminder rule, a two-role approval, a confirm-then-send to owners, and an audit timeline of every decision, send and failure. Runs on an in-memory server you replace with real calls.
 - `recipient-roster` (decide): One list of people with a switch per channel, per-channel limits, paste-to-add and inline validation.
 - `alert-rules-lib` (decide): Pure helpers for reminder rules: validate a rule, test and move past quiet hours in any time zone (DST-safe), list which reminders are due, and describe a rule in a sentence.
 - `alert-rules` (decide): An editor for reminder cadence, escalation and quiet hours, with inline validation and a plain-language summary under each rule. Edits a saved rule; it does not send or schedule.

@@ -1,0 +1,78 @@
+---
+title: Build the whole arc in one prompt
+description: One prompt that makes a coding agent install the smallest pattern from each stage and wire See, Decide, Act, Confirm and Record into one workflow screen on your own data.
+---
+
+Most internal tools that need a notification also need a table to choose from, a sign-off before it goes, and a record afterwards. The patterns here are built for that order: **See → Decide → Act → Confirm → Record**, then back to See. Installing them one at a time works. This page is the shortcut: one prompt that makes your coding agent build the whole arc as one screen, against your own data.
+
+## Read the worked example first
+
+The [Calibration desk](/docs/components/calibration-desk) is the arc already built. Gauges due for calibration sit in a table; selecting rows sets the send count; two roles approve a recall with a reason; the send adds events to an audit timeline; and the status counts move when it completes. It runs on an in-memory server so you can click through it.
+
+The prompt below tells the agent to install and read that block before writing anything, so it copies a working shape instead of guessing one:
+
+```bash
+npx shadcn@latest add https://regularui.com/r/calibration-desk.json
+```
+
+## What the agent installs
+
+The smallest pattern from each stage. Everything is installed with the stock `shadcn` CLI, and you own the source.
+
+| Stage   | Question                      | Smallest pattern                                                                             |
+| ------- | ----------------------------- | -------------------------------------------------------------------------------------------- |
+| See     | What is happening?            | [`status-strip`](/docs/components/status-strip), [`data-table`](/docs/components/data-table) |
+| Decide  | What needs me, and who hears? | [`alert-rules`](/docs/components/alert-rules), optional                                      |
+| Act     | Do it safely.                 | [`approval-step`](/docs/components/approval-step)                                            |
+| Confirm | Did it work, who knows?       | [`confirm-send`](/docs/components/confirm-send)                                              |
+| Record  | Can I prove who did what?     | [`audit-timeline`](/docs/components/audit-timeline)                                          |
+
+What holds them together is one shared shape: an item with an owner's email, a request that names the items it covers, and the `AuditEvent` your server writes for every decision, send and failure. Selecting rows changes the count on the send button, an approval enables the send, a send adds an event, and the counts update from the same data.
+
+## The prompt
+
+Fill in the four lines, or pick a sector line and replace it, then paste the whole block into your agent in a project that already has shadcn set up.
+
+```text
+Goal: build ONE workflow screen in my internal tool that runs See, Decide, Act, Confirm, Record on MY data, using crisp-ui patterns.
+
+Fill in:
+- Item and its owner: [e.g. gauge, owner email, due date]
+- Who decides, and how many must approve: [...]
+- Who is told, by email only: [...]
+- What the record must show: [...]
+Sector examples, replace one: education: attendance follow-up (students, attendance officer, guardians) | manufacturing: calibration recall (gauges, Quality and Manufacturing, owners) | engineering: ECO release (change orders, three approvers, the people who build) | health: licence expiry (licences, compliance lead, staff)
+
+Read before writing. Install the worked example, then READ it. Do not guess props.
+npx shadcn@latest add https://regularui.com/r/calibration-desk.json
+Read components/calibration-desk.tsx and lib/calibration-desk*.ts. Then install the smallest pattern per stage not already added, and read each installed file before using it:
+See: status-strip, data-table. Decide: alert-rules (optional). Act: approval-step. Confirm: confirm-send. Record: audit-timeline.
+npx shadcn@latest add https://regularui.com/r/<name>.json
+
+Contract: share one shape. An item (id, label, owner email, due), a request (item ids and approvers with decisions), and AuditEvent from audit-event. Selected rows set the "Send to N" count; approval enables the send; each send adds an audit event; the status counts come from the same data.
+
+Wiring rule: one screen, my API, my data. The UI only shows and asks; hiding a button is not access control. My server must verify user and role, refuse a second decision, stamp its own times, enforce quiet hours if alert-rules is used, and write one AuditEvent (buildAuditEvent) for every decision, send, refusal and failure, in the same step as the action. Contacts are email only, never phone. No sensitive details in messages.
+
+States to cover: loading; empty; load failed with retry; nothing selected; waiting for approval; rejected; sending; send failed and retryable; sent; viewer cannot decide.
+
+Acceptance checks. Run them and show me the output:
+1. Typecheck passes.
+2. One send adds exactly one audit event.
+3. Approving needs a reason, and the server refuses a blank one.
+4. A failed send is recorded as failed, and the same button retries it.
+5. Selecting rows changes "Send to N"; approval enables it.
+6. Keyboard only: table, approve, confirm and send are reachable, and focus returns after Cancel.
+
+Limits: UI only, not compliance. No new dependencies or abstractions beyond this. If something is unclear, ask me.
+```
+
+## What to expect
+
+- **A draft, not a finished tool.** This prompt has not been measured against different agents. Run the six checks and send back whatever fails.
+- **The server is yours.** The patterns render state and call the handlers you give them. Access control, the audit write, quiet hours and retention are your backend's. The prompt asks the agent to build them, and you should read that code first.
+- **No compliance claim.** crisp-ui does not make anything compliant with any law or standard.
+- **Smaller is fine.** Drop the optional `alert-rules` stage, or build only See to Act. Each pattern also works alone, and each page has its own shorter prompt.
+
+## Next
+
+Start with the [Calibration desk](/docs/components/calibration-desk), or go straight to a pattern: [Status strip](/docs/components/status-strip), [Data table](/docs/components/data-table), [Approval step](/docs/components/approval-step), [Confirm send](/docs/components/confirm-send) and [Audit timeline](/docs/components/audit-timeline).

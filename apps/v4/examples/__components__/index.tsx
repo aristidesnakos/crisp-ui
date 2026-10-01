@@ -24,6 +24,7 @@ const shards: Record<
       "audit-timeline-demo",
       "data-table-demo",
       "alert-rules-demo",
+      "calibration-desk-demo",
     ]),
   },
 }

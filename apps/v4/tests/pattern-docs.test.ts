@@ -69,6 +69,11 @@ const STORY: Record<string, { after: string[]; leadsTo: string[] }> = {
     after: [],
     leadsTo: ["audit-timeline"],
   },
+  // A whole screen that wires all five stages; it closes the loop itself.
+  "calibration-desk": {
+    after: ["status-strip"],
+    leadsTo: [],
+  },
 }
 
 const meta = JSON.parse(readText(path.join(docsDir, "meta.json"))) as {
@@ -82,7 +87,7 @@ const registry = JSON.parse(
 const registryItems = new Set(registry.items.map((item) => item.name))
 
 describe("pattern docs: the list of pages", () => {
-  it("covers the ten patterns and nothing else", () => {
+  it("covers every pattern and nothing else", () => {
     expect([...pages].sort()).toEqual(Object.keys(STORY).sort())
   })
 
