@@ -14,6 +14,7 @@ import { TooltipProvider } from "@/registry/new-york-v4/ui/tooltip"
 import { getSiteUrl } from "@/app/site-url"
 
 import "@/app/globals.css"
+import "@/app/typeset.css"
 
 const siteUrl = getSiteUrl()
 const ogImage = {
