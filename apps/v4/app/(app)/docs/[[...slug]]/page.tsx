@@ -101,7 +101,9 @@ export default async function Page(props: {
                       >
                         <Link href={neighbours.previous.url}>
                           <IconArrowLeft />
-                          <span className="sr-only">Previous</span>
+                          <span className="sr-only">
+                            Previous page: {neighbours.previous.name}
+                          </span>
                         </Link>
                       </Button>
                     )}
@@ -113,7 +115,9 @@ export default async function Page(props: {
                         asChild
                       >
                         <Link href={neighbours.next.url}>
-                          <span className="sr-only">Next</span>
+                          <span className="sr-only">
+                            Next page: {neighbours.next.name}
+                          </span>
                           <IconArrowRight />
                         </Link>
                       </Button>
@@ -131,7 +135,10 @@ export default async function Page(props: {
           <div className="typeset w-full flex-1 pb-16 *:data-[slot=alert]:first:mt-0 sm:pb-0">
             <MDX components={mdxComponents} />
           </div>
-          <div className="hidden h-16 w-full items-center gap-2 px-4 sm:flex sm:px-0">
+          <nav
+            aria-label="Pagination"
+            className="hidden h-16 w-full items-center gap-2 px-4 sm:flex sm:px-0"
+          >
             {neighbours.previous && (
               <Button
                 variant="secondary"
@@ -156,7 +163,7 @@ export default async function Page(props: {
                 </Link>
               </Button>
             )}
-          </div>
+          </nav>
         </div>
       </div>
       <div className="sticky top-[calc(var(--header-height)+1px)] z-30 ml-auto hidden h-[90svh] w-(--sidebar-width) flex-col gap-4 overflow-hidden overscroll-none pb-8 xl:flex">

@@ -137,31 +137,41 @@ export function DocsSidebar({
         data-docs-sidebar-content=""
         className="w-(--sidebar-menu-width) scroll-fade scrollbar-none overflow-x-hidden pl-2.5"
       >
-        {DOCS_NAV.map((group, index) => (
-          <SidebarGroup key={group.name} className={index === 0 ? "pt-12" : ""}>
-            <SidebarGroupLabel className="font-medium text-muted-foreground">
-              {group.name}
-            </SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu className="gap-0.5">
-                {group.items.map((item) => (
-                  <SidebarMenuItem key={item.href}>
-                    <SidebarMenuButton
-                      asChild
-                      isActive={item.href === pathname}
-                      className="relative h-[30px] w-fit overflow-visible border border-transparent text-[0.8rem] font-medium after:absolute after:inset-x-0 after:-inset-y-1 after:z-0 after:rounded-md data-[active=true]:border-accent data-[active=true]:bg-accent 3xl:fixed:w-full 3xl:fixed:max-w-48"
-                    >
-                      <Link href={item.href}>
-                        <span className="absolute inset-0 flex w-(--sidebar-menu-width) bg-transparent" />
-                        {item.name}
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        ))}
+        <nav aria-label="Documentation" className="flex flex-col gap-2">
+          {DOCS_NAV.map((group, index) => (
+            <SidebarGroup
+              key={group.name}
+              className={index === 0 ? "pt-12" : ""}
+            >
+              <SidebarGroupLabel className="font-medium text-muted-foreground">
+                {group.name}
+              </SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu className="gap-0.5">
+                  {group.items.map((item) => (
+                    <SidebarMenuItem key={item.href}>
+                      <SidebarMenuButton
+                        asChild
+                        isActive={item.href === pathname}
+                        className="relative h-[30px] w-fit overflow-visible border border-transparent text-[0.8rem] font-medium after:absolute after:inset-x-0 after:-inset-y-1 after:z-0 after:rounded-md data-[active=true]:border-accent data-[active=true]:bg-accent 3xl:fixed:w-full 3xl:fixed:max-w-48"
+                      >
+                        <Link
+                          href={item.href}
+                          aria-current={
+                            item.href === pathname ? "page" : undefined
+                          }
+                        >
+                          <span className="absolute inset-0 flex w-(--sidebar-menu-width) bg-transparent" />
+                          {item.name}
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  ))}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+          ))}
+        </nav>
       </SidebarContent>
     </Sidebar>
   )

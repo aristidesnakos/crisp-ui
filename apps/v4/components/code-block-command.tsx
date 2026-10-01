@@ -82,7 +82,10 @@ export function CodeBlockCommand({
           <div className="flex size-4 items-center justify-center rounded-[1px] bg-foreground opacity-70">
             <IconTerminal className="size-3 text-code" />
           </div>
-          <TabsList className="rounded-none bg-transparent p-0">
+          <TabsList
+            aria-label="Package manager"
+            className="rounded-none bg-transparent p-0"
+          >
             {Object.entries(tabs).map(([key]) => {
               return (
                 <TabsTrigger
@@ -120,7 +123,9 @@ export function CodeBlockCommand({
         className="absolute top-2 right-2 z-10 size-7 opacity-70 hover:opacity-100 focus-visible:opacity-100"
         onClick={copyCommand}
       >
-        <span className="sr-only">Copy</span>
+        <span className="sr-only" aria-live="polite">
+          {hasCopied ? "Copied" : "Copy command"}
+        </span>
         {hasCopied ? <IconCheck /> : <IconCopy />}
       </Button>
     </div>

@@ -148,11 +148,18 @@ export const mdxComponents = {
     </div>
   ),
   pre: ({ className, children, ...props }: React.ComponentProps<"pre">) => {
+    // Scrollable code must be reachable by keyboard (WCAG 2.1.1). Package
+    // manager tabs already contain focusable controls, so they are skipped.
+    const hasTabs =
+      React.isValidElement<{ __npm__?: string }>(children) &&
+      Boolean(children.props.__npm__)
+
     return (
       <pre
         data-not-typeset
+        tabIndex={hasTabs ? undefined : 0}
         className={cn(
-          "no-scrollbar min-w-0 overflow-x-auto overflow-y-auto overscroll-x-contain overscroll-y-auto px-4 py-3.5 outline-none has-data-highlighted-line:px-0 has-data-line-numbers:px-0 has-data-[slot=tabs]:p-0",
+          "no-scrollbar min-w-0 overflow-x-auto overflow-y-auto overscroll-x-contain overscroll-y-auto px-4 py-3.5 focus-visible:-outline-offset-2 has-data-highlighted-line:px-0 has-data-line-numbers:px-0 has-data-[slot=tabs]:p-0",
           className
         )}
         {...props}
