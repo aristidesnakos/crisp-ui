@@ -98,7 +98,10 @@ export default async function Page(props: {
                   </h1>
                   <div className="docs-nav flex items-center gap-2">
                     <div className="hidden sm:block">
-                      <DocsCopyPage page={markdown} url={absoluteUrl(page.url)} />
+                      <DocsCopyPage
+                        page={markdown}
+                        url={absoluteUrl(page.url)}
+                      />
                     </div>
                     <div className="ml-auto flex gap-2">
                       {neighbours.previous && (
