@@ -2,7 +2,7 @@
  * DEMO STAND-IN. REPLACE THIS FILE'S `createMemoryServer()` WITH REAL CALLS.
  *
  * `CalibrationDesk` talks to a `CalibrationDeskServer` (see
- * `calibration-desk.ts`) and to nothing else. This file is the fake one: it
+ * `calibration-desk-lib.ts`) and to nothing else. This file is the fake one: it
  * keeps the gauges, the recall request and the audit log in memory, answers
  * after a short delay, and can be told to fail a send. Nothing here is saved,
  * and nothing is ever sent anywhere.
@@ -27,7 +27,7 @@
  *
  * Example data only.
  */
-import type { AlertRule } from "@/registry/crisp/lib/alert-rules"
+import type { AlertRule } from "@/registry/crisp/lib/alert-rules-lib"
 import {
   summarizeApproval,
   validateDecision,
@@ -53,7 +53,7 @@ import {
   type DeskUser,
   type Gauge,
   type RecallRequest,
-} from "@/registry/crisp/lib/calibration-desk"
+} from "@/registry/crisp/lib/calibration-desk-lib"
 
 /** The people the demo can be viewed as. Dana and Marcus are the two approvers. */
 export const DEMO_USERS: DeskUser[] = [

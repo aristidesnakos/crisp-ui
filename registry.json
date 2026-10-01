@@ -320,7 +320,7 @@
       "docs": "Pure helpers for reminder rules: validate a rule, check quiet hours across midnight and DST, find which reminders are due, and describe a rule in a sentence.\nRead the installed file before using it; use only the props it exports.\nDocs: https://regularui.com/docs/components/alert-rules.md\nVerify: run your typechecker.",
       "files": [
         {
-          "path": "apps/v4/registry/crisp/lib/alert-rules.ts",
+          "path": "apps/v4/registry/crisp/lib/alert-rules-lib.ts",
           "type": "registry:lib"
         }
       ]
@@ -389,7 +389,7 @@
           "type": "registry:component"
         },
         {
-          "path": "apps/v4/registry/crisp/lib/calibration-desk.ts",
+          "path": "apps/v4/registry/crisp/lib/calibration-desk-lib.ts",
           "type": "registry:lib"
         },
         {

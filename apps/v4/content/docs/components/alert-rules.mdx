@@ -63,8 +63,8 @@ npx shadcn@latest add https://regularui.com/r/alert-rules-lib.json
 <Step>And the helpers it imports.</Step>
 
 <ComponentSource
-  src="registry/crisp/lib/alert-rules.ts"
-  title="lib/alert-rules.ts"
+  src="registry/crisp/lib/alert-rules-lib.ts"
+  title="lib/alert-rules-lib.ts"
 />
 
 <Step>
@@ -87,7 +87,7 @@ import {
   sameRules,
   validateRule,
   type AlertRule,
-} from "@/lib/alert-rules"
+} from "@/lib/alert-rules-lib"
 import { AlertRules } from "@/components/ui/alert-rules"
 import { SaveBar } from "@/components/ui/save-bar"
 ```
@@ -137,14 +137,14 @@ The editor is controlled. It never saves anything. It calls `onChange` with the 
 
 ## On the server
 
-The helpers in `lib/alert-rules.ts` have no React and no clock, so the code that sends can use them. Every function takes the instant to look at, so tests need no mocking.
+The helpers in `lib/alert-rules-lib.ts` have no React and no clock, so the code that sends can use them. Every function takes the instant to look at, so tests need no mocking.
 
 ```ts
 import {
   nextAllowedSendTime,
   remindersDue,
   validateRule,
-} from "@/lib/alert-rules"
+} from "@/lib/alert-rules-lib"
 
 // 1. Never trust the screen: validate what you are about to save.
 const errors = validateRule(rule)
@@ -193,7 +193,7 @@ if (sendAt.getTime() > Date.now()) {
 
 ### AlertRules
 
-Also accepts the props of a `div` (except `onChange`, which is the editor's own), including `className` and `ref`. They are applied to the root element. The prop types are exported as `AlertRulesProps`. `AlertRule` and `QuietHours` come from `lib/alert-rules`.
+Also accepts the props of a `div` (except `onChange`, which is the editor's own), including `className` and `ref`. They are applied to the root element. The prop types are exported as `AlertRulesProps`. `AlertRule` and `QuietHours` come from `lib/alert-rules-lib`.
 
 | Prop            | Type                           | Description                                                                                  |
 | --------------- | ------------------------------ | -------------------------------------------------------------------------------------------- |
@@ -226,7 +226,7 @@ Also accepts the props of a `div` (except `onChange`, which is the editor's own)
 
 ## Reference
 
-All in `lib/alert-rules.ts`. No React, no network, no clock: every instant is passed in.
+All in `lib/alert-rules-lib.ts`. No React, no network, no clock: every instant is passed in.
 
 ### validateRule
 
@@ -284,12 +284,12 @@ GOAL: Add a reminder-rules editor (cadence, escalation, quiet hours) to my inter
 INSTALL (run exactly):
 npx shadcn@latest add https://regularui.com/r/alert-rules.json
 npx shadcn@latest add https://regularui.com/r/save-bar.json
-Read the installed files (components/ui/alert-rules.tsx, lib/alert-rules.ts, components/ui/save-bar.tsx) before writing any code. Do not guess props.
+Read the installed files (components/ui/alert-rules.tsx, lib/alert-rules-lib.ts, components/ui/save-bar.tsx) before writing any code. Do not guess props.
 
 PROPS:
 <AlertRules rules={AlertRule[]} onChange={(rules) => void} validateEmail?={(email) => boolean} timeZone?={IANA name, default for new quiet hours} disabled?={boolean} />
 AlertRule = { id, label, enabled, cadenceDays: number[] (days BEFORE due), escalateAfterDays?: number (days AFTER due), escalateTo?: string (an email), quietHours?: { start: "HH:MM", end: "HH:MM", timeZone: string } | null }
-Helpers in lib/alert-rules: validateRule, normalizeRule, sameRules, isQuietTime, nextAllowedSendTime, remindersDue, summarizeRule.
+Helpers in lib/alert-rules-lib: validateRule, normalizeRule, sameRules, isQuietTime, nextAllowedSendTime, remindersDue, summarizeRule.
 
 WIRING: AlertRules is controlled and does not save. Keep `saved` and `rules` in state and render <SaveBar dirty={!sameRules(rules, saved)} />. On Save: validateRule every rule, stop if any has errors, send normalizeRule(rule) to my own API, and set `saved` only after it succeeds. The SERVER must validate again and must enforce quiet hours (isQuietTime or nextAllowedSendTime) and escalation when it sends; a UI setting is not enforcement. Contacts are email only. No phone numbers, no texting.
 

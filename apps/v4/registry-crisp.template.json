@@ -179,7 +179,7 @@
       },
       "docs": "Pure helpers for reminder rules: validate a rule, check quiet hours across midnight and DST, find which reminders are due, and describe a rule in a sentence.\nRead the installed file before using it; use only the props it exports.\nDocs: __REGISTRY_ORIGIN__/docs/components/alert-rules.md\nVerify: run your typechecker.",
       "files": [
-        { "path": "registry/crisp/lib/alert-rules.ts", "type": "registry:lib" }
+        { "path": "registry/crisp/lib/alert-rules-lib.ts", "type": "registry:lib" }
       ]
     },
     {
@@ -233,7 +233,7 @@
           "type": "registry:component"
         },
         {
-          "path": "registry/crisp/lib/calibration-desk.ts",
+          "path": "registry/crisp/lib/calibration-desk-lib.ts",
           "type": "registry:lib"
         },
         {

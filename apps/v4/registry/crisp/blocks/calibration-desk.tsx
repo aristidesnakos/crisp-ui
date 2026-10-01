@@ -34,7 +34,7 @@ import {
 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { summarizeRule } from "@/registry/crisp/lib/alert-rules"
+import { summarizeRule } from "@/registry/crisp/lib/alert-rules-lib"
 import { summarizeApproval } from "@/registry/crisp/lib/approval"
 import {
   calibrationStatus,
@@ -56,7 +56,7 @@ import {
   type DeskState,
   type DeskUser,
   type Gauge,
-} from "@/registry/crisp/lib/calibration-desk"
+} from "@/registry/crisp/lib/calibration-desk-lib"
 import {
   createMemoryServer,
   DEMO_USERS,
