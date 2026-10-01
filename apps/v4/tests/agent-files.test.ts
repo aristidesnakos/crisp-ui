@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process"
-import { readFileSync } from "node:fs"
+import { existsSync, readFileSync } from "node:fs"
 import path from "node:path"
 import { describe, expect, it } from "vitest"
 
@@ -128,9 +128,16 @@ describe("template metadata", () => {
       expect(["see", "decide", "act", "confirm", "record"]).toContain(
         item.meta?.stage
       )
-      expect(item.meta?.recipe).toBe(
-        `__REGISTRY_ORIGIN__/docs/components/${name}.md`
-      )
+      // Usually the item's own page; a helper library may point at the page
+      // of the item it belongs to. Either way the page must exist.
+      const page = item.meta?.recipe?.match(
+        /^__REGISTRY_ORIGIN__\/docs\/components\/([a-z-]+)\.md$/
+      )?.[1]
+      expect(page, `${name}: meta.recipe`).toBeTruthy()
+      expect(
+        existsSync(path.join(appRoot, `content/docs/components/${page}.mdx`)),
+        `${name}: no docs page ${page}.mdx`
+      ).toBe(true)
       const lines = (item.docs ?? "").split("\n").filter(Boolean)
       expect(lines.length).toBeGreaterThanOrEqual(3)
       expect(lines.length).toBeLessThanOrEqual(8)

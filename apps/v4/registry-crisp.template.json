@@ -83,6 +83,12 @@
       "type": "registry:lib",
       "title": "Approval",
       "description": "Pure helpers: settle an approval from its approvers' decisions under an all, any or minimum policy, check who can decide, and validate a decision's reason.",
+      "categories": ["approvals", "utilities"],
+      "meta": {
+        "stage": "act",
+        "recipe": "__REGISTRY_ORIGIN__/docs/components/approval-step.md"
+      },
+      "docs": "Pure helpers for sign-offs: summarize an approval under an all, any or minimum policy, decide who may still decide, and validate a decision.\nRead the installed file before using it; use only the props it exports.\nDocs: __REGISTRY_ORIGIN__/docs/components/approval-step.md\nVerify: run your typechecker.",
       "files": [{ "path": "registry/crisp/lib/approval.ts", "type": "registry:lib" }]
     },
     {
@@ -90,6 +96,12 @@
       "type": "registry:ui",
       "title": "Approval step",
       "description": "A sign-off with a stated reason and meaning: approvers with state as text and decision time, a policy sentence, Approve and Reject behind an inline confirm for the one person who can still decide, and a read-only explanation for everyone else.",
+      "categories": ["dashboard", "approvals"],
+      "meta": {
+        "stage": "act",
+        "recipe": "__REGISTRY_ORIGIN__/docs/components/approval-step.md"
+      },
+      "docs": "A sign-off with a stated reason and meaning: approvers, the policy, and Approve or Reject with a confirm.\nRead the installed file before using it; use only the props it exports.\nDocs: __REGISTRY_ORIGIN__/docs/components/approval-step.md\nVerify: run your typechecker.",
       "dependencies": ["lucide-react"],
       "registryDependencies": ["button", "__REGISTRY_ORIGIN__/r/approval.json"],
       "files": [{ "path": "registry/crisp/ui/approval-step.tsx", "type": "registry:ui" }]
