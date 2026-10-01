@@ -3,7 +3,11 @@ title: Data table
 description: A table of rows with named saved views and live counts, row selection, an action slot that receives the selected rows, and stale, empty, no-match and error states.
 ---
 
-<ComponentPreview styleName="radix-nova" name="data-table-demo" />
+<ComponentPreview
+  styleName="radix-nova"
+  name="data-table-demo"
+  previewClassName="p-4"
+/>
 
 Use it when someone needs to see a list of people, assets or records with a status, narrow it to the exceptions, and then act on those: calibrations that are overdue, staff who have not finished training, students absent today. It sits under a [`status-strip`](/docs/components/status-strip), which says "6 of 18 gauges in calibration". The table lists the 12 that are not, and its `actions` slot is where [`confirm-send`](/docs/components/confirm-send) goes.
 
