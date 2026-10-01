@@ -51,3 +51,6 @@ __screenshots__
 .vercel
 .tmp*
 
+
+# claude code: per-machine settings (launch.json stays tracked)
+.claude/settings.local.json
