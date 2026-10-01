@@ -8,6 +8,9 @@
       "type": "registry:lib",
       "title": "Notify envelope",
       "description": "Pure helpers: build a roster from per-channel lists, compare lists, and build a one-message To/Cc envelope.",
+      "categories": ["notifications", "utilities"],
+      "meta": { "stage": "confirm", "recipe": "__REGISTRY_ORIGIN__/docs/components/notify-envelope.md" },
+      "docs": "Pure helper functions: build a roster from per-channel lists, compare lists, and build a one-message To/Cc envelope.\nRead the installed file before using it; use only the props it exports.\nDocs: __REGISTRY_ORIGIN__/docs/components/notify-envelope.md\nVerify: run your typechecker.",
       "files": [{ "path": "registry/crisp/lib/notify-envelope.ts", "type": "registry:lib" }]
     },
     {
@@ -15,6 +18,9 @@
       "type": "registry:ui",
       "title": "Status strip",
       "description": "A headline number, a segmented bar and a legend for the stages of one whole, with a slot for the action that acts on it.",
+      "categories": ["dashboard", "status"],
+      "meta": { "stage": "see", "recipe": "__REGISTRY_ORIGIN__/docs/components/status-strip.md" },
+      "docs": "A headline number, a segmented bar and a legend for the stages of one whole.\nRead the installed file before using it; use only the props it exports.\nDocs: __REGISTRY_ORIGIN__/docs/components/status-strip.md\nVerify: run your typechecker.",
       "files": [{ "path": "registry/crisp/ui/status-strip.tsx", "type": "registry:ui" }]
     },
     {
@@ -22,6 +28,9 @@
       "type": "registry:ui",
       "title": "Save bar",
       "description": "An 'Unsaved changes' bar with Discard and Save that only renders when there is something to save.",
+      "categories": ["dashboard", "forms"],
+      "meta": { "stage": "act", "recipe": "__REGISTRY_ORIGIN__/docs/components/save-bar.md" },
+      "docs": "An \"Unsaved changes\" bar with Discard and Save, hidden when there is nothing to save.\nRead the installed file before using it; use only the props it exports.\nDocs: __REGISTRY_ORIGIN__/docs/components/save-bar.md\nVerify: run your typechecker.",
       "registryDependencies": ["button"],
       "files": [{ "path": "registry/crisp/ui/save-bar.tsx", "type": "registry:ui" }]
     },
@@ -30,6 +39,9 @@
       "type": "registry:ui",
       "title": "Confirm send",
       "description": "Click, confirm with the recipient count, send, then a 'Sent to N' status line. Can be blocked with a reason.",
+      "categories": ["dashboard", "notifications"],
+      "meta": { "stage": "act", "recipe": "__REGISTRY_ORIGIN__/docs/components/confirm-send.md" },
+      "docs": "A button that confirms with the recipient count before sending, then shows \"Sent to N\".\nRead the installed file before using it; use only the props it exports.\nDocs: __REGISTRY_ORIGIN__/docs/components/confirm-send.md\nVerify: run your typechecker.",
       "dependencies": ["lucide-react"],
       "registryDependencies": ["button"],
       "files": [{ "path": "registry/crisp/ui/confirm-send.tsx", "type": "registry:ui" }]
@@ -39,6 +51,9 @@
       "type": "registry:ui",
       "title": "Recipient roster",
       "description": "One list of people with a switch per channel, per-channel limits, paste-to-add and inline validation.",
+      "categories": ["dashboard", "notifications"],
+      "meta": { "stage": "decide", "recipe": "__REGISTRY_ORIGIN__/docs/components/recipient-roster.md" },
+      "docs": "One list of people with a switch per channel, per-channel limits, paste-to-add and inline validation.\nRead the installed file before using it; use only the props it exports.\nDocs: __REGISTRY_ORIGIN__/docs/components/recipient-roster.md\nVerify: run your typechecker.",
       "dependencies": ["lucide-react"],
       "registryDependencies": ["button", "input", "switch"],
       "files": [{ "path": "registry/crisp/ui/recipient-roster.tsx", "type": "registry:ui" }]
@@ -48,6 +63,9 @@
       "type": "registry:block",
       "title": "Status and notify",
       "description": "A status headline, a confirm-then-send action, and one recipient roster with save/discard, wired together.",
+      "categories": ["dashboard", "notifications"],
+      "meta": { "stage": "see", "stageEnd": "confirm", "recipe": "__REGISTRY_ORIGIN__/docs/components/status-notify.md" },
+      "docs": "A status headline, a confirm-then-send action and one recipient roster with save/discard, wired together.\nRead the installed file before using it; use only the props it exports.\nDocs: __REGISTRY_ORIGIN__/docs/components/status-notify.md\nVerify: run your typechecker.",
       "registryDependencies": [
         "card",
         "__REGISTRY_ORIGIN__/r/notify-envelope.json",

@@ -15,6 +15,7 @@
     "format:check": "prettier --check \"**/*.{ts,tsx,mdx}\" --cache",
     "postinstall": "fumadocs-mdx",
     "crisp:build": "node ./scripts/build-crisp-registry.mjs",
+    "agent:build": "node ./scripts/build-agent-files.mjs",
     "preview": "pnpm crisp:build && next build && next start --port 4000"
   },
   "dependencies": {
