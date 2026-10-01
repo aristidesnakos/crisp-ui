@@ -12,6 +12,7 @@ export const DOCS_NAV = [
     items: [
       { name: "Introduction", href: "/docs" },
       { name: "Installation", href: "/docs/installation" },
+      { name: "Use with AI agents", href: "/docs/ai" },
     ],
   },
   {
@@ -24,7 +25,9 @@ export const DOCS_NAV = [
       { name: "Confirm send", href: "/docs/components/confirm-send" },
       { name: "Save bar", href: "/docs/components/save-bar" },
       { name: "Notify envelope", href: "/docs/components/notify-envelope" },
+      { name: "Approval step", href: "/docs/components/approval-step" },
       { name: "Audit timeline", href: "/docs/components/audit-timeline" },
+      { name: "Data table", href: "/docs/components/data-table" },
       { name: "Alert rules", href: "/docs/components/alert-rules" },
     ],
   },
