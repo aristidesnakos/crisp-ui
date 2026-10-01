@@ -20,6 +20,7 @@ const shards: Record<
       "confirm-send-demo",
       "save-bar-demo",
       "notify-envelope-demo",
+      "approval-step-demo",
     ]),
   },
 }

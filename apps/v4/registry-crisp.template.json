@@ -77,6 +77,22 @@
       "files": [
         { "path": "registry/crisp/blocks/status-notify.tsx", "type": "registry:component" }
       ]
+    },
+    {
+      "name": "approval",
+      "type": "registry:lib",
+      "title": "Approval",
+      "description": "Pure helpers: settle an approval from its approvers' decisions under an all, any or minimum policy, check who can decide, and validate a decision's reason.",
+      "files": [{ "path": "registry/crisp/lib/approval.ts", "type": "registry:lib" }]
+    },
+    {
+      "name": "approval-step",
+      "type": "registry:ui",
+      "title": "Approval step",
+      "description": "A sign-off with a stated reason and meaning: approvers with state as text and decision time, a policy sentence, Approve and Reject behind an inline confirm for the one person who can still decide, and a read-only explanation for everyone else.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["button", "__REGISTRY_ORIGIN__/r/approval.json"],
+      "files": [{ "path": "registry/crisp/ui/approval-step.tsx", "type": "registry:ui" }]
     }
   ]
 }

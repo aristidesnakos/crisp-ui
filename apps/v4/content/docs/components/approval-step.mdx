@@ -1,0 +1,229 @@
+---
+title: Approval step
+description: A sign-off with a stated reason and meaning. Shows who must sign and who has, and gives the one person who can still decide Approve and Reject behind a confirm.
+---
+
+<ComponentPreview styleName="radix-nova" name="approval-step-demo" />
+
+Use it wherever one person's yes or no, with a reason, decides what happens next: an engineering change released, a nonconformance disposition, a lab result held back, a shift handover signed. It sits in the **Act** stage: the list above it (a data table) says what needs a decision, this is the decision, and what follows is telling people ([`confirm-send`](/docs/components/confirm-send)) and keeping the record (`audit-timeline`).
+
+It shows four things: what is being approved, who has to sign and the rule for how many, each decision with its time, meaning and reason, and, only for a person who can still decide, Approve and Reject. Everyone else gets a plain sentence saying why they cannot, not buttons that do nothing.
+
+<Callout>
+  **This is a display and an interaction pattern. It is not access control and
+  it is not an electronic-signature system.** Hiding a button stops no one. Your
+  server must verify who the user is, that they hold the role, and that it is
+  their turn, then store the decision and record an audit event. crisp-ui does
+  not make a tool compliant with any regulation, and none of this is legal or
+  compliance advice.
+</Callout>
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add https://<your-domain>/r/approval-step.json
+```
+
+Or, with the [`@crisp` namespace](/docs/installation) set up:
+
+```bash
+npx shadcn@latest add @crisp/approval-step
+```
+
+This also adds the shadcn `button`, `lucide-react`, and the `approval` helpers (`lib/approval.ts`).
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource
+  src="registry/crisp/ui/approval-step.tsx"
+  title="components/ui/approval-step.tsx"
+/>
+
+<Step>And the pure helpers it imports.</Step>
+
+<ComponentSource src="registry/crisp/lib/approval.ts" title="lib/approval.ts" />
+
+<Step>
+  Add the shadcn `button` and install `lucide-react`. Update the import paths to
+  match your project setup.
+</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { ApprovalStep } from "@/components/ui/approval-step"
+```
+
+```tsx
+// request comes from your server, fetched with the signed-in user's session
+<ApprovalStep
+  title={request.title}
+  approvers={request.approvers}
+  policy="all"
+  currentUserId={session.user.id}
+  meaning="Approved for release"
+  onDecide={async ({ outcome, reason, meaning }) => {
+    const res = await fetch(`/api/requests/${request.id}/decisions`, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ outcome, reason, meaning }),
+    })
+    if (!res.ok) throw new Error((await res.json()).message) // shown to the person
+    await mutate() // your refetch or cache update. <- required: refetch, so `approvers` carries the new decision
+  }}
+/>
+```
+
+The component owns the confirm step, the reason field and the pending, error and success states. You own the data: `approvers` is whatever your server last said.
+
+<Callout>
+  After a successful `onDecide`, update `approvers` from the server (state,
+  refetch or cache). Until the new decision appears in the list, the buttons
+  stay hidden and the line "Recorded: Approved for release" shows. The component
+  never writes a decision into the list itself, because the server decides
+  whether it was accepted and what time it was recorded.
+</Callout>
+
+## The pattern
+
+1. **Say what the signature means.** `meaning` ("Approved for release") appears in the confirm question, is passed to `onDecide`, and is shown next to each recorded decision. A bare "Approved" says less than what you are agreeing to.
+2. **Name, time and meaning stay together.** Each decided row shows the signer's name, their role, the state as text with an icon, the time, the meaning and the reason. State is never colour alone.
+3. **Confirm in place.** Approve or Reject opens a short confirm below the list: "Approve with the meaning “Approved for release”? Your name and the time will be recorded." A rejection asks for a reason and will not send without one (a whitespace-only reason counts as none). Set `requireReason` to ask for one on approval too.
+4. **One decision, once.** Only the signed-in user's own row can decide, only once, and only while the request is open. A second click while a decision is in flight does nothing.
+5. **Say why not.** A viewer who cannot decide sees one sentence: "Only Quality can sign off." or "You approved this request on 11 Mar 2026, 09:30 UTC." or "This request is approved. No more sign-offs are needed." The sentence is built from the data; use `readOnlyReason` when your server knows better ("Your account is view-only").
+6. **Blocked is visible too.** If the person is an approver but must wait for someone else (an order your server enforces), pass `blockedReason`. The buttons are disabled and the reason is printed beside them.
+7. **Failure can be retried.** If `onDecide` throws, the confirm stays open with the error text and a "Try again" button. The reason the person typed is kept.
+
+## Policy and how a request settles
+
+`policy` is one of `"all"`, `"any"` or `{ min: n }`. `summarizeApproval` turns the approvers' decisions into a status, with one rule for every policy:
+
+- `needed` is how many approvals are required: every approver for `"all"`, 1 for `"any"`, and `n` for `{ min: n }` (rounded down, and held between 1 and the number of approvers).
+- **Approved** when approvals reach `needed`. Checked first, so a rejection that comes after the requirement was met does not undo it.
+- **Rejected** when approvals plus people still waiting can no longer reach `needed`. So under `"all"` any single rejection rejects, under `"any"` it takes everyone rejecting, and `{ min: 2 }` of 3 rejects on the second rejection. `blockedBy` lists who rejected.
+- **Pending** otherwise.
+
+Edge cases fail safe: no approvers is `pending` (an empty list never approves itself, so treat it as a set-up error); a repeated approver id counts once, first entry wins; `min` above the number of approvers behaves like `"all"`. A request that is approved or rejected accepts no more decisions, even if some approvers never answered. There is no separate "veto" mode: use `"all"` when one no must block.
+
+These helpers run anywhere, so your server can use the same `summarizeApproval` to decide whether to accept a decision, with its own copy of the data.
+
+## Notes
+
+- **Time is shown in UTC** by default ("11 Mar 2026, 09:30 UTC") so the server and browser render the same text. Pass `formatTime` for another zone or locale. The time is what your server stored in `decision.at`; the browser never makes one up.
+- **`meaning` per decision.** Store the meaning the person confirmed with the decision (`decision.meaning`) and send it back. The `meaning` prop is only what the buttons offer; recorded rows show what was recorded.
+- **Not a router.** It does not move a request to the next approver, send mail or write the audit log. Those are your server's. When the request settles, notify people with [`confirm-send`](/docs/components/confirm-send).
+- **Not a four-way review.** It is approve or reject. A review with more outcomes (approved, approved as noted, revise and resubmit, rejected) is not covered.
+- **One request per component.** Render one per request; the `section` is named by its title.
+
+## Accessibility
+
+- Approve and Reject are real buttons named "Approve: ECR-1042 …" and "Reject: ECR-1042 …", so several steps on a page stay distinguishable.
+- Opening the confirm moves focus to its question, which is read out. Cancel, or Escape, returns focus to the button that opened it. Focus is not taken if the person has already moved on.
+- The reason field has a visible label and is marked required. A missing reason is announced as an alert and focus goes to the field.
+- While a decision is recorded the Confirm button stays focusable (it is `aria-disabled`, not `disabled`) so focus is not lost. A live region announces "Recording your decision…" and then "Recorded: …".
+- State is text plus an icon. Icons are hidden from assistive technology because the text says the same.
+
+This has not been tested with a screen reader. Run your own check before relying on it.
+
+## Agent prompt
+
+Paste this into your coding agent. Replace the bracketed part with your own request and approvers.
+
+```text
+Goal: add an approval step to my internal tool. [Describe: what is approved, who must approve, which roles, how many.] The signed-in approver can approve or reject with a reason; everyone else sees why they cannot.
+
+Install, then READ the installed files before writing any code:
+npx shadcn@latest add https://regularui.com/r/approval-step.json
+Read components/ui/approval-step.tsx and lib/approval.ts. Do not rewrite them.
+
+Props of ApprovalStep:
+- title: string; approvers: { id, name, role?, decision?: { outcome: "approved"|"rejected", at: ISO string, reason?, meaning? } }[]
+- policy: "all" | "any" | { min: number } (default "all")
+- currentUserId: the signed-in user's id from the session
+- meaning: string, e.g. "Approved for release"; rejectMeaning; requireReason; blockedReason; readOnlyReason
+- onDecide({ outcome, reason, meaning }): Promise<void>. Throw to fail.
+
+Wiring rule: the UI only displays and collects. Hiding a button is not access control. Add a server endpoint that checks who the user is, that they hold the role and it is their turn, refuses a second decision, stamps the time itself, saves the decision with its reason and meaning, and writes one audit event (who, what, when, meaning, reason). onDecide calls it and throws on any non-2xx. On success, refetch the request and pass the server's approvers back in. Take approvers, decisions and times only from the server; never work out permissions in the browser.
+
+States to cover: waiting; can decide; confirm open (reason required on reject); recording; failed with retry; recorded; settled; viewer cannot decide (read-only sentence, not hidden).
+
+Acceptance checks, run them and show me the output:
+1. typecheck and lint pass.
+2. A non-approver sees "Only <role> can sign off." and no buttons.
+3. Rejecting with an empty or whitespace-only reason is refused.
+4. The server, not the UI, refuses a second decision from the same person and a decision from the wrong role.
+5. Each accepted decision creates exactly one audit event.
+6. Keyboard: Tab reaches Approve and Reject; Cancel returns focus to the button.
+
+Do not add libraries or a signature/identity feature. This is not a compliant e-signature system. Build only what I asked.
+```
+
+## Example data
+
+Fictional, and not legal or compliance advice. The regulatory points are UI cues read from the rules' public text, not a determination that a tool is compliant: for example, 21 CFR 11.50 expects a signed record to show the signer's name, the date and time, and the meaning of the signature, and ISO 9001 clause 7.5.3 separates permission to view from permission to change.
+
+**Manufacturing: nonconformance (NCR) disposition.** Approvers: Quality engineer (`role: "Quality"`) and Production supervisor (`role: "Manufacturing"`), policy `"all"`. `meaning`: "Disposition approved: rework". `rejectMeaning`: "Disposition not approved". Reason required on reject. The proposed disposition (use as is, rework, scrap) is part of the request title or body, not of this component. Lock the record once settled.
+
+**Engineering: engineering change order (ECO) release.** Approvers: Quality, Manufacturing, Engineering manager. Policy `"all"`, or `{ min: 2 }` if your process allows it. `meaning`: "Approved for release". Set `requireReason` so approvals carry a note too. When it settles, notify the people who build from the drawing with [`confirm-send`](/docs/components/confirm-send).
+
+**Health: lab-result hold.** Approver: Laboratory director (`role: "Laboratory"`), policy `"any"` with a second named reviewer as cover. `meaning`: "Release hold approved". `requireReason`: on, because each hold is documented individually, not as a blanket rule. **Keep patient details out of the notification text**: "A result needs review", never a name, test or value. The record stays in your system behind its own role checks.
+
+**Education.** The research behind these patterns found few approval flows in education (none in the workflows coded), so there is no education example here. A grade change or a trip permission could use the same step; the page does not claim more than that.
+
+## Props
+
+### ApprovalStep
+
+Also accepts the props of a `section` (except `title`, which is the request's), including `className` and `ref`. The prop types are exported as `ApprovalStepProps`; `ApprovalStepDecision` is what `onDecide` receives.
+
+| Prop             | Type                                                        | Description                                                                                |
+| ---------------- | ----------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| `title`          | `string`                                                    | What is being approved. Names the section and the buttons. Required.                       |
+| `approvers`      | `Approver[]`                                                | Everyone who signs, with their recorded `decision` if any. From your server. Required.     |
+| `onDecide`       | `(decision: ApprovalStepDecision) => void \| Promise<void>` | Called after the person confirms. Throw to fail. Update `approvers` on success. Required.  |
+| `policy`         | `"all" \| "any" \| { min: number }`                         | How many approvals settle it. Default `"all"`.                                             |
+| `currentUserId`  | `string`                                                    | The signed-in user's id, matched against `approvers[].id`. Without it nobody can decide.   |
+| `meaning`        | `string`                                                    | What an approval means. Default "Approved".                                                |
+| `rejectMeaning`  | `string`                                                    | What a rejection means. Default "Rejected".                                                |
+| `requireReason`  | `boolean`                                                   | Also ask for a reason on approval. A reason is always asked on rejection. Default `false`. |
+| `blockedReason`  | `string`                                                    | Disables Approve and Reject for an approver who must wait, and shows why.                  |
+| `readOnlyReason` | `string`                                                    | Replaces "Only Quality can sign off" for a viewer who is not an approver.                  |
+| `formatTime`     | `(iso: string) => string`                                   | Formats `decision.at`. Default "11 Mar 2026, 09:30 UTC".                                   |
+
+`onDecide` receives `{ outcome: "approved" | "rejected", reason?: string, meaning: string }`. The reason is trimmed and absent when empty.
+
+### Helpers (`lib/approval.ts`)
+
+No React and no network, so they are safe on a server.
+
+| Export                                         | What it does                                                                                                                        |
+| ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `summarizeApproval(approvers, policy)`         | `{ status, approved, rejected, waiting, needed, blockedBy? }`. Rules above.                                                         |
+| `canDecide(approver, currentUserId, summary)`  | True only for the signed-in user's own row, with no decision yet, while the request is pending.                                     |
+| `validateDecision({ outcome, reason }, rules)` | `{ valid: true, reason? }` or `{ valid: false, error }`. `rules`: `requireReasonOnReject` (default true), `requireReasonOnApprove`. |
+| `describePolicy(approvers, policy)`            | "2 of 3 must approve", "All 3 must approve", "Any 1 of 3 can approve".                                                              |
+| `uniqueApprovers(approvers)`                   | The list with repeated ids dropped, first entry wins.                                                                               |
+
+## Where it fits
+
+Comes after: a data table (what needs a decision). Leads to: [`confirm-send`](/docs/components/confirm-send) (tell everyone it was approved), then `audit-timeline` (the record of who decided what and when). Each decision here must be something your server records as an audit event; the UI shows it, it does not keep it.
