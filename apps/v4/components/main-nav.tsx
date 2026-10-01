@@ -1,11 +1,11 @@
 "use client"
 
-import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "cn"
 
 import { siteConfig } from "@/lib/config"
+import { BrandMark } from "@/components/brand-mark"
 import { Button } from "@/registry/new-york-v4/ui/button"
 
 export function MainNav({
@@ -27,8 +27,7 @@ export function MainNav({
         href="/"
         className="mr-2 flex items-center gap-2 rounded-md text-sm font-semibold tracking-tight outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
       >
-        {/* Placeholder mark: replace public/icon.svg with the real logo. */}
-        <Image src="/icon.svg" alt="" width={20} height={20} unoptimized />
+        <BrandMark />
         {siteConfig.name}
       </Link>
       {items.map((item) => (

@@ -27,3 +27,13 @@ pnpm build
 - Import only from `@/components/ui/*`, `@/lib/*`, other crisp items, and packages listed in the item's `dependencies`. Anything else will not exist in a consumer's project.
 - Keep pure logic in `lib/` and cover it with a test in `apps/v4/tests/`.
 - Do not fork or publish the `shadcn` npm packages; consumers use the stock CLI.
+
+## Brand assets
+
+`brand/mark.svg` is the only hand-edited brand file; its `<style>` block holds the palette. Everything else (`icon.svg`, the favicons, touch and manifest icons, `og.png`) is generated from it:
+
+```bash
+node scripts/build-brand.mjs   # needs rsvg-convert and magick (brew install librsvg imagemagick)
+```
+
+Commit the regenerated files. The header's inline mark (`apps/v4/components/brand-mark.tsx`) copies the geometry by hand, and `tests/brand-mark.test.ts` fails if it drifts from the source. Judge any change to the mark at 16px, not at 512.

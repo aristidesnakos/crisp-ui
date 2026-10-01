@@ -1,3 +1,5 @@
+<p align="center"><img src="apps/v4/public/icon.svg" alt="" width="72" height="72"></p>
+
 # crisp-ui
 
 Reusable dashboard patterns as a [shadcn registry](https://ui.shadcn.com/docs/registry). Each one is a piece of a real admin dashboard, extracted so you can copy it into your own project with the stock `shadcn` CLI.
