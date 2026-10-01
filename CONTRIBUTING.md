@@ -21,6 +21,10 @@ pnpm test
 pnpm build
 ```
 
+## Leaving feedback while the site runs
+
+With `pnpm --filter=v4 dev` running, right-click any section of the site and choose "Dev feedback…". Type a note and press Cmd+Enter. The note and a screenshot of that section are saved to `.claude/dev-feedback.json` (git-ignored). Then ask Claude Code to "address my feedback" and the `iterate` skill in `.claude/skills/iterate/` will read the log, fix each item and mark it resolved. The capture exists only in development: a production build renders no wrapper and `/api/dev-feedback` answers 404. Wrap a new section with `<DevFeedback name="Area.Section">` from `components/dev/dev-feedback.tsx`.
+
 ## Rules for registry items
 
 - Use the standard shadcn tokens (`primary`, `muted`, `border`) and no hard-coded colours, so items follow the host project's theme.
