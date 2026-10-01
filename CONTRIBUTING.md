@@ -30,6 +30,7 @@ With `pnpm --filter=v4 dev` running, right-click any section of the site and cho
 - Use the standard shadcn tokens (`primary`, `muted`, `border`) and no hard-coded colours, so items follow the host project's theme.
 - Import only from `@/components/ui/*`, `@/lib/*`, other crisp items, and packages listed in the item's `dependencies`. Anything else will not exist in a consumer's project.
 - Give every item `categories`, `meta.stage` (`see`, `decide`, `act`, `confirm` or `record`), `meta.recipe` and a 3 to 8 line `docs` note in the template, then run `pnpm --filter=v4 agent:build` to regenerate `skills/crisp-ui/SKILL.md`, `apps/v4/public/agents-snippet.md` and the snippet copy in `ai.mdx`. A test fails if they are stale.
+- A new item shows up in the sidebar by itself, grouped by its `meta.stage` (items with `meta.stageEnd` go under "Whole screens"). Add its docs page to `apps/v4/content/docs/components/meta.json` in story order, and its "comes after / leads to" links to `STORY_MAP` in `apps/v4/lib/story.ts`; `tests/story.test.ts` checks the order and the links.
 - Keep pure logic in `lib/` and cover it with a test in `apps/v4/tests/`.
 - Do not fork or publish the `shadcn` npm packages; consumers use the stock CLI.
 
