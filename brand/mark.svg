@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <title>crisp-ui</title>
+  <!--
+    The crisp-ui mark. SOURCE OF TRUTH: every other brand asset is generated
+    from this file by scripts/build-brand.mjs. Do not edit the derived files.
+
+    A sharp square with a round bite out of the top-right corner, and a status
+    dot sitting in the bite: a clean edge, and the thing it exists to tell you
+    ("a job needs your attention"). The silhouette is the whole idea, so it
+    must still read at 16px; judge any change there, not at 512.
+
+    Palette (read by the build script, which derives the tiles and the OG card
+    from these four values, so this block is the one place to change a colour):
+      light page: ink body, violet dot.
+      dark page:  cream body, soft-violet dot (also used on the dark app tile).
+  -->
+  <style>
+    .body { fill: #24173f }
+    .pip { fill: #7c3aed }
+    @media (prefers-color-scheme: dark) {
+      .body { fill: #f6f0e1 }
+      .pip { fill: #a78bfa }
+    }
+  </style>
+  <path class="body" d="M6 6H39.35A14 14 0 0 0 58 24.65V58H6Z"/>
+  <circle class="pip" cx="52" cy="12" r="8"/>
+</svg>

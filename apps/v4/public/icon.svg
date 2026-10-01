@@ -1,15 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
-  <title>crisp-ui (placeholder mark)</title>
-  <!-- PLACEHOLDER identity: replace with the real crisp-ui logo. -->
-  <defs>
-    <pattern id="h" width="24" height="24" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-      <rect width="24" height="24" fill="none"/>
-      <rect width="10" height="24" fill="#ffffff" fill-opacity=".6"/>
-    </pattern>
-  </defs>
-  <rect width="512" height="512" rx="112" fill="#09090b"/>
-  <rect x="72" y="208" width="168" height="96" rx="20" fill="#ffffff"/>
-  <rect x="260" y="208" width="104" height="96" rx="20" fill="#ffffff" fill-opacity=".45"/>
-  <rect x="384" y="208" width="56" height="96" rx="20" fill="url(#h)"/>
-  <rect x="386" y="210" width="52" height="92" rx="18" fill="none" stroke="#ffffff" stroke-opacity=".6" stroke-width="4"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <title>crisp-ui</title>
+  <style>
+    .body { fill: #24173f }
+    .pip { fill: #7c3aed }
+    @media (prefers-color-scheme: dark) {
+      .body { fill: #f6f0e1 }
+      .pip { fill: #a78bfa }
+    }
+  </style>
+  <path class="body" d="M6 6H39.35A14 14 0 0 0 58 24.65V58H6Z"/>
+  <circle class="pip" cx="52" cy="12" r="8"/>
 </svg>
