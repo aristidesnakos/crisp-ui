@@ -18,6 +18,10 @@ build
 .eslintcache
 *.pem
 
+# dev feedback: local working state written by components/dev/dev-feedback.tsx
+/.claude/dev-feedback.json
+/.claude/dev-feedback/
+
 # debug
 npm-debug.log*
 yarn-debug.log*

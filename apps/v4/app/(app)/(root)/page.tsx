@@ -3,6 +3,7 @@ import Link from "next/link"
 import StatusNotifyDemo from "@/examples/radix/status-notify-demo"
 
 import { siteConfig } from "@/lib/config"
+import { DevFeedback } from "@/components/dev/dev-feedback"
 import {
   PageActions,
   PageHeader,
@@ -45,21 +46,25 @@ export const metadata: Metadata = {
 export default function IndexPage() {
   return (
     <div className="flex flex-1 flex-col">
-      <PageHeader className="md:**:[.container]:pb-8 lg:**:[.container]:pb-12">
-        <PageHeaderHeading className="max-w-4xl">{title}</PageHeaderHeading>
-        <PageHeaderDescription>{description}</PageHeaderDescription>
-        <PageActions>
-          <Button asChild className="h-[35px]">
-            <Link href="/docs/installation">Get Started</Link>
-          </Button>
-          <Button asChild variant="secondary">
-            <Link href="/docs/components">View patterns</Link>
-          </Button>
-        </PageActions>
-      </PageHeader>
+      <DevFeedback name="Landing.Hero">
+        <PageHeader className="md:**:[.container]:pb-8 lg:**:[.container]:pb-12">
+          <PageHeaderHeading className="max-w-4xl">{title}</PageHeaderHeading>
+          <PageHeaderDescription>{description}</PageHeaderDescription>
+          <PageActions>
+            <Button asChild className="h-[35px]">
+              <Link href="/docs/installation">Get Started</Link>
+            </Button>
+            <Button asChild variant="secondary">
+              <Link href="/docs/components">View patterns</Link>
+            </Button>
+          </PageActions>
+        </PageHeader>
+      </DevFeedback>
       <div className="container-wrapper flex-1 p-0">
         <div className="container flex justify-center px-4 pb-16 md:px-6">
-          <StatusNotifyDemo />
+          <DevFeedback name="Landing.Demo">
+            <StatusNotifyDemo />
+          </DevFeedback>
         </div>
       </div>
     </div>

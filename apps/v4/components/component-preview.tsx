@@ -3,6 +3,7 @@ import * as React from "react"
 import { getRegistryComponent } from "@/lib/registry"
 import { ComponentPreviewTabs } from "@/components/component-preview-tabs"
 import { ComponentSource } from "@/components/component-source"
+import { DevFeedback } from "@/components/dev/dev-feedback"
 
 export function ComponentPreview({
   name,
@@ -67,17 +68,19 @@ export function ComponentPreview({
 
   if (caption) {
     return (
-      <figure
-        data-hide-code={hideCode}
-        className="flex flex-col data-[hide-code=true]:gap-4"
-      >
-        {content}
-        <figcaption className="-mt-8 text-center text-sm text-muted-foreground data-[hide-code=true]:mt-0">
-          {caption}
-        </figcaption>
-      </figure>
+      <DevFeedback name={`Preview.${name}`}>
+        <figure
+          data-hide-code={hideCode}
+          className="flex flex-col data-[hide-code=true]:gap-4"
+        >
+          {content}
+          <figcaption className="-mt-8 text-center text-sm text-muted-foreground data-[hide-code=true]:mt-0">
+            {caption}
+          </figcaption>
+        </figure>
+      </DevFeedback>
     )
   }
 
-  return content
+  return <DevFeedback name={`Preview.${name}`}>{content}</DevFeedback>
 }
