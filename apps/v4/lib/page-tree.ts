@@ -17,6 +17,7 @@ export const GET_STARTED: NavGroup = {
     { name: "Introduction", href: "/docs" },
     { name: "Installation", href: "/docs/installation" },
     { name: "The story", href: "/docs/story" },
+    { name: "Build the whole arc", href: "/docs/build-the-arc" },
     { name: "Use with AI agents", href: "/docs/ai" },
     { name: "All patterns", href: "/docs/components" },
   ],
