@@ -1,10 +1,11 @@
 "use client"
 
+import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "cn"
 
-import { PAGES_NEW } from "@/lib/docs"
+import { siteConfig } from "@/lib/config"
 import { Button } from "@/registry/new-york-v4/ui/button"
 
 export function MainNav({
@@ -17,7 +18,19 @@ export function MainNav({
   const pathname = usePathname()
 
   return (
-    <nav className={cn("items-center gap-0", className)} {...props}>
+    <nav
+      aria-label="Main"
+      className={cn("items-center gap-0", className)}
+      {...props}
+    >
+      <Link
+        href="/"
+        className="mr-2 flex items-center gap-2 rounded-md text-sm font-semibold tracking-tight outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+      >
+        {/* Placeholder mark: replace public/icon.svg with the real logo. */}
+        <Image src="/icon.svg" alt="" width={20} height={20} unoptimized />
+        {siteConfig.name}
+      </Link>
       {items.map((item) => (
         <Button
           key={item.href}
@@ -29,7 +42,7 @@ export function MainNav({
           <Link
             href={item.href}
             data-active={pathname === item.href}
-            data-new={PAGES_NEW.includes(item.href)}
+            aria-current={pathname === item.href ? "page" : undefined}
             className="relative items-center"
           >
             {item.label}

@@ -3,31 +3,6 @@
 @import "shadcn/tailwind.css";
 @import "./legacy-themes.css";
 
-@source "../node_modules/streamdown/dist/*.js";
-@source "../styles/base-luma/**/*.tsx";
-@source "../styles/base-lyra/**/*.tsx";
-@source "../styles/base-maia/**/*.tsx";
-@source "../styles/base-mira/**/*.tsx";
-@source "../styles/base-nova/**/*.tsx";
-@source "../styles/base-rhea/**/*.tsx";
-@source "../styles/base-sera/**/*.tsx";
-@source "../styles/base-vega/**/*.tsx";
-@source "../styles/aria-luma/**/*.tsx";
-@source "../styles/aria-lyra/**/*.tsx";
-@source "../styles/aria-maia/**/*.tsx";
-@source "../styles/aria-mira/**/*.tsx";
-@source "../styles/aria-nova/**/*.tsx";
-@source "../styles/aria-rhea/**/*.tsx";
-@source "../styles/aria-sera/**/*.tsx";
-@source "../styles/aria-vega/**/*.tsx";
-@source "../styles/radix-luma/**/*.tsx";
-@source "../styles/radix-lyra/**/*.tsx";
-@source "../styles/radix-maia/**/*.tsx";
-@source "../styles/radix-mira/**/*.tsx";
-@source "../styles/radix-nova/**/*.tsx";
-@source "../styles/radix-rhea/**/*.tsx";
-@source "../styles/radix-sera/**/*.tsx";
-@source "../styles/radix-vega/**/*.tsx";
 
 @custom-variant style-vega (&:where(.style-vega *));
 @custom-variant style-nova (&:where(.style-nova *));
@@ -116,7 +91,8 @@
   --destructive-foreground: oklch(0.97 0.01 17);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  /* Darker than the shadcn default so focus rings reach 3:1 on white. */
+  --ring: oklch(0.556 0 0);
   --chart-1: var(--color-blue-300);
   --chart-2: var(--color-blue-500);
   --chart-3: var(--color-blue-600);

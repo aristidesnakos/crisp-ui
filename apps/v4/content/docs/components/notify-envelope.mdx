@@ -1,0 +1,142 @@
+---
+title: Notify envelope
+description: Pure helpers to build a roster from per-channel lists, compare lists, and build a one-message To and Cc envelope.
+---
+
+<ComponentPreview styleName="radix-nova" name="notify-envelope-demo" />
+
+Use it to move between the two shapes a notification list takes: one saved list of addresses per channel, and one roster of people with a switch per channel. It also builds the envelope for a notice sent as a single message.
+
+It has no React, no network and no dependencies, so it is safe to use on a server and to unit test.
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add https://<your-domain>/r/notify-envelope.json
+```
+
+Or, with the [`@crisp` namespace](/docs/installation) set up:
+
+```bash
+npx shadcn@latest add @crisp/notify-envelope
+```
+
+It has no dependencies.
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource
+  src="registry/crisp/lib/notify-envelope.ts"
+  title="lib/notify-envelope.ts"
+/>
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import {
+  applySavedChannel,
+  buildEnvelope,
+  listForChannel,
+  peopleFromLists,
+  sameList,
+} from "@/lib/notify-envelope"
+```
+
+```ts
+const keys = ["automatic", "onDemand"]
+
+// Saved lists -> one roster, one row per person.
+const people = peopleFromLists(saved, keys)
+
+// Roster -> the list for one channel, ready to save.
+const list = listForChannel(people, "onDemand")
+
+// Is there anything to save?
+const dirty = !sameList(list, saved.onDemand)
+
+// A save landed: follow it, leave the other channel's edits alone.
+const next = applySavedChannel(people, "onDemand", saved.onDemand, keys)
+
+// One message, everyone on To, the copied parties on Cc and Reply-To.
+const envelope = buildEnvelope(saved.onDemand, ["admin@example.org"])
+// { to: [...], cc: ["admin@example.org"], replyTo: ["admin@example.org"] }
+```
+
+## Envelope rule
+
+Choose the shape per audience:
+
+- **A small, named group who are meant to see one another:** one message, everyone on `to`, the people you want copied on `cc` and `replyTo`. One send reaches everyone or fails as a whole, so a retry never double-mails half the list. Use `buildEnvelope`.
+- **A list whose members must not learn about each other:** one message per recipient. Do not use `buildEnvelope`.
+
+## Notes
+
+- **`buildEnvelope` de-duplicates `to`.** Addresses are trimmed and compared without regard to case, and the first spelling is kept.
+- **An address is never on both `to` and `cc`.** Anyone in `to` is dropped from `cc`. They stay in `replyTo`, so replies still reach them.
+- **`cc` and `replyTo` are trimmed but not de-duplicated.** Pass a clean copied list.
+- **`peopleFromLists` lowercases and trims** every address and merges duplicates across channels. Keys in `lists` that are not in `channelKeys` are ignored.
+- **`sameList` ignores order, case and duplicates.** Use it to decide whether there is anything to save.
+- **`applySavedChannel` only touches one channel.** It sets that channel's switch for everyone on the roster and adds people who are in the saved list but not yet on it. It does not remove people who end up with every channel off.
+
+## Reference
+
+### peopleFromLists
+
+`(lists: Record<string, string[]>, channelKeys: string[]) => RosterPerson[]`
+
+Builds a roster from one list of addresses per channel. Every person has a flag for every key in `channelKeys`.
+
+### listForChannel
+
+`(people: RosterPerson[], key: string) => string[]`
+
+The addresses switched on for one channel, in roster order.
+
+### sameList
+
+`(a: string[], b: string[]) => boolean`
+
+True when the two lists hold the same addresses, ignoring order, case, surrounding spaces and duplicates.
+
+### applySavedChannel
+
+`(people: RosterPerson[], key: string, saved: string[], channelKeys: string[]) => RosterPerson[]`
+
+Applies a newly saved list for one channel to the roster.
+
+### buildEnvelope
+
+`(recipients: string[], copied: string[]) => { to: string[]; cc: string[]; replyTo: string[] }`
+
+The envelope for one message to a small group who are meant to see one another.
+
+### RosterPerson
+
+| Field      | Type                      | Description                               |
+| ---------- | ------------------------- | ----------------------------------------- |
+| `email`    | `string`                  | The person's address.                     |
+| `channels` | `Record<string, boolean>` | Whether they are on each channel, by key. |
+
+The same shape is exported by [`recipient-roster`](/docs/components/recipient-roster), so the two fit together without a conversion.

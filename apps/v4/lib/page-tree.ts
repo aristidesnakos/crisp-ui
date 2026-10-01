@@ -4,6 +4,30 @@ export type PageTreeNode = (typeof source.pageTree)["children"][number]
 export type PageTreeFolder = Extract<PageTreeNode, { type: "folder" }>
 export type PageTreePage = Extract<PageTreeNode, { type: "page" }>
 
+// The docs navigation. The site is small enough that this is written out
+// rather than derived from the page tree.
+export const DOCS_NAV = [
+  {
+    name: "Get Started",
+    items: [
+      { name: "Introduction", href: "/docs" },
+      { name: "Installation", href: "/docs/installation" },
+    ],
+  },
+  {
+    name: "Patterns",
+    items: [
+      { name: "Components", href: "/docs/components" },
+      { name: "Status and notify", href: "/docs/components/status-notify" },
+      { name: "Status strip", href: "/docs/components/status-strip" },
+      { name: "Recipient roster", href: "/docs/components/recipient-roster" },
+      { name: "Confirm send", href: "/docs/components/confirm-send" },
+      { name: "Save bar", href: "/docs/components/save-bar" },
+      { name: "Notify envelope", href: "/docs/components/notify-envelope" },
+    ],
+  },
+]
+
 // Recursively find all pages in a folder tree.
 export function getAllPagesFromFolder(folder: PageTreeFolder): PageTreePage[] {
   const pages: PageTreePage[] = []
@@ -19,33 +43,10 @@ export function getAllPagesFromFolder(folder: PageTreeFolder): PageTreePage[] {
   return pages
 }
 
-// Get the pages from a folder, handling nested base folders (radix/base).
-export function getPagesFromFolder(
-  folder: PageTreeFolder,
-  currentBase: string
-): PageTreePage[] {
-  // For the components folder, find the base subfolder.
+// Get the pages from a folder. The components folder is flattened, without
+// its own index page.
+export function getPagesFromFolder(folder: PageTreeFolder): PageTreePage[] {
   if (folder.$id === "components" || folder.name === "Components") {
-    for (const child of folder.children) {
-      if (child.type === "folder") {
-        // Match by $id or by name.
-        const isRadix = child.$id === "radix" || child.name === "Radix UI"
-        const isBase = child.$id === "base" || child.name === "Base UI"
-        const isReactAria = child.$id === "aria" || child.name === "React Aria"
-
-        if (
-          (currentBase === "radix" && isRadix) ||
-          (currentBase === "base" && isBase) ||
-          (currentBase === "aria" && isReactAria)
-        ) {
-          return child.children.filter(
-            (c): c is PageTreePage => c.type === "page"
-          )
-        }
-      }
-    }
-
-    // Fallback: return all pages from nested folders.
     return getAllPagesFromFolder(folder).filter(
       (page) => !page.url.endsWith("/components")
     )
@@ -55,10 +56,4 @@ export function getPagesFromFolder(
   return folder.children.filter(
     (child): child is PageTreePage => child.type === "page"
   )
-}
-
-// Get current base (radix, base, or aria) from pathname.
-export function getCurrentBase(pathname: string): string {
-  const baseMatch = pathname.match(/\/docs\/components\/(radix|base|aria)\//)
-  return baseMatch ? baseMatch[1] : "base" // Default to base.
 }

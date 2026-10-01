@@ -60,6 +60,26 @@ function RecipientRoster({
 }: RecipientRosterProps) {
   const [draft, setDraft] = React.useState("")
   const [error, setError] = React.useState("")
+  // Polite announcement for changes that are otherwise only visible (a row appearing).
+  const [status, setStatus] = React.useState("")
+  const errorId = React.useId()
+  const limitId = React.useId()
+  const rootRef = React.useRef<HTMLDivElement>(null)
+  const inputRef = React.useRef<HTMLInputElement>(null)
+  // Position and address of a row just removed, so focus is not lost with it.
+  const removed = React.useRef<{ index: number; email: string } | null>(null)
+
+  React.useEffect(() => {
+    const gone = removed.current
+    if (!gone || people.some((p) => p.email === gone.email)) return
+    removed.current = null
+    const buttons =
+      rootRef.current?.querySelectorAll<HTMLButtonElement>(
+        "[data-roster-remove]:not(:disabled)"
+      ) ?? []
+    const next = buttons[Math.min(gone.index, buttons.length - 1)]
+    ;(next ?? inputRef.current)?.focus()
+  }, [people])
 
   const count = (key: string) => people.filter((p) => p.channels[key]).length
 
@@ -79,14 +99,20 @@ function RecipientRoster({
       return
     }
     setError("")
+    const added = candidates.filter(
+      (email) => !people.some((p) => p.email === email)
+    )
+    setStatus(
+      added.length === 0
+        ? "Already in the list."
+        : `Added ${added.length === 1 ? added[0] : `${added.length} addresses`}. Choose what ${added.length === 1 ? "they receive" : "each receives"}.`
+    )
     onChange([
       ...people,
-      ...candidates
-        .filter((email) => !people.some((p) => p.email === email))
-        .map((email) => ({
-          email,
-          channels: Object.fromEntries(channels.map((c) => [c.key, false])),
-        })),
+      ...added.map((email) => ({
+        email,
+        channels: Object.fromEntries(channels.map((c) => [c.key, false])),
+      })),
     ])
     setDraft("")
   }
@@ -102,6 +128,7 @@ function RecipientRoster({
 
   return (
     <div
+      ref={rootRef}
       data-slot="recipient-roster"
       className={cn(
         "[--roster-col:3.5rem] sm:[--roster-col:6.75rem]",
@@ -120,12 +147,18 @@ function RecipientRoster({
         {channels.map((c) => (
           <div
             key={c.key}
-            className="pb-2 text-center text-xs tracking-wide text-muted-foreground/70 uppercase"
+            className="pb-2 text-center text-xs tracking-wide text-muted-foreground uppercase"
           >
             {c.label}
-            <span className="block tracking-normal normal-case tabular-nums">
+            <span
+              id={`${limitId}-${c.key}`}
+              className="block tracking-normal normal-case tabular-nums"
+            >
               {count(c.key)}
               {c.limit ? ` / ${c.limit}` : ""}
+              {c.limit && count(c.key) >= c.limit ? (
+                <span className="sr-only"> limit reached</span>
+              ) : null}
             </span>
             {c.hint && (
               <span className="hidden tracking-normal normal-case sm:block">
@@ -169,6 +202,8 @@ function RecipientRoster({
                       c.switchLabel?.(person.email) ??
                       `${c.label}: ${person.email}`
                     }
+                    aria-describedby={full ? `${limitId}-${c.key}` : undefined}
+                    className="relative after:absolute after:-inset-x-1 after:-inset-y-1.5 after:content-['']"
                     checked={on}
                     disabled={disabled || full}
                     onCheckedChange={(checked) =>
@@ -183,10 +218,16 @@ function RecipientRoster({
                 variant="ghost"
                 size="icon"
                 aria-label={`Remove ${person.email}`}
+                data-roster-remove=""
                 disabled={disabled}
-                onClick={() =>
+                onClick={() => {
+                  removed.current = {
+                    index: people.indexOf(person),
+                    email: person.email,
+                  }
+                  setStatus(`Removed ${person.email}.`)
                   onChange(people.filter((p) => p.email !== person.email))
-                }
+                }}
                 className="size-8 text-muted-foreground hover:text-foreground sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100 [@media(hover:none)]:opacity-100"
               >
                 <X className="size-4" aria-hidden="true" />
@@ -211,10 +252,13 @@ function RecipientRoster({
           <Plus className="size-3.5" />
         </span>
         <Input
+          ref={inputRef}
           type="email"
           inputMode="email"
           autoComplete="off"
           aria-label="Add an email address"
+          aria-invalid={error ? true : undefined}
+          aria-describedby={error ? errorId : undefined}
           placeholder="Add an email address and press Enter"
           value={draft}
           disabled={disabled}
@@ -228,14 +272,17 @@ function RecipientRoster({
               addEmails(text)
             }
           }}
-          className="h-11 border-0 bg-transparent px-0 shadow-none focus-visible:ring-0"
+          className="-ml-2 h-11 border-0 bg-transparent px-2 shadow-none focus-visible:ring-2 focus-visible:ring-ring"
         />
       </form>
       {error && (
-        <p role="alert" className="mt-1 text-sm text-destructive">
+        <p id={errorId} role="alert" className="mt-1 text-sm text-destructive">
           {error}
         </p>
       )}
+      <p role="status" className="sr-only">
+        {status}
+      </p>
       {footnote && (
         <p className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
           <span

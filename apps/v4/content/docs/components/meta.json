@@ -1,4 +1,12 @@
 {
   "title": "Components",
-  "pages": ["..."]
+  "pages": [
+    "index",
+    "status-notify",
+    "status-strip",
+    "recipient-roster",
+    "confirm-send",
+    "save-bar",
+    "notify-envelope"
+  ]
 }

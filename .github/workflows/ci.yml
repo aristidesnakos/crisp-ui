@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CRISP_REGISTRY_ORIGIN: http://localhost:4000
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm registry:build
+      - run: pnpm typecheck
+      - run: pnpm lint
+      - run: pnpm format:check
+      - run: pnpm test
+      # `build` type-checks too, because ignoreBuildErrors is off.
+      - run: pnpm build
+
+      - name: Serve the registry
+        run: |
+          pnpm start > server.log 2>&1 &
+          npx --yes wait-on -t 60000 http://localhost:4000/r/status-notify.json
+      - name: Smoke test, install into a fresh project
+        run: scripts/smoke-install.sh
+      - name: Server log
+        if: failure()
+        run: cat server.log

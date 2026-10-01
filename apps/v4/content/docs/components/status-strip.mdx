@@ -1,0 +1,105 @@
+---
+title: Status strip
+description: A headline number, a segmented bar and a legend for the stages of one whole, with a slot for the action that acts on it.
+---
+
+<ComponentPreview styleName="radix-nova" name="status-strip-demo" />
+
+Use it at the top of any screen that reports how far a job has got: training completion, an import run, a sync. It says "11 of 18 staff trained" once, then shows the same numbers as a bar, so the total is the sentence and not a separate tile.
+
+Put the button that acts on the status in the `action` slot. The action then sits beside the numbers it will affect.
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add https://<your-domain>/r/status-strip.json
+```
+
+Or, with the [`@crisp` namespace](/docs/installation) set up:
+
+```bash
+npx shadcn@latest add @crisp/status-strip
+```
+
+It has no dependencies beyond the `cn` helper that `shadcn init` already adds.
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource
+  src="registry/crisp/ui/status-strip.tsx"
+  title="components/ui/status-strip.tsx"
+/>
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { StatusStrip } from "@/components/ui/status-strip"
+```
+
+```tsx
+<StatusStrip
+  headlineNoun="staff trained"
+  segments={[
+    { key: "done", label: "completed", count: 11, tone: "done" },
+    {
+      key: "active",
+      label: "signed in, not trained",
+      count: 4,
+      tone: "active",
+    },
+    { key: "pending", label: "not signed in yet", count: 3, tone: "pending" },
+  ]}
+  action={<Button>Email this summary</Button>}
+/>
+```
+
+## Notes
+
+- **Segments are stages of one whole.** They must not overlap. The total is their sum, so a person who is in two segments is counted twice.
+- **Tones.** `done` is solid, `active` is tinted, and `pending` is hatched, which reads as "not started or unreachable". The headline counts only `done` segments, so with more than one `done` segment they are added together.
+- **Zero counts.** A segment with a count of 0 is left out of the bar but still appears in the legend. If the total is 0 there is no bar.
+- **Accessibility.** The bar is an image with a label that lists every segment, for example "11 completed, 4 signed in, not trained, 3 not signed in yet". The legend is a description list.
+- **Colour.** The tones use `primary` and `muted-foreground`, so they follow your theme.
+
+## Props
+
+### StatusStrip
+
+Also accepts the props of a `div`.
+
+| Prop           | Type              | Description                                                                                          |
+| -------------- | ----------------- | ---------------------------------------------------------------------------------------------------- |
+| `segments`     | `StatusSegment[]` | Stages of one whole. Required.                                                                       |
+| `headlineNoun` | `string`          | Completes the headline: "11 of 18 `<noun>`". Default `"done"`.                                       |
+| `action`       | `ReactNode`       | Rendered on the right of the headline, wrapping below it on narrow screens. Omitted when not passed. |
+
+### StatusSegment
+
+| Field   | Type                              | Description                                   |
+| ------- | --------------------------------- | --------------------------------------------- |
+| `key`   | `string`                          | React key. Must be unique within the strip.   |
+| `label` | `string`                          | Shown in the legend and the bar's label.      |
+| `count` | `number`                          | How many fall in this stage. Sizes the bar.   |
+| `tone`  | `"done" \| "active" \| "pending"` | `StatusTone`. Sets the fill and the headline. |

@@ -4,11 +4,8 @@ import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 
-import { PAGES_NEW } from "@/lib/docs"
 import { DOCS_SIDEBAR_SCROLL_STORAGE_KEY } from "@/lib/docs-sidebar-scroll"
-import { showMcpDocs } from "@/lib/flags"
-import { getCurrentBase, getPagesFromFolder } from "@/lib/page-tree"
-import type { source } from "@/lib/source"
+import { DOCS_NAV } from "@/lib/page-tree"
 import {
   Sidebar,
   SidebarContent,
@@ -19,44 +16,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/registry/new-york-v4/ui/sidebar"
-
-const TOP_LEVEL_SECTIONS = [
-  { name: "Introduction", href: "/docs" },
-  {
-    name: "Components",
-    href: "/docs/components",
-  },
-  {
-    name: "Installation",
-    href: "/docs/installation",
-  },
-  {
-    name: "Theming",
-    href: "/docs/theming",
-  },
-  {
-    name: "CLI",
-    href: "/docs/cli",
-  },
-  {
-    name: "Typeset",
-    href: "/docs/typeset",
-  },
-  {
-    name: "Skills",
-    href: "/docs/skills",
-  },
-  {
-    name: "Registry",
-    href: "/docs/registry",
-  },
-  {
-    name: "Changelog",
-    href: "/docs/changelog",
-  },
-]
-const EXCLUDED_SECTIONS = ["installation", "dark-mode", "changelog", "rtl"]
-const EXCLUDED_PAGES = ["/docs", "/docs/changelog", "/docs/rtl", "/docs/new"]
 
 function readScrollState() {
   try {
@@ -114,11 +73,9 @@ function getActiveItem(container: HTMLElement) {
 }
 
 export function DocsSidebar({
-  tree,
   ...props
-}: React.ComponentProps<typeof Sidebar> & { tree: typeof source.pageTree }) {
+}: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname()
-  const currentBase = getCurrentBase(pathname)
   const contentRef = React.useRef<HTMLDivElement>(null)
 
   React.useLayoutEffect(() => {
@@ -180,93 +137,31 @@ export function DocsSidebar({
         data-docs-sidebar-content=""
         className="w-(--sidebar-menu-width) scroll-fade scrollbar-none overflow-x-hidden pl-2.5"
       >
-        <SidebarGroup className="pt-12">
-          <SidebarGroupLabel className="font-medium text-muted-foreground">
-            Sections
-          </SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {TOP_LEVEL_SECTIONS.map(({ name, href }) => {
-                if (!showMcpDocs && href.includes("/mcp")) {
-                  return null
-                }
-                return (
-                  <SidebarMenuItem key={name}>
+        {DOCS_NAV.map((group, index) => (
+          <SidebarGroup key={group.name} className={index === 0 ? "pt-12" : ""}>
+            <SidebarGroupLabel className="font-medium text-muted-foreground">
+              {group.name}
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu className="gap-0.5">
+                {group.items.map((item) => (
+                  <SidebarMenuItem key={item.href}>
                     <SidebarMenuButton
                       asChild
-                      isActive={
-                        href === "/docs"
-                          ? pathname === href
-                          : pathname.startsWith(href)
-                      }
+                      isActive={item.href === pathname}
                       className="relative h-[30px] w-fit overflow-visible border border-transparent text-[0.8rem] font-medium after:absolute after:inset-x-0 after:-inset-y-1 after:z-0 after:rounded-md data-[active=true]:border-accent data-[active=true]:bg-accent 3xl:fixed:w-full 3xl:fixed:max-w-48"
                     >
-                      <Link href={href}>
+                      <Link href={item.href}>
                         <span className="absolute inset-0 flex w-(--sidebar-menu-width) bg-transparent" />
-                        {name}
-                        {PAGES_NEW.includes(href) && (
-                          <span
-                            className="flex size-2 rounded-full bg-blue-500"
-                            title="New"
-                          />
-                        )}
+                        {item.name}
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
-                )
-              })}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-        {tree.children.map((item) => {
-          if (EXCLUDED_SECTIONS.includes(item.$id ?? "")) {
-            return null
-          }
-
-          return (
-            <SidebarGroup key={item.$id}>
-              <SidebarGroupLabel className="font-medium text-muted-foreground">
-                {item.name}
-              </SidebarGroupLabel>
-              <SidebarGroupContent>
-                {item.type === "folder" && (
-                  <SidebarMenu className="gap-0.5">
-                    {getPagesFromFolder(item, currentBase).map((page) => {
-                      if (!showMcpDocs && page.url.includes("/mcp")) {
-                        return null
-                      }
-
-                      if (EXCLUDED_PAGES.includes(page.url)) {
-                        return null
-                      }
-
-                      return (
-                        <SidebarMenuItem key={page.url}>
-                          <SidebarMenuButton
-                            asChild
-                            isActive={page.url === pathname}
-                            className="relative h-[30px] w-fit overflow-visible border border-transparent text-[0.8rem] font-medium after:absolute after:inset-x-0 after:-inset-y-1 after:z-0 after:rounded-md data-[active=true]:border-accent data-[active=true]:bg-accent 3xl:fixed:w-full 3xl:fixed:max-w-48"
-                          >
-                            <Link href={page.url}>
-                              <span className="absolute inset-0 flex w-(--sidebar-menu-width) bg-transparent" />
-                              {page.name}
-                              {PAGES_NEW.includes(page.url) && (
-                                <span
-                                  className="flex size-2 rounded-full bg-blue-500"
-                                  title="New"
-                                />
-                              )}
-                            </Link>
-                          </SidebarMenuButton>
-                        </SidebarMenuItem>
-                      )
-                    })}
-                  </SidebarMenu>
-                )}
-              </SidebarGroupContent>
-            </SidebarGroup>
-          )
-        })}
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ))}
       </SidebarContent>
     </Sidebar>
   )

@@ -6,66 +6,63 @@ import { META_THEME_COLORS, siteConfig } from "@/lib/config"
 import { DOCS_SIDEBAR_SCROLL_RESTORE_SCRIPT } from "@/lib/docs-sidebar-scroll"
 import { fontVariables } from "@/lib/fonts"
 import { ActiveThemeProvider } from "@/components/active-theme"
-import { Analytics } from "@/components/analytics"
+import { SkipLink } from "@/components/skip-link"
 import { TailwindIndicator } from "@/components/tailwind-indicator"
 import { ThemeProvider } from "@/components/theme-provider"
-import { TooltipProvider as BaseTooltipProvider } from "@/registry/bases/base/ui/tooltip"
-import { Toaster } from "@/registry/bases/radix/ui/sonner"
-import { TooltipProvider as RadixTooltipProvider } from "@/registry/bases/radix/ui/tooltip"
-import { Toaster as BaseToaster } from "@/styles/base-nova/ui/toast"
+import { Toaster } from "@/registry/new-york-v4/ui/sonner"
+import { TooltipProvider } from "@/registry/new-york-v4/ui/tooltip"
+import { getSiteUrl } from "@/app/site-url"
 
 import "@/app/globals.css"
-import "@/app/(app)/(typeset)/typeset.css"
+
+const siteUrl = getSiteUrl()
+const ogImage = {
+  url: "/og.png",
+  width: 1200,
+  height: 630,
+  alt: siteConfig.name,
+}
 
 export const metadata: Metadata = {
   title: {
     default: siteConfig.name,
     template: `%s - ${siteConfig.name}`,
   },
-  metadataBase: new URL(siteConfig.url),
+  metadataBase: new URL(siteUrl),
   description: siteConfig.description,
-  keywords: ["Next.js", "React", "Tailwind CSS", "Components", "shadcn"],
-  authors: [
-    {
-      name: "shadcn",
-      url: "https://shadcn.com",
-    },
+  keywords: [
+    "React",
+    "Tailwind CSS",
+    "dashboard",
+    "status",
+    "notifications",
+    "component registry",
   ],
-  creator: "shadcn",
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: siteConfig.url,
+    url: "/",
     title: siteConfig.name,
     description: siteConfig.description,
     siteName: siteConfig.name,
-    images: [
-      {
-        url: `${siteConfig.url}/opengraph-image.png`,
-        width: 1200,
-        height: 630,
-        alt: siteConfig.name,
-      },
-    ],
+    images: [ogImage],
   },
   twitter: {
     card: "summary_large_image",
     title: siteConfig.name,
     description: siteConfig.description,
-    images: [`${siteConfig.url}/opengraph-image.png`],
-    creator: "@shadcn",
+    images: [ogImage],
   },
   icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon-16x16.png",
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
     apple: "/apple-touch-icon.png",
   },
-  manifest: `${siteConfig.url}/site.webmanifest`,
-  alternates: {
-    types: {
-      "application/rss+xml": `${siteConfig.url}/rss.xml`,
-    },
-  },
+  manifest: "/site.webmanifest",
 }
 
 export default function RootLayout({
@@ -106,19 +103,16 @@ export default function RootLayout({
           "group/body overscroll-none antialiased [--footer-height:calc(var(--spacing)*14)] xl:[--footer-height:calc(var(--spacing)*24)]"
         )}
       >
+        <SkipLink />
         <ThemeProvider>
           <ActiveThemeProvider>
             <NuqsAdapter>
-              <BaseTooltipProvider delay={0}>
-                <RadixTooltipProvider delayDuration={0}>
-                  {children}
-                  <Toaster position="top-center" />
-                  <BaseToaster />
-                </RadixTooltipProvider>
-              </BaseTooltipProvider>
+              <TooltipProvider delayDuration={0}>
+                {children}
+                <Toaster position="top-center" />
+              </TooltipProvider>
             </NuqsAdapter>
             <TailwindIndicator />
-            <Analytics />
           </ActiveThemeProvider>
         </ThemeProvider>
       </body>

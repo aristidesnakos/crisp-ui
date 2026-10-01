@@ -4,13 +4,11 @@ import { mdxComponents } from "@/mdx-components"
 import { IconArrowLeft, IconArrowRight } from "@tabler/icons-react"
 import { findNeighbour } from "fumadocs-core/page-tree"
 
-import { replaceComponentsList } from "@/lib/llm"
+import { siteConfig } from "@/lib/config"
 import { source } from "@/lib/source"
 import { absoluteUrl } from "@/lib/utils"
-import { DocsBaseSwitcher } from "@/components/docs-base-switcher"
 import { DocsCopyPage } from "@/components/docs-copy-page"
 import { DocsTableOfContents } from "@/components/docs-toc"
-import { OpenInV0Cta } from "@/components/open-in-v0-cta"
 import { Button } from "@/registry/new-york-v4/ui/button"
 
 export const revalidate = false
@@ -48,26 +46,15 @@ export async function generateMetadata(props: {
       description: doc.description,
       type: "article",
       url: absoluteUrl(page.url),
-      images: [
-        {
-          url: `/og?title=${encodeURIComponent(
-            doc.title
-          )}&description=${encodeURIComponent(doc.description)}`,
-        },
-      ],
+      // A page's openGraph replaces the layout's rather than merging, so the
+      // shared image is repeated here.
+      images: [{ url: "/og.png", width: 1200, height: 630 }],
     },
     twitter: {
       card: "summary_large_image",
       title: doc.title,
       description: doc.description,
-      images: [
-        {
-          url: `/og?title=${encodeURIComponent(
-            doc.title
-          )}&description=${encodeURIComponent(doc.description)}`,
-        },
-      ],
-      creator: "@shadcn",
+      images: ["/og.png"],
     },
   }
 }
@@ -83,11 +70,8 @@ export default async function Page(props: {
 
   const doc = page.data
   const MDX = doc.body
-  const isChangelog = params.slug?.[0] === "changelog"
-  const neighbours = isChangelog
-    ? { previous: null, next: null }
-    : findNeighbour(source.pageTree, page.url)
-  const raw = replaceComponentsList(await page.data.getText("raw"))
+  const neighbours = findNeighbour(source.pageTree, page.url)
+  const raw = await page.data.getText("raw")
 
   return (
     <div
@@ -145,16 +129,6 @@ export default async function Page(props: {
             </div>
           </div>
           <div className="typeset w-full flex-1 pb-16 *:data-[slot=alert]:first:mt-0 sm:pb-0">
-            {params.slug &&
-              params.slug[0] === "components" &&
-              params.slug[1] &&
-              params.slug[2] && (
-                <DocsBaseSwitcher
-                  base={params.slug[1]}
-                  component={params.slug[2]}
-                  className="mb-4"
-                />
-              )}
             <MDX components={mdxComponents} />
           </div>
           <div className="hidden h-16 w-full items-center gap-2 px-4 sm:flex sm:px-0">
@@ -192,9 +166,6 @@ export default async function Page(props: {
             <DocsTableOfContents toc={doc.toc} />
           </div>
         ) : null}
-        <div className="hidden flex-1 flex-col gap-6 px-6 xl:flex">
-          <OpenInV0Cta />
-        </div>
       </div>
     </div>
   )
