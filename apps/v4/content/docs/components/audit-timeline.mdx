@@ -9,8 +9,7 @@ Use it wherever people need to see what happened and who did it: who sent the su
 
 It is the **Record** stage of the story See, Decide, Act, Confirm, Record.
 
-- **Comes after:** [`confirm-send`](/docs/components/confirm-send). "Sent to 3 people" becomes an audit entry, and so does every save and decision.
-- **Leads to:** nothing. It closes the loop back to [`status-strip`](/docs/components/status-strip), because the next number you look at is the result of what was recorded.
+"Sent to 3 people" from [`confirm-send`](/docs/components/confirm-send) becomes an audit entry, and so does every save and decision. It closes the loop back to [`status-strip`](/docs/components/status-strip), because the next number you look at is the result of what was recorded.
 
 <Callout>
   **What this is not.** It only displays events. It does not create, store,
@@ -130,6 +129,14 @@ await db.auditEvents.insert(
 - **Structure.** One heading per day (level 3 by default, set `headingLevel`), each followed by an ordered list. Controls are a native `select` with a label and standard buttons.
 - **Colour.** It uses the shadcn tokens (`border`, `muted-foreground`, `destructive`), so it follows your theme.
 
+## What it does not do
+
+- **It does not create, store, protect, retain or export events.** It only displays events your server recorded. Write them on the server, in the same handler that does the work.
+- **It is not tamper-proof.** An audit log is only as trustworthy as the server that writes it. If the only copy of a record is in the browser, it is not a record.
+- **It does not filter or page on the server.** Filters apply only to the events already loaded. Older events come from `onLoadMore`.
+- **It does not remove sensitive details.** Keep message bodies, diagnoses, grades and other personal data out of `target`, `reason` and `detail`.
+- **It makes no compliance claim.** Using it does not make a tool compliant with FERPA, HIPAA, 21 CFR Part 11, ISO 9001 or anything else. It is UI cues, not compliance.
+
 ## Props
 
 ### AuditTimeline
@@ -194,9 +201,51 @@ The absolute label with the zone, and the ISO string for `<time dateTime>`. For 
 
 `formatRelativeTime(at, now, locale?)`, `filterAuditEvents(events, { actor, action })`, `distinctActors(events)`, `distinctActions(events)`, `actorName(actor)` and `actorRole(actor)`.
 
-## Example events by sector
+## Why it exists
+
+Several rules and standards expect a record of who did what, when and why, for example the disclosure log in FERPA (34 CFR 99.32), audit controls in the HIPAA Security Rule (45 CFR 164.312), a name, time and meaning on a signed record in 21 CFR Part 11, and documented-information control in ISO 9001 (7.5.3). OWASP lists missing logging and monitoring as a top risk. Tools built quickly, by hand or with an AI agent, often leave the record out.
+
+Whether any of these applies to your tool is not something this page can tell you. crisp-ui is UI only: access control, retention, encryption and consent live in your backend, and nothing here makes a tool compliant.
+
+## Agent prompt
+
+Paste this into your coding agent (Claude Code, Cursor, Codex or similar) in your project.
+
+```text
+Goal: add a read-only audit timeline ("who did what, when, and why") to my internal tool. It comes after confirm-send: "Sent to 3 people" becomes an event.
+
+Install: npx shadcn@latest add https://regularui.com/r/audit-timeline.json
+Read the installed files (components/ui/audit-timeline.tsx, lib/audit-event.ts) before writing any code. Do not guess props.
+
+Contract:
+type AuditEvent = { id: string; at: string /* ISO */; actor: string | { name: string; role?: string }; action: string; target?: string; reason?: string; outcome?: "succeeded" | "failed" | "blocked"; detail?: string }
+<AuditTimeline events timeZone initialCount? onLoadMore? hasMore? emptyMessage? filterable? loading? error? onRetry? stale? />
+buildAuditEvent(input, { now?, newId?, requireReason? }) throws if requireReason is set and the reason is blank.
+
+Wiring rule: write an AuditEvent on the SERVER for every send, save and decision, in the same handler that does the work, with buildAuditEvent and the server clock. Record failed and blocked attempts too. The UI never creates the record; the page only fetches events and passes them in. Use requireReason for approvals and overrides. Never put message bodies or personal data in reason or detail.
+
+States to handle: loading, empty ("No activity recorded yet"), error with retry, stale, failed and blocked outcomes, and a long list (initialCount, Show more).
+
+Acceptance checks (run them and show me the output):
+1. Typecheck and lint pass.
+2. A send, a failed save and an approval each add one event with actor, time and reason visible.
+3. Approving without a reason is rejected by the server.
+4. Times show a time zone, and outcomes are readable without colour.
+5. Keyboard only: the filters and Show more can be reached and used.
+
+Do not build or claim tamper-proofing, retention, export, a log database or compliance. Reuse my existing storage; if there is none, keep events in memory and say so. No new dependencies or abstractions beyond this. If something is unclear, ask me.
+```
+
+## Examples by sector
 
 Fictional data, to show the wording. Each is something the server wrote, not something the page made.
+
+- **Education.** A record of a disclosure to a guardian: the registrar disclosed a student's attendance record, with the reason given and the fields shared, dates and attendance marks only.
+- **Manufacturing.** A calibration marked overdue by a scheduler, then the gauge recalled by a quality engineer.
+- **Engineering.** An approval of ECO-2041, with its reason and what the signature means.
+- **Health.** An appointment reminder with nothing about the patient in the body: time and place only.
+
+### Example events
 
 ```ts
 const events: AuditEvent[] = [
@@ -255,37 +304,6 @@ const events: AuditEvent[] = [
 ]
 ```
 
-## Why it exists
+## Next
 
-Several rules and standards expect a record of who did what, when and why, for example the disclosure log in FERPA (34 CFR 99.32), audit controls in the HIPAA Security Rule (45 CFR 164.312), a name, time and meaning on a signed record in 21 CFR Part 11, and documented-information control in ISO 9001 (7.5.3). OWASP lists missing logging and monitoring as a top risk. Tools built quickly, by hand or with an AI agent, often leave the record out.
-
-Whether any of these applies to your tool is not something this page can tell you. crisp-ui is UI only: access control, retention, encryption and consent live in your backend, and nothing here makes a tool compliant.
-
-## Agent prompt
-
-Paste this into your coding agent (Claude Code, Cursor, Codex or similar) in your project.
-
-```text
-Goal: add a read-only audit timeline ("who did what, when, and why") to my internal tool. It comes after confirm-send: "Sent to 3 people" becomes an event.
-
-Install: npx shadcn@latest add https://regularui.com/r/audit-timeline.json
-Read the installed files (components/ui/audit-timeline.tsx, lib/audit-event.ts) before writing any code. Do not guess props.
-
-Contract:
-type AuditEvent = { id: string; at: string /* ISO */; actor: string | { name: string; role?: string }; action: string; target?: string; reason?: string; outcome?: "succeeded" | "failed" | "blocked"; detail?: string }
-<AuditTimeline events timeZone initialCount? onLoadMore? hasMore? emptyMessage? filterable? loading? error? onRetry? stale? />
-buildAuditEvent(input, { now?, newId?, requireReason? }) throws if requireReason is set and the reason is blank.
-
-Wiring rule: write an AuditEvent on the SERVER for every send, save and decision, in the same handler that does the work, with buildAuditEvent and the server clock. Record failed and blocked attempts too. The UI never creates the record; the page only fetches events and passes them in. Use requireReason for approvals and overrides. Never put message bodies or personal data in reason or detail.
-
-States to handle: loading, empty ("No activity recorded yet"), error with retry, stale, failed and blocked outcomes, and a long list (initialCount, Show more).
-
-Acceptance checks (run them and show me the output):
-1. Typecheck and lint pass.
-2. A send, a failed save and an approval each add one event with actor, time and reason visible.
-3. Approving without a reason is rejected by the server.
-4. Times show a time zone, and outcomes are readable without colour.
-5. Keyboard only: the filters and Show more can be reached and used.
-
-Do not build or claim tamper-proofing, retention, export, a log database or compliance. Reuse my existing storage; if there is none, keep events in memory and say so. No new dependencies or abstractions beyond this. If something is unclear, ask me.
-```
+Comes after: [`confirm-send`](/docs/components/confirm-send), [`approval-step`](/docs/components/approval-step). Leads to: [`status-strip`](/docs/components/status-strip).

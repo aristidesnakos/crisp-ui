@@ -125,6 +125,14 @@ Each part is its own item and works alone.
 | [`save-bar`](/docs/components/save-bar)                 | "Unsaved changes" with Discard and Save, hidden when clean                     |
 | [`notify-envelope`](/docs/components/notify-envelope)   | Pure helpers: roster from lists, list comparison, one-message To/Cc envelope   |
 
+## What it does not do
+
+- **It never calls your API.** You pass the saved lists and two handlers. It does not fetch, save or send.
+- **Contacts are email addresses only.** There are no phone numbers and no SMS or text. The two channels are fixed as `automatic` and `onDemand`.
+- **It does not run the automatic channel.** Your server sends as things happen. The block only keeps the list of who is on it, and the column hint says when it sends.
+- **It is not access control and keeps no audit record.** Pair it with `audit-timeline` and write the events on your server.
+- **It makes no compliance claim.** It is UI cues, not compliance.
+
 ## Props
 
 ### StatusNotify
@@ -147,3 +155,44 @@ Also accepts the props of the shadcn `card` it renders (except `title` and `onEr
 | `title` / `description`                 | `string`                                      | Heading and one-line help above the roster.                                               |
 
 Each channel config (`automatic`, `onDemand`) also accepts `limit` and `switchLabel: (email) => string` for a per-person accessible name.
+
+## Agent prompt
+
+Paste this into your coding agent (Claude Code, Cursor, Codex or similar) in your project. Replace the bracketed parts with your own.
+
+```text
+Goal: add a status-and-notify block to my [screen]: a headline "N of M [things] [done]" with a segmented bar, a confirm-then-send button, and one roster of who hears about it. Contacts are email addresses only.
+
+Install: npx shadcn@latest add https://regularui.com/r/status-notify.json
+Read the installed files (components/status-notify.tsx and the parts it adds: status-strip, recipient-roster, confirm-send, save-bar under components/ui, and lib/notify-envelope.ts) before writing any code. Do not guess props.
+
+Contract:
+<StatusNotify segments={StatusSegment[]} headlineNoun? automatic={{ label, hint?, limit?, switchLabel? }} onDemand={{ same fields }} saved={{ automatic: string[]; onDemand: string[] }} onSave={(channel: "automatic" | "onDemand", emails: string[]) => Promise<void>} onSend={() => Promise<number | void>} onError?={(error, { action: "save" | "send"; channel? }) => void} automaticFallback? validateEmail? sendLabel? recipientNoun? recipientNounPlural? title? description? />
+StatusSegment = { key; label; count; tone: "done" | "active" | "pending" }
+
+Wiring rule: the block never calls my API. onSave persists one list and throws on failure. It MUST lead to `saved` updating (state, refetch or cache), or the Unsaved changes bar stays and sending stays blocked. onSend sends the on-demand summary to the SAVED list from my server and returns the real sent count. onError shows a toast. Segments come from my data and must not overlap. Email addresses only: do not add phone numbers, SMS or texting.
+
+States to handle: clean, dirty, save failed (only that channel stays dirty), sending, sent, an empty automatic list (automaticFallback says what really happens), a list at its limit, an invalid address.
+
+Acceptance checks (run them and show me the output):
+1. Typecheck and lint pass.
+2. Edit one list and Save: the bar goes away only after `saved` updates.
+3. Sending is blocked while there are unsaved edits.
+4. If one channel's save fails and the other succeeds, only the failed one stays dirty.
+5. The confirmation names the recipient count before onSend runs.
+
+UI only: it does not send, store or check permissions, and it makes no compliance claim. No new dependencies or abstractions beyond this. If something is unclear, ask me.
+```
+
+## Examples by sector
+
+Example data only, to show the wording. These are not claims about any real organisation, and the component proves nothing about a sector's rules. The pattern is the same in each; only the data changes.
+
+- **Education.** Staff training completion: "11 of 18 staff trained", an email to the office as each person finishes, and a digest to the principal on demand.
+- **Manufacturing.** Calibrations in date: "6 of 18 gauges in calibration", an email to the quality team for each overdue gauge, and a digest on demand.
+- **Engineering.** Change orders reviewed: "7 of 12 ECOs reviewed", with the document controller emailed a digest on demand.
+- **Health.** Staff licences current: "41 of 46 licences current", with the practice manager emailed a digest on demand. Staff addresses only, and no patient details.
+
+## Next
+
+Comes after: none, this is where a screen starts. Leads to: [`audit-timeline`](/docs/components/audit-timeline).

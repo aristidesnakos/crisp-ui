@@ -258,7 +258,7 @@ Goal: show my [rows, e.g. gauges due for calibration] as a table with saved view
 Install:
 npx shadcn@latest add https://regularui.com/r/data-table.json
 npx shadcn@latest add https://regularui.com/r/confirm-send.json
-Read components/ui/data-table.tsx and lib/table-view.ts in full before writing any code. Do not guess props.
+Read the installed files (components/ui/data-table.tsx, lib/table-view.ts) in full before writing any code. Do not guess props.
 
 Props contract (DataTable<Row>):
 - rows: every row, unfiltered. getRowId: stable unique string. rowLabel: row => "Gauge G-104" (names its checkbox). caption: names the table.
@@ -277,7 +277,7 @@ Acceptance checks (run them and show the output):
 3. Every checkbox has a name that includes its row's label.
 4. Changing the view never leaves a hidden row selected.
 
-Out of scope: pagination, column resizing, server-side fetching, access control. Use only what is installed. Add no dependencies and rebuild nothing the files already do.
+Out of scope: pagination, column resizing, server-side fetching, access control. Use only what is installed. Add no dependencies and rebuild nothing the files already do. If something is unclear, ask me.
 ```
 
 ## Examples by sector
@@ -291,4 +291,4 @@ These are example data and wording only. The component is the same in each; only
 
 ## Next
 
-Send a reminder to the selection with [`confirm-send`](/docs/components/confirm-send): it asks "Send to 3 people?" with the count before anything goes out.
+Comes after: [`status-strip`](/docs/components/status-strip). Leads to: [`approval-step`](/docs/components/approval-step), [`confirm-send`](/docs/components/confirm-send).

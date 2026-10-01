@@ -83,6 +83,14 @@ import { StatusStrip } from "@/components/ui/status-strip"
 - **Accessibility.** The bar is an image with a label that lists every segment, for example "11 completed, 4 signed in, not trained, 3 not signed in yet". The legend is a list.
 - **Colour.** The tones use `primary` and `muted-foreground`, so they follow your theme.
 
+## What it does not do
+
+- **It does not fetch, count or store anything.** It draws the numbers you pass. Putting each item into a segment is your code.
+- **It does not stop segments overlapping.** A person in two segments is counted twice, so make every item fall in exactly one.
+- **It does not act.** The `action` slot only holds the button you give it. Sending, saving and permission checks are yours.
+- **It shows one moment, not a trend.** It is one whole split into stages. It is not a chart over time.
+- **It makes no compliance claim.** "11 of 18 staff trained" is a display of numbers you supply, and a UI cue, not compliance. It proves nothing about who was trained.
+
 ## Props
 
 ### StatusStrip
@@ -105,3 +113,44 @@ Exported from the same file, along with `StatusTone` and `StatusStripProps`.
 | `label` | `string`                          | Shown in the legend and the bar's label.      |
 | `count` | `number`                          | How many fall in this stage. Sizes the bar.   |
 | `tone`  | `"done" \| "active" \| "pending"` | `StatusTone`. Sets the fill and the headline. |
+
+## Agent prompt
+
+Paste this into your coding agent (Claude Code, Cursor, Codex or similar) in your project. Replace the bracketed parts with your own.
+
+```text
+Goal: add a status strip to the top of my [screen]: a headline like "11 of 18 [things] [done]", a segmented bar, a legend, and my [action, e.g. "Email this summary"] button beside the numbers.
+
+Install: npx shadcn@latest add https://regularui.com/r/status-strip.json
+Read the installed files (components/ui/status-strip.tsx) before writing any code. Do not guess props.
+
+Contract:
+type StatusSegment = { key: string; label: string; count: number; tone: "done" | "active" | "pending" }
+<StatusStrip segments={StatusSegment[]} headlineNoun?={string, default "done"} action?={ReactNode} />  // also takes div props, e.g. className
+
+Wiring rule: segments are stages of ONE whole and must not overlap, so put every item in exactly one segment and count them from my own data. The headline adds up the "done" segments only; the bar total is the sum of all counts. The component fetches and stores nothing. Put the button that acts on this status in `action`.
+
+States to handle: loading (do not draw zeros as if they were real), a total of 0 (no bar), a segment with count 0 (left out of the bar, still in the legend), a narrow screen (the action wraps under the headline).
+
+Acceptance checks (run them and show me the output):
+1. Typecheck and lint pass.
+2. A test shows the segment counts add up to the number of items I load, and no item is counted twice.
+3. The headline reads "N of M <noun>", with N the sum of the done segments.
+4. The bar has an accessible label that lists every segment with its count.
+5. The three tones look different without colour (solid, tinted, hatched).
+
+UI only: it does not fetch, store, send or check permissions, and it makes no compliance claim. No new dependencies or abstractions beyond this. If something is unclear, ask me.
+```
+
+## Examples by sector
+
+Example data only, to show the wording. These are not claims about any real organisation, and the component proves nothing about a sector's rules. The pattern is the same in each; only the data changes.
+
+- **Education.** Staff training completion: "11 of 18 staff trained", with segments completed, signed in but not trained, and not signed in yet.
+- **Manufacturing.** Calibrations in date: "6 of 18 gauges in calibration", with segments in date, due in 30 days and overdue.
+- **Engineering.** Engineering change orders reviewed: "7 of 12 ECOs reviewed", with segments reviewed, in review and not started.
+- **Health.** Staff licences current: "41 of 46 licences current", with segments current, expiring in 60 days and expired.
+
+## Next
+
+Comes after: none, this is where a screen starts. Leads to: [`data-table`](/docs/components/data-table), [`recipient-roster`](/docs/components/recipient-roster).
