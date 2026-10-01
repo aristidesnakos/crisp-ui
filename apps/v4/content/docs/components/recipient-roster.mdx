@@ -102,6 +102,14 @@ The roster is controlled. It never saves anything. It calls `onChange` with the 
 - **Layout.** Each channel is a column of 3.5rem on narrow screens and 6.75rem from `sm` up. The `hint` is hidden on narrow screens. The remove button shows on hover on wide screens, and always on touch devices.
 - **Accessibility.** Each switch is named "`label`: `email`" unless you pass `switchLabel`. Validation errors are announced with `role="alert"`.
 
+## What it does not do
+
+- **It never saves or sends.** It calls `onChange` with the next list. You keep the state and decide when to save.
+- **Contacts are email addresses only.** There are no phone numbers and no SMS or text channels. A channel here is a way an email is sent, such as as things happen or in a digest, not another kind of contact.
+- **It does not check that an address exists.** `validate` checks the shape of an address, not that anyone reads it.
+- **It does not record consent.** A switch is a setting in your list. It is not proof that a person agreed, and opt-out handling is yours.
+- **It does not control access or make anything compliant.** It is UI cues, not compliance.
+
 ## Props
 
 ### RecipientRoster
@@ -135,3 +143,50 @@ Also accepts the props of a `div` (except `onChange`, which is the roster's own)
 | ---------- | ------------------------- | ----------------------------------------- |
 | `email`    | `string`                  | The person's address, lowercase.          |
 | `channels` | `Record<string, boolean>` | Whether they are on each channel, by key. |
+
+## Agent prompt
+
+Paste this into your coding agent (Claude Code, Cursor, Codex or similar) in your project. Replace the bracketed parts with your own.
+
+```text
+Goal: add one list of people to my [screen], where each person appears once with a switch per way of hearing about [what, e.g. training completion]. Contacts are email addresses only.
+
+Install:
+npx shadcn@latest add https://regularui.com/r/recipient-roster.json
+npx shadcn@latest add https://regularui.com/r/notify-envelope.json
+Read the installed files (components/ui/recipient-roster.tsx, lib/notify-envelope.ts) before writing any code. Do not guess props.
+
+Contract:
+type RosterPerson = { email: string /* lowercase */; channels: Record<string, boolean> }
+type RosterChannel = { key: string; label: string; hint?: string; limit?: number; switchLabel?: (email: string) => string }
+<RecipientRoster people channels onChange={(people) => void} disabled? validate?={(email) => boolean} emptyMessage? footnote? />
+lib/notify-envelope: peopleFromLists(lists, channelKeys), listForChannel(people, key), sameList(a, b)
+
+Wiring rule: the roster is controlled and never saves. Keep `people` in state, built with peopleFromLists from my saved lists (it lowercases). Save one list per channel, made with listForChannel, to my own API, and update the saved lists only after the write succeeds. Pass `validate` to match my backend's email rule. Pair it with save-bar so changes are saved on purpose.
+
+Contacts are email addresses only. Do not add phone numbers, SMS or texting, and do not add a phone field or another channel type.
+
+States to handle: empty list (emptyMessage), a channel at its limit (switches for people not on it lock), an invalid or duplicate address (error shown, nothing added), saving (disabled), save failed.
+
+Acceptance checks (run them and show me the output):
+1. Typecheck and lint pass.
+2. Pasting "a@x.org, b@x.org bad" adds nobody and names the bad address.
+3. A channel at its limit locks the other switches, and the ones that are on can still be turned off.
+4. Duplicates are skipped and addresses are stored in lowercase.
+5. Keyboard only: Tab reaches each switch, and each is named "<label>: <email>".
+
+UI only: it does not send, store, record consent or control access, and it makes no compliance claim. No new dependencies or abstractions beyond this. If something is unclear, ask me.
+```
+
+## Examples by sector
+
+Example data only, to show the wording. These are not claims about any real organisation, and the component proves nothing about a sector's rules. The pattern is the same in each; only the data changes.
+
+- **Education.** Office staff and department leads who hear when staff finish training: one switch for each finish, one for a weekly digest.
+- **Manufacturing.** Supervisors and quality engineers who hear about each overdue calibration as it happens, and a plant manager who gets only the digest.
+- **Engineering.** Reviewers and the document controller on a change order: one switch for the approval notice, one for a weekly summary.
+- **Health.** Practice manager and credentialing staff who hear when a staff licence is close to lapsing. Staff email addresses only, and no patient details in what is sent.
+
+## Next
+
+Comes after: [`status-strip`](/docs/components/status-strip), [`data-table`](/docs/components/data-table). Leads to: [`alert-rules`](/docs/components/alert-rules), [`confirm-send`](/docs/components/confirm-send).

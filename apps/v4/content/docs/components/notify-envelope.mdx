@@ -100,6 +100,14 @@ Choose the shape per audience:
 - **`sameList` ignores order, case and duplicates.** Use it to decide whether there is anything to save.
 - **`applySavedChannel` only touches one channel.** It sets that channel's switch for everyone on the roster and adds people who are in the saved list but not yet on it. It does not remove people who end up with every channel off.
 
+## What it does not do
+
+- **It is not a component and sends nothing.** There is no React and no network. These are pure functions that move addresses between shapes and build one envelope. Sending it is your server's job.
+- **It does not hide recipients from each other.** `buildEnvelope` puts everyone on `to`, so they all see one another. For a list whose members must not learn about each other, send one message per recipient and do not use it.
+- **It does not validate addresses.** It trims, lowercases where it says so, and drops blanks. It does not check that an address is well formed.
+- **It does not de-duplicate `cc` and `replyTo`.** Pass a clean copied list.
+- **Contacts are email addresses only, and it makes no compliance claim.** There are no phone numbers.
+
 ## Reference
 
 ### peopleFromLists
@@ -140,3 +148,48 @@ The envelope for one message to a small group who are meant to see one another.
 | `channels` | `Record<string, boolean>` | Whether they are on each channel, by key. |
 
 The same shape is exported by [`recipient-roster`](/docs/components/recipient-roster), so the two fit together without a conversion.
+
+## Agent prompt
+
+Paste this into your coding agent (Claude Code, Cursor, Codex or similar) in your project. Replace the bracketed parts with your own.
+
+```text
+Goal: use the notify-envelope helpers to [keep one saved list of addresses per channel and show them as one roster / send one notice to a small named group].
+
+Install: npx shadcn@latest add https://regularui.com/r/notify-envelope.json
+Read the installed files (lib/notify-envelope.ts) before writing any code. Do not guess signatures.
+
+Contract (pure functions, no React, no network):
+type RosterPerson = { email: string; channels: Record<string, boolean> }
+peopleFromLists(lists: Record<string, string[]>, channelKeys: string[]): RosterPerson[]
+listForChannel(people: RosterPerson[], key: string): string[]
+sameList(a: string[], b: string[]): boolean  // ignores order, case, spaces, duplicates
+applySavedChannel(people: RosterPerson[], key: string, saved: string[], channelKeys: string[]): RosterPerson[]
+buildEnvelope(recipients: string[], copied: string[]): { to: string[]; cc: string[]; replyTo: string[] }
+
+Wiring rule: use sameList to decide whether a list is dirty. After a save lands, call applySavedChannel for that one channel and leave the other channel's edits alone. Use buildEnvelope on my SERVER only when one message goes to a small, named group who are meant to see one another. For a list whose members must not learn about each other, send one message per recipient and do not use buildEnvelope. Anyone on `to` is dropped from `cc` but stays on `replyTo`.
+
+Cases to handle: an empty list, the same address on several channels (merged into one person, lowercased), an address in both recipients and copied, blank strings, keys that are not in channelKeys (ignored).
+
+Acceptance checks (run them and show me the output):
+1. Typecheck and lint pass.
+2. A test: sameList(["A@x.org", " a@x.org "], ["a@x.org"]) is true.
+3. A test: buildEnvelope(["a@x.org"], ["a@x.org", "b@x.org"]) gives to ["a@x.org"], cc ["b@x.org"] and replyTo ["a@x.org", "b@x.org"].
+4. A test: peopleFromLists merges one address on two channels into one person, with every channel key set.
+5. The file imports no React and makes no network call.
+
+Contacts are email addresses only. UI helpers only: they do not send or store anything and make no compliance claim. No new dependencies or abstractions beyond this. If something is unclear, ask me.
+```
+
+## Examples by sector
+
+Example data only, to show the wording. These are not claims about any real organisation, and the component proves nothing about a sector's rules. The pattern is the same in each; only the data changes.
+
+- **Education.** A summary to a small named group, such as the office and the principal on `to` with the registrar on `cc`. A notice to families goes one message per recipient, because they must not see each other.
+- **Manufacturing.** A recall notice to three named gauge owners on `to`, with the quality manager on `cc` and `replyTo`.
+- **Engineering.** A release notice to the reviewers on `to`, with the document controller on `cc` and `replyTo`.
+- **Health.** Staff licence reminders go one message per person, since staff should not learn each other's status, so do not use `buildEnvelope` there. Patient lists are out of scope.
+
+## Next
+
+Comes after: [`confirm-send`](/docs/components/confirm-send). Leads to: [`audit-timeline`](/docs/components/audit-timeline).

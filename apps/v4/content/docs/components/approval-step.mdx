@@ -131,9 +131,6 @@ These helpers run anywhere, so your server can use the same `summarizeApproval` 
 
 - **Time is shown in UTC** by default ("11 Mar 2026, 09:30 UTC") so the server and browser render the same text. Pass `formatTime` for another zone or locale. The time is what your server stored in `decision.at`; the browser never makes one up.
 - **`meaning` per decision.** Store the meaning the person confirmed with the decision (`decision.meaning`) and send it back. The `meaning` prop is only what the buttons offer; recorded rows show what was recorded.
-- **Not a router.** It does not move a request to the next approver, send mail or write the audit log. Those are your server's. When the request settles, notify people with [`confirm-send`](/docs/components/confirm-send).
-- **Not a four-way review.** It is approve or reject. A review with more outcomes (approved, approved as noted, revise and resubmit, rejected) is not covered.
-- **One request per component.** Render one per request; the `section` is named by its title.
 
 ## Accessibility
 
@@ -145,50 +142,13 @@ These helpers run anywhere, so your server can use the same `summarizeApproval` 
 
 This has not been tested with a screen reader. Run your own check before relying on it.
 
-## Agent prompt
+## What it does not do
 
-Paste this into your coding agent. Replace the bracketed part with your own request and approvers.
-
-```text
-Goal: add an approval step to my internal tool. [Describe: what is approved, who must approve, which roles, how many.] The signed-in approver can approve or reject with a reason; everyone else sees why they cannot.
-
-Install, then READ the installed files before writing any code:
-npx shadcn@latest add https://regularui.com/r/approval-step.json
-Read components/ui/approval-step.tsx and lib/approval.ts. Do not rewrite them.
-
-Props of ApprovalStep:
-- title: string; approvers: { id, name, role?, decision?: { outcome: "approved"|"rejected", at: ISO string, reason?, meaning? } }[]
-- policy: "all" | "any" | { min: number } (default "all")
-- currentUserId: the signed-in user's id from the session
-- meaning: string, e.g. "Approved for release"; rejectMeaning; requireReason; blockedReason; readOnlyReason
-- onDecide({ outcome, reason, meaning }): Promise<void>. Throw to fail.
-
-Wiring rule: the UI only displays and collects. Hiding a button is not access control. Add a server endpoint that checks who the user is, that they hold the role and it is their turn, refuses a second decision, stamps the time itself, saves the decision with its reason and meaning, and writes one audit event (who, what, when, meaning, reason). onDecide calls it and throws on any non-2xx. On success, refetch the request and pass the server's approvers back in. Take approvers, decisions and times only from the server; never work out permissions in the browser.
-
-States to cover: waiting; can decide; confirm open (reason required on reject); recording; failed with retry; recorded; settled; viewer cannot decide (read-only sentence, not hidden).
-
-Acceptance checks, run them and show me the output:
-1. typecheck and lint pass.
-2. A non-approver sees "Only <role> can sign off." and no buttons.
-3. Rejecting with an empty or whitespace-only reason is refused.
-4. The server, not the UI, refuses a second decision from the same person and a decision from the wrong role.
-5. Each accepted decision creates exactly one audit event.
-6. Keyboard: Tab reaches Approve and Reject; Cancel returns focus to the button.
-
-Do not add libraries or a signature/identity feature. This is not a compliant e-signature system. Build only what I asked.
-```
-
-## Example data
-
-Fictional, and not legal or compliance advice. The regulatory points are UI cues read from the rules' public text, not a determination that a tool is compliant: for example, 21 CFR 11.50 expects a signed record to show the signer's name, the date and time, and the meaning of the signature, and ISO 9001 clause 7.5.3 separates permission to view from permission to change.
-
-**Manufacturing: nonconformance (NCR) disposition.** Approvers: Quality engineer (`role: "Quality"`) and Production supervisor (`role: "Manufacturing"`), policy `"all"`. `meaning`: "Disposition approved: rework". `rejectMeaning`: "Disposition not approved". Reason required on reject. The proposed disposition (use as is, rework, scrap) is part of the request title or body, not of this component. Lock the record once settled.
-
-**Engineering: engineering change order (ECO) release.** Approvers: Quality, Manufacturing, Engineering manager. Policy `"all"`, or `{ min: 2 }` if your process allows it. `meaning`: "Approved for release". Set `requireReason` so approvals carry a note too. When it settles, notify the people who build from the drawing with [`confirm-send`](/docs/components/confirm-send).
-
-**Health: lab-result hold.** Approver: Laboratory director (`role: "Laboratory"`), policy `"any"` with a second named reviewer as cover. `meaning`: "Release hold approved". `requireReason`: on, because each hold is documented individually, not as a blanket rule. **Keep patient details out of the notification text**: "A result needs review", never a name, test or value. The record stays in your system behind its own role checks.
-
-**Education.** The research behind these patterns found few approval flows in education (none in the workflows coded), so there is no education example here. A grade change or a trip permission could use the same step; the page does not claim more than that.
+- **It is not access control and not an electronic-signature system.** Hiding a button stops no one. Your server must verify who the user is, that they hold the role and that it is their turn, then store the decision.
+- **It does not record anything.** Each decision must be something your server records as an audit event. The UI shows it and does not keep it.
+- **It is not a router.** It does not move a request to the next approver, send mail or write the audit log. Those are your server's. When the request settles, notify people with [`confirm-send`](/docs/components/confirm-send).
+- **It is not a four-way review.** It is approve or reject. A review with more outcomes (approved, approved as noted, revise and resubmit, rejected) is not covered.
+- **It handles one request per component.** Render one per request. It makes no compliance claim and gives no legal advice.
 
 ## Props
 
@@ -224,6 +184,48 @@ No React and no network, so they are safe on a server.
 | `describePolicy(approvers, policy)`            | "2 of 3 must approve", "All 3 must approve", "Any 1 of 3 can approve".                                                              |
 | `uniqueApprovers(approvers)`                   | The list with repeated ids dropped, first entry wins.                                                                               |
 
-## Where it fits
+## Agent prompt
 
-Comes after: a data table (what needs a decision). Leads to: [`confirm-send`](/docs/components/confirm-send) (tell everyone it was approved), then `audit-timeline` (the record of who decided what and when). Each decision here must be something your server records as an audit event; the UI shows it, it does not keep it.
+Paste this into your coding agent. Replace the bracketed part with your own request and approvers.
+
+```text
+Goal: add an approval step to my internal tool. [Describe: what is approved, who must approve, which roles, how many.] The signed-in approver can approve or reject with a reason; everyone else sees why they cannot.
+
+Install:
+npx shadcn@latest add https://regularui.com/r/approval-step.json
+Read the installed files (components/ui/approval-step.tsx, lib/approval.ts) before writing any code. Do not guess props, and do not rewrite them.
+
+Props of ApprovalStep:
+- title: string; approvers: { id, name, role?, decision?: { outcome: "approved"|"rejected", at: ISO string, reason?, meaning? } }[]
+- policy: "all" | "any" | { min: number } (default "all")
+- currentUserId: the signed-in user's id from the session
+- meaning: string, e.g. "Approved for release"; rejectMeaning; requireReason; blockedReason; readOnlyReason
+- onDecide({ outcome, reason, meaning }): Promise<void>. Throw to fail.
+
+Wiring rule: the UI only displays and collects. Hiding a button is not access control. Add a server endpoint that checks who the user is, that they hold the role and it is their turn, refuses a second decision, stamps the time itself, saves the decision with its reason and meaning, and writes one audit event (who, what, when, meaning, reason). onDecide calls it and throws on any non-2xx. On success, refetch the request and pass the server's approvers back in. Take approvers, decisions and times only from the server; never work out permissions in the browser.
+
+States to cover: waiting; can decide; confirm open (reason required on reject); recording; failed with retry; recorded; settled; viewer cannot decide (read-only sentence, not hidden).
+
+Acceptance checks, run them and show me the output:
+1. typecheck and lint pass.
+2. A non-approver sees "Only <role> can sign off." and no buttons.
+3. Rejecting with an empty or whitespace-only reason is refused.
+4. The server, not the UI, refuses a second decision from the same person and a decision from the wrong role.
+5. Each accepted decision creates exactly one audit event.
+6. Keyboard: Tab reaches Approve and Reject; Cancel returns focus to the button.
+
+Do not add libraries or a signature/identity feature. This is not a compliant e-signature system. Build only what I asked. If something is unclear, ask me.
+```
+
+## Examples by sector
+
+Fictional, and not legal or compliance advice. The regulatory points are UI cues read from the rules' public text, not a determination that a tool is compliant: for example, 21 CFR 11.50 expects a signed record to show the signer's name, the date and time, and the meaning of the signature, and ISO 9001 clause 7.5.3 separates permission to view from permission to change.
+
+- **Education.** The research behind these patterns found few approval flows in education (none in the workflows coded), so there is no education example here. A grade change or a trip permission could use the same step; the page does not claim more than that.
+- **Manufacturing.** Nonconformance (NCR) disposition. Approvers: Quality engineer (`role: "Quality"`) and Production supervisor (`role: "Manufacturing"`), policy `"all"`. `meaning`: "Disposition approved: rework". `rejectMeaning`: "Disposition not approved". Reason required on reject. The proposed disposition (use as is, rework, scrap) is part of the request title or body, not of this component. Lock the record once settled.
+- **Engineering.** Engineering change order (ECO) release. Approvers: Quality, Manufacturing, Engineering manager. Policy `"all"`, or `{ min: 2 }` if your process allows it. `meaning`: "Approved for release". Set `requireReason` so approvals carry a note too. When it settles, notify the people who build from the drawing with [`confirm-send`](/docs/components/confirm-send).
+- **Health.** Lab-result hold. Approver: Laboratory director (`role: "Laboratory"`), policy `"any"` with a second named reviewer as cover. `meaning`: "Release hold approved". `requireReason`: on, because each hold is documented individually, not as a blanket rule. **Keep patient details out of the notification text**: "A result needs review", never a name, test or value. The record stays in your system behind its own role checks.
+
+## Next
+
+Comes after: [`data-table`](/docs/components/data-table). Leads to: [`confirm-send`](/docs/components/confirm-send), [`audit-timeline`](/docs/components/audit-timeline).

@@ -7,7 +7,7 @@ description: An editor for reminder cadence, escalation and quiet hours, with a 
 
 Use it when something has a due date and people need reminding: a gauge calibration, a training certificate, a licence, a review. It lets a person read and change three things for each kind of reminder: **which days before the due date** it goes, **who hears about it if it is still open afterwards**, and **the hours when nothing is sent**. Under every rule it writes the result as a sentence, so the rule can be checked at a glance instead of by reading switches.
 
-It is the **Decide** stage of See, Decide, Act, Confirm, Record: it settles _when_ and _to whom_ a notice goes, before [`confirm-send`](/docs/components/confirm-send) acts. It comes after [`status-strip`](/docs/components/status-strip) and `data-table` (a separate pattern), where you see what is due. Who the people are is the job of [`recipient-roster`](/docs/components/recipient-roster).
+It is the **Decide** stage of See, Decide, Act, Confirm, Record: it settles _when_ and _to whom_ a notice goes, before [`confirm-send`](/docs/components/confirm-send) acts. What is due is what [`status-strip`](/docs/components/status-strip) and [`data-table`](/docs/components/data-table) show. Who the people are is the job of [`recipient-roster`](/docs/components/recipient-roster).
 
 <Callout>
   A setting in this editor is not enforcement. It edits a saved rule and nothing
@@ -167,104 +167,9 @@ if (sendAt.getTime() > Date.now()) {
 
 `remindersDue` does not know what you already sent. Keep that record yourself and send only the steps that are missing, or a late deploy will send every step at once.
 
-## Sector examples
-
-Example data only. The component is the same in every sector; the words and the numbers change. The `dueAt` for each item lives in your own data.
-
-**Manufacturing: gauge calibration due**, reminders 30, 14, 7 and 1 days before, and the supervisor hears three days after it is overdue.
-
-```ts
-{
-  id: "calibration-due",
-  label: "Gauge calibration due",
-  enabled: true,
-  cadenceDays: [30, 14, 7, 1],
-  escalateAfterDays: 3,
-  escalateTo: "supervisor@example.org",
-  quietHours: { start: "21:00", end: "08:00", timeZone: "America/Chicago" },
-}
-```
-
-**Education: attendance notices.** A reminder to send the absence note to the school, nothing between 9 pm and 8 am, and the attendance office hears after two days. The 9 pm to 8 am window is borrowed from an attendance-texting guide published by the US Department of Education's IES; whether it applies to you is for you to decide.
-
-```ts
-{
-  id: "absence-note",
-  label: "Absence note due",
-  enabled: true,
-  cadenceDays: [3, 1],
-  escalateAfterDays: 2,
-  escalateTo: "attendance@example.org",
-  quietHours: { start: "21:00", end: "08:00", timeZone: "America/New_York" },
-}
-```
-
-**Engineering: ECO review reminders.** Reviewers hear five, two and one days before the review closes, and the engineering manager hears a day after.
-
-```ts
-{
-  id: "eco-review",
-  label: "ECO review due",
-  enabled: true,
-  cadenceDays: [5, 2, 1],
-  escalateAfterDays: 1,
-  escalateTo: "engineering-manager@example.org",
-  quietHours: null,
-}
-```
-
-**Health: licence expiry** at 60, 30 and 7 days, and the practice manager hears a day after it lapses.
-
-```ts
-{
-  id: "licence-expiry",
-  label: "Staff licence expires",
-  enabled: true,
-  cadenceDays: [60, 30, 7],
-  escalateAfterDays: 1,
-  escalateTo: "practice-manager@example.org",
-  quietHours: { start: "20:00", end: "07:00", timeZone: "America/Denver" },
-}
-```
-
-Appointment-reminder **texting is out of scope.** Contacts here are email addresses, so a rule can reach a person by email only. Patient and family texts need phone numbers, consent and opt-out handling that this pattern does not have.
-
-## Agent prompt
-
-Paste this into your coding agent in your project. Replace the last line with your own items.
-
-```text
-GOAL: Add a reminder-rules editor (cadence, escalation, quiet hours) to my internal tool so a person can review and save WHEN and to WHOM reminders go. It edits saved rules. It never sends anything.
-
-INSTALL (run exactly):
-npx shadcn@latest add https://regularui.com/r/alert-rules.json
-npx shadcn@latest add https://regularui.com/r/save-bar.json
-Read the installed files before writing code: components/ui/alert-rules.tsx, lib/alert-rules.ts, components/ui/save-bar.tsx. Do not guess props.
-
-PROPS:
-<AlertRules rules={AlertRule[]} onChange={(rules) => void} validateEmail?={(email) => boolean} timeZone?={IANA name, default for new quiet hours} disabled?={boolean} />
-AlertRule = { id, label, enabled, cadenceDays: number[] (days BEFORE due), escalateAfterDays?: number (days AFTER due), escalateTo?: string (an email), quietHours?: { start: "HH:MM", end: "HH:MM", timeZone: string } | null }
-Helpers in lib/alert-rules: validateRule, normalizeRule, sameRules, isQuietTime, nextAllowedSendTime, remindersDue, summarizeRule.
-
-WIRING: AlertRules is controlled and does not save. Keep `saved` and `rules` in state and render <SaveBar dirty={!sameRules(rules, saved)} />. On Save: validateRule every rule, stop if any has errors, send normalizeRule(rule) to my own API, and set `saved` only after it succeeds. The SERVER must validate again and must enforce quiet hours (isQuietTime or nextAllowedSendTime) and escalation when it sends; a UI setting is not enforcement. Contacts are email only. No phone numbers, no texting.
-
-STATES: clean (no save bar), dirty, saving, save failed (stay dirty, show why), invalid field (message tied to its input), rule off, no quiet hours, empty cadence.
-
-ACCEPTANCE (show me each result):
-1. pnpm typecheck and pnpm lint pass.
-2. A test: with quietHours 21:00-08:00 America/New_York, isQuietTime is true at 2026-01-16T02:00:00Z and false at 2026-01-16T13:00:00Z.
-3. Cadence 7 twice shows an error that names it. Escalation days with no email puts an error on the email field.
-4. Keyboard only: Tab reaches every control, Enter adds a day, and the remove buttons are named like "Remove 7 days before".
-
-Do not add scheduling, a job queue, SMS or new packages. Build only the settings screen and the server check. If something is unclear, ask.
-
-MY ITEMS: <what has a due date, who owns it, who should hear if it is overdue>
-```
-
 ## Notes
 
 - **You decide when it is saved.** The editor only reads `rules`. Compare with the saved copy using `sameRules`, which ignores the order of the reminder days and the case of an address, so those are not changes worth saving. After a failed save, leave `saved` alone and the save bar stays.
-- **Rules are fixed by you.** The editor edits the rules you pass. It does not add or delete a rule or change its name. Each rule's name is shown as an `h3`.
 - **Normalize before you store.** `normalizeRule` sorts the days largest first, drops repeats, and lowercases and trims the address. The editor adds days in order and tidies the address when the field loses focus, but it keeps what was typed while it is being edited so that `validateRule` can show what is wrong.
 - **Errors are shown beside the field.** Each message is tied to its input and the input is marked invalid. A message names what to do, for example "Add who to escalate to, or clear the days." An enabled rule with no reminder days is an error. A disabled one may be empty while someone drafts it.
 - **A rule that is off says so.** The switch has a text label and the summary begins "This rule is off, so nothing is sent." The other fields stay editable.
@@ -275,6 +180,14 @@ MY ITEMS: <what has a due date, who owns it, who should hear if it is overdue>
 - **Reminder steps are 24-hour days.** `remindersDue` counts back whole 24-hour days from the due instant, not calendar days, so across a clock change a step can sit an hour off local time. Choose the send time with `nextAllowedSendTime`.
 - **Built to be used by keyboard.** Every control is a native input, button or switch with a visible label or an accessible name, remove buttons say what they remove ("Remove 7 days before"), and focus rings come from the shadcn parts. State is always written as well as shown: the switch has an On or Off label and errors are text. This has not been tested with assistive technology, so test it in your own screens.
 - **No theme work.** It uses the shadcn tokens (`border`, `muted`, `destructive`), so it follows your theme.
+
+## What it does not do
+
+- **It does not send or schedule anything.** It edits a saved rule. The server that sends the messages must read the saved rule and apply quiet hours and escalation itself. A setting in this editor is not enforcement.
+- **It does not remember what was already sent.** `remindersDue` does not know either, so keep that record yourself.
+- **Contacts are email addresses only.** There are no phone numbers and no SMS or text.
+- **It does not add or delete rules, or rename them.** It edits the rules you pass. Each rule's name is shown as an `h3`.
+- **It makes no compliance claim.** It is a clear way to set and review a rule, and the rest is your backend. It is UI cues, not compliance.
 
 ## Props
 
@@ -360,3 +273,108 @@ The sentence shown under each rule, for example "Reminds 30, 14, 7 and 1 days be
 ### Also exported
 
 `isEmailAddress`, `isValidTimeZone`, `parseTimeOfDay`, `formatTimeOfDay`, `MAX_CADENCE_DAYS`, and the types `RuleError`, `RuleErrors`, `RuleField`, `RuleErrorCode`, `ReminderStep` and `RemindersDue`.
+
+## Agent prompt
+
+Paste this into your coding agent in your project. Replace the last line with your own items.
+
+```text
+GOAL: Add a reminder-rules editor (cadence, escalation, quiet hours) to my internal tool so a person can review and save WHEN and to WHOM reminders go. It edits saved rules. It never sends anything.
+
+INSTALL (run exactly):
+npx shadcn@latest add https://regularui.com/r/alert-rules.json
+npx shadcn@latest add https://regularui.com/r/save-bar.json
+Read the installed files (components/ui/alert-rules.tsx, lib/alert-rules.ts, components/ui/save-bar.tsx) before writing any code. Do not guess props.
+
+PROPS:
+<AlertRules rules={AlertRule[]} onChange={(rules) => void} validateEmail?={(email) => boolean} timeZone?={IANA name, default for new quiet hours} disabled?={boolean} />
+AlertRule = { id, label, enabled, cadenceDays: number[] (days BEFORE due), escalateAfterDays?: number (days AFTER due), escalateTo?: string (an email), quietHours?: { start: "HH:MM", end: "HH:MM", timeZone: string } | null }
+Helpers in lib/alert-rules: validateRule, normalizeRule, sameRules, isQuietTime, nextAllowedSendTime, remindersDue, summarizeRule.
+
+WIRING: AlertRules is controlled and does not save. Keep `saved` and `rules` in state and render <SaveBar dirty={!sameRules(rules, saved)} />. On Save: validateRule every rule, stop if any has errors, send normalizeRule(rule) to my own API, and set `saved` only after it succeeds. The SERVER must validate again and must enforce quiet hours (isQuietTime or nextAllowedSendTime) and escalation when it sends; a UI setting is not enforcement. Contacts are email only. No phone numbers, no texting.
+
+STATES: clean (no save bar), dirty, saving, save failed (stay dirty, show why), invalid field (message tied to its input), rule off, no quiet hours, empty cadence.
+
+ACCEPTANCE (show me each result):
+1. pnpm typecheck and pnpm lint pass.
+2. A test: with quietHours 21:00-08:00 America/New_York, isQuietTime is true at 2026-01-16T02:00:00Z and false at 2026-01-16T13:00:00Z.
+3. Cadence 7 twice shows an error that names it. Escalation days with no email puts an error on the email field.
+4. Keyboard only: Tab reaches every control, Enter adds a day, and the remove buttons are named like "Remove 7 days before".
+
+Do not add scheduling, a job queue, SMS or new packages. Build only the settings screen and the server check. If something is unclear, ask.
+
+MY ITEMS: <what has a due date, who owns it, who should hear if it is overdue>
+```
+
+## Examples by sector
+
+Example data only. The component is the same in every sector; the words and the numbers change. The `dueAt` for each item lives in your own data. These are not claims about any real organisation.
+
+Appointment-reminder **texting is out of scope.** Contacts here are email addresses, so a rule can reach a person by email only. Patient and family texts need phone numbers, consent and opt-out handling that this pattern does not have.
+
+- **Education.** Attendance notices: a reminder to send the absence note to the school, nothing between 9 pm and 8 am, and the attendance office hears after two days. The 9 pm to 8 am window is borrowed from an attendance-texting guide published by the US Department of Education's IES; whether it applies to you is for you to decide.
+- **Manufacturing.** Gauge calibration due: reminders 30, 14, 7 and 1 days before, and the supervisor hears three days after it is overdue.
+- **Engineering.** ECO review reminders: reviewers hear five, two and one days before the review closes, and the engineering manager hears a day after.
+- **Health.** Licence expiry at 60, 30 and 7 days, and the practice manager hears a day after it lapses.
+
+### Rule objects
+
+**Education**
+
+```ts
+{
+  id: "absence-note",
+  label: "Absence note due",
+  enabled: true,
+  cadenceDays: [3, 1],
+  escalateAfterDays: 2,
+  escalateTo: "attendance@example.org",
+  quietHours: { start: "21:00", end: "08:00", timeZone: "America/New_York" },
+}
+```
+
+**Manufacturing**
+
+```ts
+{
+  id: "calibration-due",
+  label: "Gauge calibration due",
+  enabled: true,
+  cadenceDays: [30, 14, 7, 1],
+  escalateAfterDays: 3,
+  escalateTo: "supervisor@example.org",
+  quietHours: { start: "21:00", end: "08:00", timeZone: "America/Chicago" },
+}
+```
+
+**Engineering**
+
+```ts
+{
+  id: "eco-review",
+  label: "ECO review due",
+  enabled: true,
+  cadenceDays: [5, 2, 1],
+  escalateAfterDays: 1,
+  escalateTo: "engineering-manager@example.org",
+  quietHours: null,
+}
+```
+
+**Health**
+
+```ts
+{
+  id: "licence-expiry",
+  label: "Staff licence expires",
+  enabled: true,
+  cadenceDays: [60, 30, 7],
+  escalateAfterDays: 1,
+  escalateTo: "practice-manager@example.org",
+  quietHours: { start: "20:00", end: "07:00", timeZone: "America/Denver" },
+}
+```
+
+## Next
+
+Comes after: [`recipient-roster`](/docs/components/recipient-roster). Leads to: [`confirm-send`](/docs/components/confirm-send).

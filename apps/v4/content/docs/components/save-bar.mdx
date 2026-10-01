@@ -77,6 +77,14 @@ import { SaveBar } from "@/components/ui/save-bar"
 - **Focus.** After Save or Discard the bar unmounts, and so does the button that had focus. The bar cannot know where focus should go, so move it yourself, for example to the field or heading the person was editing.
 - **Fixed wording.** The text, "Discard" and "Save" are not configurable. Copy the file if you need different words.
 
+## What it does not do
+
+- **It does not save.** Save calls your `onSave`. It also does not know what is dirty: you pass `dirty`.
+- **It does not validate.** It cannot be switched off for an invalid form, so check in `onSave` and show your own message.
+- **It has no autosave, undo or leave-page warning, and it is not sticky or fixed.** It is a plain bar for the bottom of a card.
+- **Its wording is fixed.** "Unsaved changes", Discard and Save are not configurable. Copy the file if you need other words.
+- **It is not a record.** It does not log that a save happened, and it makes no compliance claim. Your server records changes.
+
 ## Props
 
 ### SaveBar
@@ -89,3 +97,44 @@ Also accepts the props of a `div`, including `className` and `ref`. The prop typ
 | `onSave`    | `() => void` | Called when Save is pressed. Required.                      |
 | `onDiscard` | `() => void` | Called when Discard is pressed. Required.                   |
 | `saving`    | `boolean`    | Disables both buttons and shows "Saving…". Default `false`. |
+
+## Agent prompt
+
+Paste this into your coding agent (Claude Code, Cursor, Codex or similar) in your project. Replace the bracketed parts with your own.
+
+```text
+Goal: add an "Unsaved changes" bar with Discard and Save under my [form or list], shown only when something has changed.
+
+Install: npx shadcn@latest add https://regularui.com/r/save-bar.json
+Read the installed files (components/ui/save-bar.tsx) before writing any code. Do not guess props.
+
+Contract:
+<SaveBar dirty={boolean} onSave={() => void} onDiscard={() => void} saving?={boolean} />  // also takes div props, e.g. className
+It renders nothing while dirty is false. The wording is fixed: "Unsaved changes", Discard, Save.
+
+Wiring rule: I decide what is dirty. Keep `saved` and the edited value in state and pass dirty={!same(edited, saved)}. onDiscard resets the edited value to `saved`. onSave calls my own API, sets `saving` around it, and updates `saved` ONLY after the write succeeds. On failure leave `saved` alone so the bar stays, and show my own error. Validate in onSave, because the bar cannot be switched off. After Save or Discard the bar unmounts, so move focus myself to the field or heading the person was editing.
+
+States to handle: clean (no bar), dirty, saving (both buttons disabled, "Saving…"), save failed (still dirty, error shown), discarded.
+
+Acceptance checks (run them and show me the output):
+1. Typecheck and lint pass.
+2. A clean form renders no bar and no save controls.
+3. Editing shows the bar, and changing the value back to the saved one hides it.
+4. A failed save keeps the bar and the edits. A successful save hides it.
+5. After Save or Discard, focus lands on a sensible element, not on the page body.
+
+UI only: it does not save, validate, autosave or check permissions, and it makes no compliance claim. No new dependencies or abstractions beyond this. If something is unclear, ask me.
+```
+
+## Examples by sector
+
+Example data only, to show the wording. These are not claims about any real organisation, and the component proves nothing about a sector's rules. The pattern is the same in each; only the data changes.
+
+- **Education.** The list of staff addresses that get training reminders. This pattern fits any form edited in place and saved as a whole, so the sector matters little.
+- **Manufacturing.** Days between calibrations for each kind of gauge.
+- **Engineering.** The default reviewers for a change order.
+- **Health.** How many days before expiry a licence reminder goes out.
+
+## Next
+
+Comes after: [`recipient-roster`](/docs/components/recipient-roster), [`alert-rules`](/docs/components/alert-rules). Leads to: [`confirm-send`](/docs/components/confirm-send).

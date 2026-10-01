@@ -93,6 +93,14 @@ The component owns only the "are you sure" step. You own `sending` and `sentCoun
 - **Sending state.** The confirmation closes as soon as Send is pressed, then `sending` disables the button. The label does not change while `sending` is true, so pair it with your own indicator if the send is slow.
 - **Fragment output.** It renders a fragment of buttons and text, so put it in a flex container that supplies the gap.
 
+## What it does not do
+
+- **It does not send anything.** Your `onSend` does. The component owns only the "are you sure" step.
+- **It does not know the list.** Pass the number of people the send will actually reach. If the screen has unsaved edits, block the send with `blockedReason`.
+- **It does not retry, queue or track delivery.** You own `sending` and `sentCount`, and the message for a failure.
+- **It is not access control.** A disabled button stops no one. Your server decides who may send.
+- **It makes no compliance claim.** Confirming with a count is a UI cue, not compliance.
+
 ## Props
 
 ### ConfirmSend
@@ -110,3 +118,44 @@ The prop types are exported as `ConfirmSendProps`. It renders no wrapper element
 | `sending`       | `boolean`                     | Disables the button while your send runs. Default `false`.                        |
 | `sentCount`     | `number \| null`              | Shows "Sent to N" when set. Default `null`.                                       |
 | `label`         | `string`                      | Idle button label. Default "Send now".                                            |
+
+## Agent prompt
+
+Paste this into your coding agent (Claude Code, Cursor, Codex or similar) in your project. Replace the bracketed parts with your own.
+
+```text
+Goal: put a confirm-then-send action on my [screen] for [what is sent, e.g. the weekly summary], so nothing goes out on one click and the person sees how many people it reaches first.
+
+Install: npx shadcn@latest add https://regularui.com/r/confirm-send.json
+Read the installed files (components/ui/confirm-send.tsx) before writing any code. Do not guess props.
+
+Contract:
+<ConfirmSend count={number} onSend={() => void | Promise<void>} noun?="person" nounPlural?="people" blockedReason?={string} emptyReason?={string} sending?={boolean} sentCount?={number | null} label?="Send now" />
+It renders a fragment of buttons and text and takes no className, so put it in a flex container with a gap.
+
+Wiring rule: the component owns only the "are you sure" step. I own `sending` and `sentCount`. `count` is the SAVED list the send will reach, not what is on screen. If the list has unsaved edits, pass blockedReason ("Save your changes first"). onSend calls my own API, sets `sending` in a try/finally, and on success sets `sentCount` to the number my API says it reached. Reset sentCount to null when the list changes. Do not send from the browser straight to a mail service.
+
+States to handle: idle, confirming ("Send to 3 people?"), sending, sent ("Sent to 3"), failed (my own error text, and the button is usable again), blocked (reason shown as tooltip and description), empty list (count 0).
+
+Acceptance checks (run them and show me the output):
+1. Typecheck and lint pass.
+2. One click never calls onSend. Send in the confirmation calls it once.
+3. With unsaved edits the button is disabled and says why.
+4. A failed send shows an error, does not show "Sent to N", and can be retried.
+5. Keyboard only: Tab reaches Send and Cancel, and the blocked reason is read out.
+
+UI only: it does not send, store, queue or check permissions, and it makes no compliance claim. No new dependencies or abstractions beyond this. If something is unclear, ask me.
+```
+
+## Examples by sector
+
+Example data only, to show the wording. These are not claims about any real organisation, and the component proves nothing about a sector's rules. The pattern is the same in each; only the data changes.
+
+- **Education.** "Send to 12 staff?" before a reminder goes to everyone who has not finished training.
+- **Manufacturing.** "Send to 4 owners?" before a recall notice goes to the owners of overdue gauges.
+- **Engineering.** "Send to 5 people?" before a change order's release notice goes to those who build from the drawing.
+- **Health.** "Send to 3 staff?" before a licence-expiry reminder goes out. The count is of people, and the message carries no patient details.
+
+## Next
+
+Comes after: [`data-table`](/docs/components/data-table), [`approval-step`](/docs/components/approval-step), [`save-bar`](/docs/components/save-bar). Leads to: [`audit-timeline`](/docs/components/audit-timeline).
