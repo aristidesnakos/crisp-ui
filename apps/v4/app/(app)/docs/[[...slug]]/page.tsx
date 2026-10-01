@@ -5,6 +5,7 @@ import { IconArrowLeft, IconArrowRight } from "@tabler/icons-react"
 import { findNeighbour } from "fumadocs-core/page-tree"
 
 import { siteConfig } from "@/lib/config"
+import { getPageMarkdown } from "@/lib/docs-markdown"
 import { source } from "@/lib/source"
 import { absoluteUrl } from "@/lib/utils"
 import { DevFeedback } from "@/components/dev/dev-feedback"
@@ -72,8 +73,10 @@ export default async function Page(props: {
   const doc = page.data
   const MDX = doc.body
   const neighbours = findNeighbour(source.pageTree, page.url)
-  const raw = await page.data.getText("raw")
   const slug = page.slugs.join("/") || "index"
+  // The same plain markdown the page's .md twin serves, so "Copy Page" gives
+  // an agent code and tables rather than MDX component tags.
+  const markdown = await getPageMarkdown(page)
 
   return (
     <div
@@ -92,7 +95,7 @@ export default async function Page(props: {
                   </h1>
                   <div className="docs-nav flex items-center gap-2">
                     <div className="hidden sm:block">
-                      <DocsCopyPage page={raw} url={absoluteUrl(page.url)} />
+                      <DocsCopyPage page={markdown} url={absoluteUrl(page.url)} />
                     </div>
                     <div className="ml-auto flex gap-2">
                       {neighbours.previous && (
