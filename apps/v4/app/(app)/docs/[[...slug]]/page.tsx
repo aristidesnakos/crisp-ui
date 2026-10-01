@@ -7,8 +7,10 @@ import { findNeighbour } from "fumadocs-core/page-tree"
 import { siteConfig } from "@/lib/config"
 import { getPageMarkdown } from "@/lib/docs-markdown"
 import { twinPath } from "@/lib/mdx-to-markdown"
+import { getAgentPrompt, getSectorExamples } from "@/lib/pattern-sections"
 import { source } from "@/lib/source"
 import { absoluteUrl } from "@/lib/utils"
+import { AgentPromptBar } from "@/components/agent-prompt-bar"
 import { DevFeedback } from "@/components/dev/dev-feedback"
 import { DocsCopyPage } from "@/components/docs-copy-page"
 import { DocsTableOfContents } from "@/components/docs-toc"
@@ -80,6 +82,10 @@ export default async function Page(props: {
   // The same plain markdown the page's .md twin serves, so "Copy Page" gives
   // an agent code and tables rather than MDX component tags.
   const markdown = await getPageMarkdown(page)
+  // Pattern pages carry an "Agent prompt" section; others do not get the bar.
+  const rawMdx = await doc.getText("raw")
+  const agentPrompt = getAgentPrompt(rawMdx)
+  const sectorExamples = getSectorExamples(rawMdx)
 
   return (
     <div
@@ -145,6 +151,11 @@ export default async function Page(props: {
               </div>
             </div>
           </DevFeedback>
+          {agentPrompt && (
+            <DevFeedback name={`Docs.${slug}.PromptBar`}>
+              <AgentPromptBar prompt={agentPrompt} examples={sectorExamples} />
+            </DevFeedback>
+          )}
           <DevFeedback name={`Docs.${slug}.Body`}>
             <div className="typeset w-full flex-1 pb-16 *:data-[slot=alert]:first:mt-0 sm:pb-0">
               <MDX components={mdxComponents} />
