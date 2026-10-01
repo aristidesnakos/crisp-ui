@@ -49,6 +49,7 @@ export async function StarsCount() {
   return (
     <span className="w-fit text-xs text-muted-foreground tabular-nums">
       {formattedCount}
+      <span className="sr-only"> stars</span>
     </span>
   )
 }

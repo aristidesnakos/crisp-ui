@@ -25,8 +25,8 @@ export function CodeCollapsibleWrapper({
       className={cn("group/collapsible relative md:-mx-1", className)}
       {...props}
     >
-      <CollapsibleTrigger asChild>
-        <div className="absolute top-1.5 right-9 z-10 flex items-center">
+      <div className="absolute top-1.5 right-9 z-10 flex items-center">
+        <CollapsibleTrigger asChild>
           <Button
             variant="ghost"
             size="sm"
@@ -34,16 +34,21 @@ export function CodeCollapsibleWrapper({
           >
             {isOpened ? "Collapse" : "Expand"}
           </Button>
-          <Separator orientation="vertical" className="mx-1.5 h-4!" />
-        </div>
-      </CollapsibleTrigger>
+        </CollapsibleTrigger>
+        <Separator orientation="vertical" className="mx-1.5 h-4!" />
+      </div>
       <CollapsibleContent
         forceMount
         className="relative mt-6 overflow-hidden data-[state=closed]:max-h-64 data-[state=closed]:[content-visibility:auto] [&>figure]:mt-0 [&>figure]:md:mx-0!"
       >
         {children}
       </CollapsibleContent>
-      <CollapsibleTrigger className="absolute inset-x-0 -bottom-2 flex h-20 items-center justify-center rounded-b-lg bg-gradient-to-b from-code/70 to-code text-sm text-muted-foreground group-data-[state=open]/collapsible:hidden">
+      {/* Mouse-only duplicate of the keyboard-reachable trigger above. */}
+      <CollapsibleTrigger
+        aria-hidden="true"
+        tabIndex={-1}
+        className="absolute inset-x-0 -bottom-2 flex h-20 items-center justify-center rounded-b-lg bg-gradient-to-b from-code/70 to-code text-sm text-muted-foreground group-data-[state=open]/collapsible:hidden"
+      >
         {isOpened ? "Collapse" : "Expand"}
       </CollapsibleTrigger>
     </Collapsible>

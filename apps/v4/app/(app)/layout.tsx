@@ -8,7 +8,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       className="group/layout relative z-10 flex min-h-svh flex-col bg-background has-data-[slot=designer]:h-svh has-data-[slot=designer]:overflow-hidden"
     >
       <SiteHeader />
-      <main className="flex min-h-0 flex-1 flex-col">{children}</main>
+      <main
+        id="main-content"
+        tabIndex={-1}
+        className="flex min-h-0 flex-1 flex-col outline-none"
+      >
+        {children}
+      </main>
       <SiteFooter />
     </div>
   )

@@ -106,7 +106,10 @@ export function DocsTableOfContents({
   }
 
   return (
-    <div className={cn("flex flex-col gap-2 p-4 pt-0 text-sm", className)}>
+    <nav
+      aria-label="On this page"
+      className={cn("flex flex-col gap-2 p-4 pt-0 text-sm", className)}
+    >
       <p className="h-6 bg-background text-xs font-medium text-muted-foreground">
         On This Page
       </p>
@@ -116,11 +119,14 @@ export function DocsTableOfContents({
           href={item.url}
           className="text-[0.8rem] text-muted-foreground no-underline transition-colors hover:text-foreground data-[active=true]:font-medium data-[active=true]:text-foreground data-[depth=3]:pl-4 data-[depth=4]:pl-6"
           data-active={item.url === `#${activeHeading}`}
+          aria-current={
+            item.url === `#${activeHeading}` ? "location" : undefined
+          }
           data-depth={item.depth}
         >
           {item.title}
         </a>
       ))}
-    </div>
+    </nav>
   )
 }

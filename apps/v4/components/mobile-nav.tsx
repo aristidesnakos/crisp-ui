@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import Link, { type LinkProps } from "next/link"
-import { useRouter } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { cn } from "cn"
 
 import { DOCS_NAV } from "@/lib/page-tree"
@@ -30,11 +30,14 @@ export function MobileNav({
         <Button
           variant="ghost"
           className={cn(
-            "extend-touch-target h-8 touch-manipulation items-center justify-start gap-2.5 p-0! hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 active:bg-transparent dark:hover:bg-transparent",
+            "extend-touch-target h-8 touch-manipulation items-center justify-start gap-2.5 p-0! hover:bg-transparent active:bg-transparent dark:hover:bg-transparent",
             className
           )}
         >
-          <div className="relative flex h-8 w-4 items-center justify-center">
+          <div
+            aria-hidden="true"
+            className="relative flex h-8 w-4 items-center justify-center"
+          >
             <div className="relative size-4">
               <span
                 className={cn(
@@ -49,7 +52,6 @@ export function MobileNav({
                 )}
               />
             </div>
-            <span className="sr-only">Toggle Menu</span>
           </div>
           <span className="flex h-8 items-center text-lg leading-none font-medium">
             Menu
@@ -57,13 +59,17 @@ export function MobileNav({
         </Button>
       </PopoverTrigger>
       <PopoverContent
+        aria-label="Site menu"
         className="no-scrollbar h-(--radix-popper-available-height) w-(--radix-popper-available-width) overflow-y-auto rounded-none border-none bg-background/90 p-0 shadow-none backdrop-blur duration-100 data-open:animate-none!"
         align="start"
         side="bottom"
         alignOffset={-16}
         sideOffset={14}
       >
-        <div className="flex flex-col gap-12 overflow-auto px-6 py-6">
+        <nav
+          aria-label="Mobile"
+          className="flex flex-col gap-12 overflow-auto px-6 py-6"
+        >
           <div className="flex flex-col gap-4">
             <div className="text-sm font-medium text-muted-foreground">
               Menu
@@ -94,7 +100,7 @@ export function MobileNav({
               </div>
             </div>
           ))}
-        </div>
+        </nav>
       </PopoverContent>
     </Popover>
   )
@@ -112,9 +118,11 @@ function MobileLink({
   className?: string
 }) {
   const router = useRouter()
+  const pathname = usePathname()
   return (
     <Link
       href={href}
+      aria-current={pathname === href.toString() ? "page" : undefined}
       onClick={() => {
         router.push(href.toString())
         onOpenChange?.(false)
