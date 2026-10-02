@@ -94,7 +94,7 @@ import { Quiz } from "@/components/ui/quiz"
 ## Notes
 
 - **One attempt per question.** The first tap decides it. The question then locks, the picked option shows a check (right) or a cross (wrong), the right option is marked, and the rest fade. The result is written as text too: "Correct" or "Not quite. The answer is B." Colour is never the only signal.
-- **Colours use `color-mix`, not alpha modifiers.** Tints are written as `bg-[color-mix(in_srgb,var(--primary)_10%,var(--background))]`, not `bg-primary/10`. Some themes store colours as bare `var(--x)` values, and Tailwind compiles an alpha modifier on those to nothing, so the tint would silently disappear.
+- **Colours use `color-mix`, not alpha modifiers.** A wrong answer's tint is written as `bg-[color-mix(in_srgb,var(--destructive)_8%,var(--background))]`, not `bg-destructive/8`, and the right answer uses a ring instead of a tint. Some themes store colours as bare `var(--x)` values, and Tailwind compiles an alpha modifier on those to nothing, so the tint would silently disappear.
 - **`--destructive-ink` is optional.** Wrong-answer text and border use `--destructive-ink` when your theme defines it (a darker red that reads on a light background) and fall back to `--destructive` when it does not.
 - **`lang` and `promptLang`.** Set `promptLang` on a question and `lang` on an option written in another language, for example `"ja"`. They set the `lang` attribute so screen readers pronounce the text correctly and the browser picks the right font. Text in such a language is also kept from breaking mid-word.
 - **Focus.** After Try again the button unmounts, so focus moves to the first option of the first question. Tab, Enter and Space work as on any button.
