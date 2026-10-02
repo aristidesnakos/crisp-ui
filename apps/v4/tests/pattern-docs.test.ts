@@ -61,6 +61,10 @@ const STORY: Record<string, { after: string[]; leadsTo: string[] }> = {
     after: ["confirm-send"],
     leadsTo: ["audit-timeline"],
   },
+  quiz: {
+    after: ["confirm-send", "notify-envelope"],
+    leadsTo: ["audit-timeline"],
+  },
   "audit-timeline": {
     after: ["confirm-send", "approval-step"],
     leadsTo: ["status-strip"],

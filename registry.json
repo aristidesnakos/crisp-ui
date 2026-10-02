@@ -397,6 +397,55 @@
           "type": "registry:lib"
         }
       ]
+    },
+    {
+      "name": "quiz-lib",
+      "type": "registry:lib",
+      "title": "Quiz helpers",
+      "description": "Pure helpers for a tap-to-answer quiz: grade a pick, tally a set of picks, build an empty pick list, and check that your questions are well formed.",
+      "categories": [
+        "education",
+        "utilities"
+      ],
+      "meta": {
+        "stage": "confirm",
+        "recipe": "https://regularui.com/docs/components/quiz.md"
+      },
+      "docs": "Pure helpers for a quiz: grade a pick, tally a set of picks, build an empty pick list, and check that your questions are well formed (checkQuestions).\nRead the installed file before using it; use only the props it exports.\nDocs: https://regularui.com/docs/components/quiz.md\nVerify: run your typechecker, and run checkQuestions in a test against your own questions.",
+      "files": [
+        {
+          "path": "apps/v4/registry/crisp/lib/quiz.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "quiz",
+      "type": "registry:ui",
+      "title": "Quiz",
+      "description": "Tap an answer and see at once whether it was right, and which option was. One attempt per question, then it locks; the footer shows the score and Try again.",
+      "categories": [
+        "dashboard",
+        "education"
+      ],
+      "meta": {
+        "stage": "confirm",
+        "recipe": "https://regularui.com/docs/components/quiz.md"
+      },
+      "docs": "A set of questions answered by tapping: instant right or wrong, the right option revealed, one attempt each, then a score and Try again. Also exports QuizCard for a single controlled question.\nRead the installed file before using it; use only the props it exports.\nThe wording (\"Correct\", \"Not quite. The answer is B.\", \"N of M correct\", \"Try again\") is fixed; copy the file to change it. No persistence, timer or shuffling.\nDocs: https://regularui.com/docs/components/quiz.md\nVerify: run your typechecker.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "button",
+        "aristidesnakos/crisp-ui/quiz-lib"
+      ],
+      "files": [
+        {
+          "path": "apps/v4/registry/crisp/ui/quiz.tsx",
+          "type": "registry:ui"
+        }
+      ]
     }
   ]
 }

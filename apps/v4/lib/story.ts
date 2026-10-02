@@ -79,6 +79,11 @@ export const STORY_MAP: Record<string, StoryLinks> = {
     after: ["confirm-send"],
     leadsTo: ["audit-timeline"],
   },
+  quiz: {
+    stage: "confirm",
+    after: ["confirm-send", "notify-envelope"],
+    leadsTo: ["audit-timeline"],
+  },
   "audit-timeline": {
     stage: "record",
     after: ["confirm-send", "approval-step"],

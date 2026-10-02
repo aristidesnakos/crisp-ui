@@ -45,6 +45,14 @@ export const Components: Record<string, any> = {
       ) || "save-bar-demo"
     return { default: mod.default || mod[exportName] }
   }),
+  "quiz-demo": React.lazy(async () => {
+    const mod = await import("@/examples/radix/quiz-demo")
+    const exportName =
+      Object.keys(mod).find(
+        (key) => typeof mod[key] === "function" || typeof mod[key] === "object"
+      ) || "quiz-demo"
+    return { default: mod.default || mod[exportName] }
+  }),
   "notify-envelope-demo": React.lazy(async () => {
     const mod = await import("@/examples/radix/notify-envelope-demo")
     const exportName =

@@ -1,6 +1,6 @@
 ---
 name: crisp-ui
-description: "Install and use crisp-ui, a shadcn registry of dashboard patterns for internal tools (status-strip, status-notify, table-view, data-table, calibration-desk, recipient-roster, alert-rules-lib, alert-rules, save-bar, confirm-send, approval, approval-step, notify-envelope, audit-event, audit-timeline). Use when building an admin or internal-tool screen that shows how a job is going, lets a person choose who is notified and sends a message, or when the user mentions crisp-ui or regularui.com. UI only: it does not provide a backend and does not make anything compliant."
+description: "Install and use crisp-ui, a shadcn registry of dashboard patterns for internal tools (status-strip, status-notify, table-view, data-table, calibration-desk, recipient-roster, alert-rules-lib, alert-rules, save-bar, confirm-send, approval, approval-step, notify-envelope, quiz-lib, quiz, audit-event, audit-timeline). Use when building an admin or internal-tool screen that shows how a job is going, lets a person choose who is notified and sends a message, or when the user mentions crisp-ui or regularui.com. UI only: it does not provide a backend and does not make anything compliant."
 license: MIT
 ---
 
@@ -41,7 +41,7 @@ Pick items in this order. It is a recommended path for a workflow screen, not a 
 | See | What is happening? | `status-strip`, `status-notify`, `table-view`, `data-table`, `calibration-desk` |
 | Decide | What needs me, and who hears? | `recipient-roster`, `alert-rules-lib`, `alert-rules` |
 | Act | Do it safely. | `save-bar`, `confirm-send`, `approval`, `approval-step` |
-| Confirm | Did it work, who knows? | `notify-envelope` |
+| Confirm | Did it work, who knows? | `notify-envelope`, `quiz-lib`, `quiz` |
 | Record | Can I prove who did what? | `audit-event`, `audit-timeline` |
 
 ## Items
@@ -61,6 +61,8 @@ Pick items in this order. It is a recommended path for a workflow screen, not a 
 | `approval` | act | Pure helpers: settle an approval from its approvers' decisions under an all, any or minimum policy, check who can decide, and validate a decision's reason. | `npx shadcn@latest add https://regularui.com/r/approval.json` | https://regularui.com/docs/components/approval-step.md |
 | `approval-step` | act | A sign-off with a stated reason and meaning: approvers with state as text and decision time, a policy sentence, Approve and Reject behind an inline confirm for the one person who can still decide, and a read-only explanation for everyone else. | `npx shadcn@latest add https://regularui.com/r/approval-step.json` | https://regularui.com/docs/components/approval-step.md |
 | `notify-envelope` | confirm | Pure helpers: build a roster from per-channel lists, compare lists, and build a one-message To/Cc envelope. | `npx shadcn@latest add https://regularui.com/r/notify-envelope.json` | https://regularui.com/docs/components/notify-envelope.md |
+| `quiz-lib` | confirm | Pure helpers for a tap-to-answer quiz: grade a pick, tally a set of picks, build an empty pick list, and check that your questions are well formed. | `npx shadcn@latest add https://regularui.com/r/quiz-lib.json` | https://regularui.com/docs/components/quiz.md |
+| `quiz` | confirm | Tap an answer and see at once whether it was right, and which option was. One attempt per question, then it locks; the footer shows the score and Try again. | `npx shadcn@latest add https://regularui.com/r/quiz.json` | https://regularui.com/docs/components/quiz.md |
 | `audit-event` | record | The shared AuditEvent type, plus pure helpers to build one on the server (reason can be required), group by day in a time zone, filter, and format times. | `npx shadcn@latest add https://regularui.com/r/audit-event.json` | https://regularui.com/docs/components/audit-timeline.md |
 | `audit-timeline` | record | A read-only 'who did what, when, and why' list of recorded events, grouped by day, with outcome text and icon, a visible reason, filters, and honest empty, error and stale states. | `npx shadcn@latest add https://regularui.com/r/audit-timeline.json` | https://regularui.com/docs/components/audit-timeline.md |
 
