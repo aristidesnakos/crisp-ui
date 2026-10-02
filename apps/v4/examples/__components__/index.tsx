@@ -19,6 +19,7 @@ const shards: Record<
       "recipient-roster-demo",
       "confirm-send-demo",
       "save-bar-demo",
+      "quiz-demo",
       "notify-envelope-demo",
       "approval-step-demo",
       "audit-timeline-demo",

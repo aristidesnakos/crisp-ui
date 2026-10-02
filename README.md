@@ -16,6 +16,8 @@ There is no package to upgrade: you install the source and own it.
 | `confirm-send`     | Click, confirm with the count, send, "Sent to N"                    |
 | `save-bar`         | "Unsaved changes" with Discard and Save, hidden when clean          |
 | `notify-envelope`  | Pure helpers: roster from lists, list comparison, one-message To/Cc |
+| `quiz`             | Tap an answer, see at once whether it was right; score and retry    |
+| `quiz-lib`         | Pure helpers: grade a pick, tally picks, check your questions       |
 | `audit-timeline`   | Read-only "who did what, when, and why" list, grouped by day        |
 | `audit-event`      | The `AuditEvent` type and pure helpers for building and grouping    |
 | `alert-rules`      | Editor for reminder cadence, escalation and quiet hours             |

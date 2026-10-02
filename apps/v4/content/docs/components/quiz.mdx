@@ -1,0 +1,192 @@
+---
+title: Quiz
+description: Tap an answer and see at once whether it was right, and which option was. One attempt per question, then a score and Try again.
+---
+
+<ComponentPreview styleName="radix-nova" name="quiz-demo" />
+
+Use it where a person checks what they just learned: a vocabulary check after a lesson, a refresher after a policy change. Each question is a set of buttons. A tap shows right or wrong straight away, marks the right option, and locks that question. When every question is answered the footer shows the score and a Try again button.
+
+## Installation
+
+<CodeTabs>
+
+<TabsList>
+  <TabsTrigger value="cli">Command</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add https://regularui.com/r/quiz.json
+```
+
+Or, with the [`@crisp` namespace](/docs/installation) set up:
+
+```bash
+npx shadcn@latest add @crisp/quiz
+```
+
+This also adds the shadcn `button` and the [`quiz-lib`](https://regularui.com/r/quiz-lib.json) helpers, and installs `lucide-react`.
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps className="mb-0 pt-2">
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource
+  src="registry/crisp/ui/quiz.tsx"
+  title="components/ui/quiz.tsx"
+/>
+
+<Step>
+  Add the helpers. They have no React and no dependencies, so you can import
+  them in a test or on your server too.
+</Step>
+
+<ComponentSource src="registry/crisp/lib/quiz.ts" title="lib/quiz.ts" />
+
+<Step>
+  Add the shadcn `button` and install `lucide-react`. Update the import paths to
+  match your project setup.
+</Step>
+
+</Steps>
+
+</TabsContent>
+
+</CodeTabs>
+
+## Usage
+
+```tsx
+import { Quiz } from "@/components/ui/quiz"
+```
+
+```tsx
+<Quiz
+  questions={[
+    {
+      prompt: "水",
+      promptLang: "ja",
+      hint: "Which reading is right?",
+      options: [
+        { label: "みず", lang: "ja" },
+        { label: "ひ", lang: "ja" },
+        { label: "き", lang: "ja" },
+      ],
+      answer: 0,
+    },
+    {
+      prompt: "How often is the extinguisher inspected?",
+      options: ["Every week", "Every month", "Every year"],
+      answer: 1,
+      explanation: "A quick check each month, a full service each year.",
+    },
+  ]}
+  onComplete={(result) => save(result.correct, result.total)}
+/>
+```
+
+## Notes
+
+- **One attempt per question.** The first tap decides it. The question then locks, the picked option shows a check (right) or a cross (wrong), the right option is marked, and the rest fade. The result is written as text too: "Correct" or "Not quite. The answer is B." Colour is never the only signal.
+- **Colours use `color-mix`, not alpha modifiers.** Tints are written as `bg-[color-mix(in_srgb,var(--primary)_10%,var(--background))]`, not `bg-primary/10`. Some themes store colours as bare `var(--x)` values, and Tailwind compiles an alpha modifier on those to nothing, so the tint would silently disappear.
+- **`--destructive-ink` is optional.** Wrong-answer text and border use `--destructive-ink` when your theme defines it (a darker red that reads on a light background) and fall back to `--destructive` when it does not.
+- **`lang` and `promptLang`.** Set `promptLang` on a question and `lang` on an option written in another language, for example `"ja"`. They set the `lang` attribute so screen readers pronounce the text correctly and the browser picks the right font. Text in such a language is also kept from breaking mid-word.
+- **Focus.** After Try again the button unmounts, so focus moves to the first option of the first question. Tab, Enter and Space work as on any button.
+- **`onComplete`.** Called once, with `{ total, answered, correct, complete }`, when the last question is answered. It is not called again until the person tries again and finishes again.
+- **No persistence, no timer, no shuffling.** Nothing is stored. There is no time limit. Options appear in the order you give them, so shuffle on your side (once, not on every render) and set `answer` to the shuffled position.
+- **Check your own questions.** `checkQuestions` in `quiz-lib` lists problems that make a question unanswerable or ambiguous: fewer than two options, an `answer` that is not an option, and two options with the same text. Run it in a test against your own data.
+- **Fixed wording.** "Correct", "Not quite. The answer is B.", "N of M correct", "N of M answered" and "Try again" are not configurable. Copy the file if you need other words.
+- **Client component.** The questions render in the server HTML as buttons, but they need JavaScript to be answered.
+
+## What it does not do
+
+- **It does not store results.** It keeps picks in memory only, so a reload starts again. Save the score yourself from `onComplete`.
+- **It does not shuffle, time or limit attempts.** One try per question per run; Try again clears the whole set.
+- **It does not check your data at runtime.** A wrong `answer` index is not caught while the page runs. Use `checkQuestions` in a test.
+- **It is not an assessment.** It is a self-check with instant feedback. It does not prove that anyone learned or understood anything, and it makes no compliance claim.
+- **Its wording is fixed.** Copy the file to change it.
+
+## Props
+
+### Quiz
+
+Also accepts the props of a `div`, including `className` and `ref`. The prop types are exported as `QuizProps`.
+
+| Prop         | Type                           | Description                                                                |
+| ------------ | ------------------------------ | -------------------------------------------------------------------------- |
+| `questions`  | `QuizQuestion[]`               | The questions, in the order shown. Required.                               |
+| `onComplete` | `(result: QuizResult) => void` | Called once when the last question is answered, with the totals. Optional. |
+
+### QuizQuestion
+
+| Field         | Type                       | Description                                                         |
+| ------------- | -------------------------- | ------------------------------------------------------------------- |
+| `prompt`      | `ReactNode`                | The thing asked about, shown large. Required.                       |
+| `promptLang`  | `string`                   | Language of the prompt when it differs from the page, e.g. `"ja"`.  |
+| `hint`        | `ReactNode`                | A quieter line under the prompt.                                    |
+| `options`     | `(string \| QuizOption)[]` | Two or more. A string is the same as `{ label: string }`. Required. |
+| `answer`      | `number`                   | Index into `options` of the one right answer. Required.             |
+| `explanation` | `ReactNode`                | Shown under the result once the question is answered.               |
+
+`QuizOption` is `{ label: ReactNode; lang?: string }`.
+
+### QuizCard
+
+One controlled question, for when you lay the set out yourself. It keeps no state. Prop types are exported as `QuizCardProps`.
+
+| Prop       | Type                      | Description                                                      |
+| ---------- | ------------------------- | ---------------------------------------------------------------- |
+| `question` | `QuizQuestion`            | The question. Required.                                          |
+| `picked`   | `number \| null`          | The index picked, or `null` before it is answered. Required.     |
+| `onPick`   | `(index: number) => void` | Called with an option index. Not called once answered. Required. |
+| `number`   | `number`                  | 1-based position, shown as "1 / 3" when `total` is set too.      |
+| `total`    | `number`                  | The number of questions, for the "1 / 3" label.                  |
+
+## Agent prompt
+
+Paste this into your coding agent (Claude Code, Cursor, Codex or similar) in your project. Replace the bracketed parts with your own.
+
+```text
+Goal: add a tap-to-answer quiz with instant right or wrong feedback to my [lesson, refresher or onboarding page].
+
+Install: npx shadcn@latest add https://regularui.com/r/quiz.json
+Read the installed files (components/ui/quiz.tsx, lib/quiz.ts) before writing any code. Do not guess props.
+
+Contract:
+<Quiz questions={QuizQuestion[]} onComplete?={(result) => void} />  // also takes div props
+QuizQuestion = { prompt, promptLang?, hint?, options: (string | { label, lang? })[], answer: number, explanation? }
+<QuizCard question picked onPick number? total? />  // one controlled question
+The wording is fixed: "Correct", "Not quite. The answer is B.", "N of M correct", "Try again".
+
+Wiring rule: my questions are plain data. `answer` is an index into `options`. If I shuffle options, I shuffle once (not on every render) and set `answer` to the new position. Set promptLang / option lang for text in another language, such as "ja". Save the score myself in onComplete, because the quiz stores nothing. Write one test that runs checkQuestions from lib/quiz.ts against my real questions and expects [].
+
+States to handle: unanswered, answered right, answered wrong (the right option is marked), all answered (score and Try again), Try again (focus moves to the first option).
+
+Acceptance checks (run them and show me the output):
+1. Typecheck and lint pass.
+2. checkQuestions(myQuestions) returns [].
+3. Tapping a wrong option shows the cross, marks the right one and says which letter was right. The question then ignores further taps.
+4. After the last question the footer shows "N of M correct" and onComplete ran exactly once.
+5. Keyboard: Tab reaches each option, Enter or Space answers it, and Try again puts focus on the first option.
+
+UI only: it does not persist results, time, shuffle or prove anyone learned anything, and it makes no compliance claim. No new dependencies or abstractions beyond this. If something is unclear, ask me.
+```
+
+## Examples by sector
+
+Example data only, to show the wording. These are not claims about any real organisation, and the component proves nothing about a sector's rules. The pattern is the same in each; only the data changes.
+
+- **Education.** A vocabulary check after a lesson: three words, each with four readings or meanings, and a score at the end.
+- **Manufacturing.** A safety sign-off check before a shift: which sign means hearing protection is required, what to do when a guard is missing.
+- **Engineering.** A refresher on the naming rule for drawing revisions before someone files a change order.
+- **Health.** A policy refresher on how long to keep a record before review. Staff policy only; no patient data in the example.
+
+## Next
+
+Comes after: [`confirm-send`](/docs/components/confirm-send), [`notify-envelope`](/docs/components/notify-envelope). Leads to: [`audit-timeline`](/docs/components/audit-timeline).

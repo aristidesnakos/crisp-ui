@@ -21,6 +21,8 @@ Story order: See, Decide, Act, Confirm, Record. Items:
 - `approval` (act): Pure helpers: settle an approval from its approvers' decisions under an all, any or minimum policy, check who can decide, and validate a decision's reason.
 - `approval-step` (act): A sign-off with a stated reason and meaning: approvers with state as text and decision time, a policy sentence, Approve and Reject behind an inline confirm for the one person who can still decide, and a read-only explanation for everyone else.
 - `notify-envelope` (confirm): Pure helpers: build a roster from per-channel lists, compare lists, and build a one-message To/Cc envelope.
+- `quiz-lib` (confirm): Pure helpers for a tap-to-answer quiz: grade a pick, tally a set of picks, build an empty pick list, and check that your questions are well formed.
+- `quiz` (confirm): Tap an answer and see at once whether it was right, and which option was. One attempt per question, then it locks; the footer shows the score and Try again.
 - `audit-event` (record): The shared AuditEvent type, plus pure helpers to build one on the server (reason can be required), group by day in a time zone, filter, and format times.
 - `audit-timeline` (record): A read-only 'who did what, when, and why' list of recorded events, grouped by day, with outcome text and icon, a visible reason, filters, and honest empty, error and stale states.
 
