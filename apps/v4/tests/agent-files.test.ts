@@ -89,7 +89,7 @@ describe("skill format (agentskills.io specification)", () => {
 
   it("stays under 500 lines and points at llms.txt", () => {
     expect(skill.split("\n").length).toBeLessThan(500)
-    expect(skill).toContain("https://regularui.com/llms.txt")
+    expect(skill).toContain("https://realgood.site/llms.txt")
   })
 
   it("carries the rules an agent must follow", () => {
@@ -189,9 +189,9 @@ describe("root registry.json (GitHub registry)", () => {
   })
 
   it("links its docs at production", () => {
-    expect(root.homepage).toBe("https://regularui.com")
+    expect(root.homepage).toBe("https://realgood.site")
     for (const item of root.items) {
-      expect(item.meta?.recipe?.startsWith("https://regularui.com/docs/")).toBe(
+      expect(item.meta?.recipe?.startsWith("https://realgood.site/docs/")).toBe(
         true
       )
     }

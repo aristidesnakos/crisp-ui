@@ -5,7 +5,7 @@ import { proxy } from "../proxy"
 
 function run(pathname: string, accept?: string) {
   const response = proxy(
-    new NextRequest(`https://regularui.com${pathname}`, {
+    new NextRequest(`https://realgood.site${pathname}`, {
       headers: accept ? { accept } : {},
     })
   )
@@ -22,14 +22,14 @@ describe("proxy", () => {
   it("rewrites a docs URL to its markdown twin when markdown is preferred", () => {
     const result = run("/docs/components/status-notify", "text/markdown")
     expect(result.rewrite).toBe(
-      "https://regularui.com/llm/components/status-notify"
+      "https://realgood.site/llm/components/status-notify"
     )
     expect(result.vary).toBe("Accept")
   })
 
   it("rewrites the docs index", () => {
     expect(run("/docs", "text/markdown").rewrite).toBe(
-      "https://regularui.com/llm"
+      "https://realgood.site/llm"
     )
   })
 

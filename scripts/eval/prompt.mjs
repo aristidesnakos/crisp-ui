@@ -4,7 +4,7 @@
 //   node --experimental-strip-types scripts/eval/prompt.mjs <slug> [sector]
 //
 // <slug> is a pattern (data-table) or "build-the-arc". EVAL_ORIGIN, when set,
-// replaces https://regularui.com so the install commands hit a local registry.
+// replaces https://realgood.site so the install commands hit a local registry.
 import { readFileSync } from "node:fs"
 import path from "node:path"
 import { fileURLToPath } from "node:url"
@@ -40,6 +40,6 @@ const base = mdx.slice(open + 8, close)
 const examples = slug === "build-the-arc" ? {} : getSectorExamples(mdx)
 let prompt = buildPrompt(base, slug === "build-the-arc" ? null : sector, examples)
 if (process.env.EVAL_ORIGIN) {
-  prompt = prompt.replaceAll("https://regularui.com", process.env.EVAL_ORIGIN)
+  prompt = prompt.replaceAll("https://realgood.site", process.env.EVAL_ORIGIN)
 }
 process.stdout.write(prompt + "\n")

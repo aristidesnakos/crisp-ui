@@ -21,7 +21,7 @@ Run it.
 
 \`\`\`bash
 ## not a heading, it is a shell comment
-npx shadcn@latest add https://regularui.com/r/demo.json
+npx shadcn@latest add https://realgood.site/r/demo.json
 \`\`\`
 
 ### A subsection

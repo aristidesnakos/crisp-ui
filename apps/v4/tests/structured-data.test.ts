@@ -6,7 +6,7 @@ import {
   serializeJsonLd,
 } from "../lib/structured-data"
 
-const origin = "https://regularui.com"
+const origin = "https://realgood.site"
 const names: Record<string, string> = {
   "/docs": "Docs",
   "/docs/components": "Patterns",

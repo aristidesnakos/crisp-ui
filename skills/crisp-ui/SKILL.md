@@ -1,6 +1,6 @@
 ---
 name: crisp-ui
-description: "Install and use crisp-ui, a shadcn registry of dashboard patterns for internal tools (status-strip, status-notify, table-view, data-table, calibration-desk, recipient-roster, alert-rules-lib, alert-rules, save-bar, confirm-send, approval, approval-step, notify-envelope, quiz-lib, quiz, audit-event, audit-timeline). Use when building an admin or internal-tool screen that shows how a job is going, lets a person choose who is notified and sends a message, or when the user mentions crisp-ui or regularui.com. UI only: it does not provide a backend and does not make anything compliant."
+description: "Install and use crisp-ui, a shadcn registry of dashboard patterns for internal tools (status-strip, status-notify, table-view, data-table, calibration-desk, recipient-roster, alert-rules-lib, alert-rules, save-bar, confirm-send, approval, approval-step, notify-envelope, quiz-lib, quiz, audit-event, audit-timeline). Use when building an admin or internal-tool screen that shows how a job is going, lets a person choose who is notified and sends a message, or when the user mentions crisp-ui or realgood.site. UI only: it does not provide a backend and does not make anything compliant."
 license: MIT
 ---
 
@@ -15,20 +15,20 @@ crisp-ui is a shadcn registry of dashboard patterns for internal tools. You inst
 The project must already be set up with `npx shadcn@latest init`. Install an item by URL; its dependencies come with it:
 
 ```bash
-npx shadcn@latest add https://regularui.com/r/status-notify.json
+npx shadcn@latest add https://realgood.site/r/status-notify.json
 ```
 
 Or register the namespace once in `components.json` and install by name:
 
 ```json
-{ "registries": { "@crisp": "https://regularui.com/r/{name}.json" } }
+{ "registries": { "@crisp": "https://realgood.site/r/{name}.json" } }
 ```
 
 ```bash
 npx shadcn@latest add @crisp/status-notify
 ```
 
-To look before installing, run `npx shadcn@latest view https://regularui.com/r/status-notify.json` (prints the item JSON) or add `--dry-run` to `add` (lists the files and dependencies it would write, writes nothing).
+To look before installing, run `npx shadcn@latest view https://realgood.site/r/status-notify.json` (prints the item JSON) or add `--dry-run` to `add` (lists the files and dependencies it would write, writes nothing).
 
 ## The story
 
@@ -48,25 +48,25 @@ Pick items in this order. It is a recommended path for a workflow screen, not a 
 
 | Item | Stage | What it is | Install | Docs |
 | --- | --- | --- | --- | --- |
-| `status-strip` | see | A headline number, a segmented bar and a legend for the stages of one whole, with a slot for the action that acts on it. | `npx shadcn@latest add https://regularui.com/r/status-strip.json` | https://regularui.com/docs/components/status-strip.md |
-| `status-notify` | see to confirm | A status headline, a confirm-then-send action, and one recipient roster with save/discard, wired together. | `npx shadcn@latest add https://regularui.com/r/status-notify.json` | https://regularui.com/docs/components/status-notify.md |
-| `table-view` | see | Pure helpers for a list of rows: named views with counts, a stable sort, and selection that drops rows that are no longer there. | `npx shadcn@latest add https://regularui.com/r/table-view.json` | https://regularui.com/docs/components/data-table.md |
-| `data-table` | see | A table of rows with named saved views and live counts, row selection, an action slot that receives the selected rows, and stale, empty, no-match and error states. | `npx shadcn@latest add https://regularui.com/r/data-table.json` | https://regularui.com/docs/components/data-table.md |
-| `calibration-desk` | see to record | The whole arc on one screen, as a worked example: gauges due for calibration (status strip and data table), a reminder rule, a two-role approval, a confirm-then-send to owners, and an audit timeline of every decision, send and failure. Runs on an in-memory server you replace with real calls. | `npx shadcn@latest add https://regularui.com/r/calibration-desk.json` | https://regularui.com/docs/components/calibration-desk.md |
-| `recipient-roster` | decide | One list of people with a switch per channel, per-channel limits, paste-to-add and inline validation. | `npx shadcn@latest add https://regularui.com/r/recipient-roster.json` | https://regularui.com/docs/components/recipient-roster.md |
-| `alert-rules-lib` | decide | Pure helpers for reminder rules: validate a rule, test and move past quiet hours in any time zone (DST-safe), list which reminders are due, and describe a rule in a sentence. | `npx shadcn@latest add https://regularui.com/r/alert-rules-lib.json` | https://regularui.com/docs/components/alert-rules.md |
-| `alert-rules` | decide | An editor for reminder cadence, escalation and quiet hours, with inline validation and a plain-language summary under each rule. Edits a saved rule; it does not send or schedule. | `npx shadcn@latest add https://regularui.com/r/alert-rules.json` | https://regularui.com/docs/components/alert-rules.md |
-| `save-bar` | act | An 'Unsaved changes' bar with Discard and Save that only renders when there is something to save. | `npx shadcn@latest add https://regularui.com/r/save-bar.json` | https://regularui.com/docs/components/save-bar.md |
-| `confirm-send` | act | Click, confirm with the recipient count, send, then a 'Sent to N' status line. Can be blocked with a reason. | `npx shadcn@latest add https://regularui.com/r/confirm-send.json` | https://regularui.com/docs/components/confirm-send.md |
-| `approval` | act | Pure helpers: settle an approval from its approvers' decisions under an all, any or minimum policy, check who can decide, and validate a decision's reason. | `npx shadcn@latest add https://regularui.com/r/approval.json` | https://regularui.com/docs/components/approval-step.md |
-| `approval-step` | act | A sign-off with a stated reason and meaning: approvers with state as text and decision time, a policy sentence, Approve and Reject behind an inline confirm for the one person who can still decide, and a read-only explanation for everyone else. | `npx shadcn@latest add https://regularui.com/r/approval-step.json` | https://regularui.com/docs/components/approval-step.md |
-| `notify-envelope` | confirm | Pure helpers: build a roster from per-channel lists, compare lists, and build a one-message To/Cc envelope. | `npx shadcn@latest add https://regularui.com/r/notify-envelope.json` | https://regularui.com/docs/components/notify-envelope.md |
-| `quiz-lib` | confirm | Pure helpers for a tap-to-answer quiz: grade a pick, tally a set of picks, build an empty pick list, and check that your questions are well formed. | `npx shadcn@latest add https://regularui.com/r/quiz-lib.json` | https://regularui.com/docs/components/quiz.md |
-| `quiz` | confirm | Tap an answer and see at once whether it was right, and which option was. One attempt per question, then it locks; the footer shows the score and Try again. | `npx shadcn@latest add https://regularui.com/r/quiz.json` | https://regularui.com/docs/components/quiz.md |
-| `audit-event` | record | The shared AuditEvent type, plus pure helpers to build one on the server (reason can be required), group by day in a time zone, filter, and format times. | `npx shadcn@latest add https://regularui.com/r/audit-event.json` | https://regularui.com/docs/components/audit-timeline.md |
-| `audit-timeline` | record | A read-only 'who did what, when, and why' list of recorded events, grouped by day, with outcome text and icon, a visible reason, filters, and honest empty, error and stale states. | `npx shadcn@latest add https://regularui.com/r/audit-timeline.json` | https://regularui.com/docs/components/audit-timeline.md |
+| `status-strip` | see | A headline number, a segmented bar and a legend for the stages of one whole, with a slot for the action that acts on it. | `npx shadcn@latest add https://realgood.site/r/status-strip.json` | https://realgood.site/docs/components/status-strip.md |
+| `status-notify` | see to confirm | A status headline, a confirm-then-send action, and one recipient roster with save/discard, wired together. | `npx shadcn@latest add https://realgood.site/r/status-notify.json` | https://realgood.site/docs/components/status-notify.md |
+| `table-view` | see | Pure helpers for a list of rows: named views with counts, a stable sort, and selection that drops rows that are no longer there. | `npx shadcn@latest add https://realgood.site/r/table-view.json` | https://realgood.site/docs/components/data-table.md |
+| `data-table` | see | A table of rows with named saved views and live counts, row selection, an action slot that receives the selected rows, and stale, empty, no-match and error states. | `npx shadcn@latest add https://realgood.site/r/data-table.json` | https://realgood.site/docs/components/data-table.md |
+| `calibration-desk` | see to record | The whole arc on one screen, as a worked example: gauges due for calibration (status strip and data table), a reminder rule, a two-role approval, a confirm-then-send to owners, and an audit timeline of every decision, send and failure. Runs on an in-memory server you replace with real calls. | `npx shadcn@latest add https://realgood.site/r/calibration-desk.json` | https://realgood.site/docs/components/calibration-desk.md |
+| `recipient-roster` | decide | One list of people with a switch per channel, per-channel limits, paste-to-add and inline validation. | `npx shadcn@latest add https://realgood.site/r/recipient-roster.json` | https://realgood.site/docs/components/recipient-roster.md |
+| `alert-rules-lib` | decide | Pure helpers for reminder rules: validate a rule, test and move past quiet hours in any time zone (DST-safe), list which reminders are due, and describe a rule in a sentence. | `npx shadcn@latest add https://realgood.site/r/alert-rules-lib.json` | https://realgood.site/docs/components/alert-rules.md |
+| `alert-rules` | decide | An editor for reminder cadence, escalation and quiet hours, with inline validation and a plain-language summary under each rule. Edits a saved rule; it does not send or schedule. | `npx shadcn@latest add https://realgood.site/r/alert-rules.json` | https://realgood.site/docs/components/alert-rules.md |
+| `save-bar` | act | An 'Unsaved changes' bar with Discard and Save that only renders when there is something to save. | `npx shadcn@latest add https://realgood.site/r/save-bar.json` | https://realgood.site/docs/components/save-bar.md |
+| `confirm-send` | act | Click, confirm with the recipient count, send, then a 'Sent to N' status line. Can be blocked with a reason. | `npx shadcn@latest add https://realgood.site/r/confirm-send.json` | https://realgood.site/docs/components/confirm-send.md |
+| `approval` | act | Pure helpers: settle an approval from its approvers' decisions under an all, any or minimum policy, check who can decide, and validate a decision's reason. | `npx shadcn@latest add https://realgood.site/r/approval.json` | https://realgood.site/docs/components/approval-step.md |
+| `approval-step` | act | A sign-off with a stated reason and meaning: approvers with state as text and decision time, a policy sentence, Approve and Reject behind an inline confirm for the one person who can still decide, and a read-only explanation for everyone else. | `npx shadcn@latest add https://realgood.site/r/approval-step.json` | https://realgood.site/docs/components/approval-step.md |
+| `notify-envelope` | confirm | Pure helpers: build a roster from per-channel lists, compare lists, and build a one-message To/Cc envelope. | `npx shadcn@latest add https://realgood.site/r/notify-envelope.json` | https://realgood.site/docs/components/notify-envelope.md |
+| `quiz-lib` | confirm | Pure helpers for a tap-to-answer quiz: grade a pick, tally a set of picks, build an empty pick list, and check that your questions are well formed. | `npx shadcn@latest add https://realgood.site/r/quiz-lib.json` | https://realgood.site/docs/components/quiz.md |
+| `quiz` | confirm | Tap an answer and see at once whether it was right, and which option was. One attempt per question, then it locks; the footer shows the score and Try again. | `npx shadcn@latest add https://realgood.site/r/quiz.json` | https://realgood.site/docs/components/quiz.md |
+| `audit-event` | record | The shared AuditEvent type, plus pure helpers to build one on the server (reason can be required), group by day in a time zone, filter, and format times. | `npx shadcn@latest add https://realgood.site/r/audit-event.json` | https://realgood.site/docs/components/audit-timeline.md |
+| `audit-timeline` | record | A read-only 'who did what, when, and why' list of recorded events, grouped by day, with outcome text and icon, a visible reason, filters, and honest empty, error and stale states. | `npx shadcn@latest add https://realgood.site/r/audit-timeline.json` | https://realgood.site/docs/components/audit-timeline.md |
 
-Each item's JSON at `https://regularui.com/r/<item>.json` also carries `categories`, `meta.stage`, `meta.recipe` (its docs URL) and a short `docs` note.
+Each item's JSON at `https://realgood.site/r/<item>.json` also carries `categories`, `meta.stage`, `meta.recipe` (its docs URL) and a short `docs` note.
 
 ## Rules
 
@@ -78,7 +78,7 @@ Each item's JSON at `https://regularui.com/r/<item>.json` also carries `categori
 
 ## More
 
-- Site index for agents: https://regularui.com/llms.txt
-- Each docs page as markdown: https://regularui.com/docs/components/<item>.md
-- Registry item JSON: https://regularui.com/r/<item>.json
-- Setup guide: https://regularui.com/docs/ai
+- Site index for agents: https://realgood.site/llms.txt
+- Each docs page as markdown: https://realgood.site/docs/components/<item>.md
+- Registry item JSON: https://realgood.site/r/<item>.json
+- Setup guide: https://realgood.site/docs/ai
