@@ -119,7 +119,7 @@ Older roadmap items still open: `component-tests` (fold per-pattern tests into t
 
 ## 9. Decisions (Ari, 2026-10-01)
 
-1. **Domain: regularui.com.** Used as the registry origin in docs and builds. Hosting and DNS are Ari's to set up; the product is still named crisp-ui in code and docs (see open questions).
+1. **Domain: realgood.site.** Used as the registry origin in docs and builds. Hosting and DNS are Ari's to set up; the product is still named crisp-ui in code and docs (see open questions).
 2. **Arc approved:** See, Decide, Act, Confirm, Record.
 3. **All four new patterns approved:** `data-table`, `audit-timeline`, `alert-rules`, `approval-step`.
 4. **Roster stays email.** Task 8 (contact-agnostic roster) is dropped. Sector examples that need texting are out of scope for the roster; recipes must say so rather than imply SMS.
@@ -131,4 +131,4 @@ Older roadmap items still open: `component-tests` (fold per-pattern tests into t
 
 - **Add** `crisp/dev-feedback` (task 0b, first): `<DevFeedback name="Docs.<slug>.<Section>">` around the docs page body, preview, install and props sections and the landing demo; `/api/dev-feedback` hard-gated to non-production; `.claude/skills/iterate/SKILL.md` adapted so `Docs.<slug>.*` names map to `content/docs/components/<slug>.mdx` and `registry/crisp/`. Acceptance: in a production build the route returns 404 and no wrapper element or feedback JS is rendered; in dev, a submitted note appears in `.claude/dev-feedback.json` with a screenshot; the log files are git-ignored.
 - **Drop** task 8.
-- **Task 1** uses `https://regularui.com` as `CRISP_REGISTRY_ORIGIN`; acceptance unchanged.
+- **Task 1** uses `https://realgood.site` as `CRISP_REGISTRY_ORIGIN`; acceptance unchanged.

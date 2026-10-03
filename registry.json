@@ -1,7 +1,7 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
   "name": "crisp-ui",
-  "homepage": "https://regularui.com",
+  "homepage": "https://realgood.site",
   "items": [
     {
       "name": "notify-envelope",
@@ -14,9 +14,9 @@
       ],
       "meta": {
         "stage": "confirm",
-        "recipe": "https://regularui.com/docs/components/notify-envelope.md"
+        "recipe": "https://realgood.site/docs/components/notify-envelope.md"
       },
-      "docs": "Pure helper functions: build a roster from per-channel lists, compare lists, and build a one-message To/Cc envelope.\nRead the installed file before using it; use only the props it exports.\nDocs: https://regularui.com/docs/components/notify-envelope.md\nVerify: run your typechecker.",
+      "docs": "Pure helper functions: build a roster from per-channel lists, compare lists, and build a one-message To/Cc envelope.\nRead the installed file before using it; use only the props it exports.\nDocs: https://realgood.site/docs/components/notify-envelope.md\nVerify: run your typechecker.",
       "files": [
         {
           "path": "apps/v4/registry/crisp/lib/notify-envelope.ts",
@@ -35,9 +35,9 @@
       ],
       "meta": {
         "stage": "see",
-        "recipe": "https://regularui.com/docs/components/status-strip.md"
+        "recipe": "https://realgood.site/docs/components/status-strip.md"
       },
-      "docs": "A headline number, a segmented bar and a legend for the stages of one whole.\nRead the installed file before using it; use only the props it exports.\nDocs: https://regularui.com/docs/components/status-strip.md\nVerify: run your typechecker.",
+      "docs": "A headline number, a segmented bar and a legend for the stages of one whole.\nRead the installed file before using it; use only the props it exports.\nDocs: https://realgood.site/docs/components/status-strip.md\nVerify: run your typechecker.",
       "files": [
         {
           "path": "apps/v4/registry/crisp/ui/status-strip.tsx",
@@ -56,9 +56,9 @@
       ],
       "meta": {
         "stage": "act",
-        "recipe": "https://regularui.com/docs/components/save-bar.md"
+        "recipe": "https://realgood.site/docs/components/save-bar.md"
       },
-      "docs": "An \"Unsaved changes\" bar with Discard and Save, hidden when there is nothing to save.\nRead the installed file before using it; use only the props it exports.\nDocs: https://regularui.com/docs/components/save-bar.md\nVerify: run your typechecker.",
+      "docs": "An \"Unsaved changes\" bar with Discard and Save, hidden when there is nothing to save.\nRead the installed file before using it; use only the props it exports.\nDocs: https://realgood.site/docs/components/save-bar.md\nVerify: run your typechecker.",
       "registryDependencies": [
         "button"
       ],
@@ -80,9 +80,9 @@
       ],
       "meta": {
         "stage": "act",
-        "recipe": "https://regularui.com/docs/components/confirm-send.md"
+        "recipe": "https://realgood.site/docs/components/confirm-send.md"
       },
-      "docs": "A button that confirms with the recipient count before sending, then shows \"Sent to N\".\nRead the installed file before using it; use only the props it exports.\nDocs: https://regularui.com/docs/components/confirm-send.md\nVerify: run your typechecker.",
+      "docs": "A button that confirms with the recipient count before sending, then shows \"Sent to N\".\nRead the installed file before using it; use only the props it exports.\nDocs: https://realgood.site/docs/components/confirm-send.md\nVerify: run your typechecker.",
       "dependencies": [
         "lucide-react"
       ],
@@ -107,9 +107,9 @@
       ],
       "meta": {
         "stage": "decide",
-        "recipe": "https://regularui.com/docs/components/recipient-roster.md"
+        "recipe": "https://realgood.site/docs/components/recipient-roster.md"
       },
-      "docs": "One list of people with a switch per channel, per-channel limits, paste-to-add and inline validation.\nRead the installed file before using it; use only the props it exports.\nDocs: https://regularui.com/docs/components/recipient-roster.md\nVerify: run your typechecker.",
+      "docs": "One list of people with a switch per channel, per-channel limits, paste-to-add and inline validation.\nRead the installed file before using it; use only the props it exports.\nDocs: https://realgood.site/docs/components/recipient-roster.md\nVerify: run your typechecker.",
       "dependencies": [
         "lucide-react"
       ],
@@ -137,9 +137,9 @@
       "meta": {
         "stage": "see",
         "stageEnd": "confirm",
-        "recipe": "https://regularui.com/docs/components/status-notify.md"
+        "recipe": "https://realgood.site/docs/components/status-notify.md"
       },
-      "docs": "A status headline, a confirm-then-send action and one recipient roster with save/discard, wired together.\nRead the installed file before using it; use only the props it exports.\nDocs: https://regularui.com/docs/components/status-notify.md\nVerify: run your typechecker.",
+      "docs": "A status headline, a confirm-then-send action and one recipient roster with save/discard, wired together.\nRead the installed file before using it; use only the props it exports.\nDocs: https://realgood.site/docs/components/status-notify.md\nVerify: run your typechecker.",
       "registryDependencies": [
         "card",
         "aristidesnakos/crisp-ui/notify-envelope",
@@ -166,9 +166,9 @@
       ],
       "meta": {
         "stage": "act",
-        "recipe": "https://regularui.com/docs/components/approval-step.md"
+        "recipe": "https://realgood.site/docs/components/approval-step.md"
       },
-      "docs": "Pure helpers for sign-offs: summarize an approval under an all, any or minimum policy, decide who may still decide, and validate a decision.\nRead the installed file before using it; use only the props it exports.\nDocs: https://regularui.com/docs/components/approval-step.md\nVerify: run your typechecker.",
+      "docs": "Pure helpers for sign-offs: summarize an approval under an all, any or minimum policy, decide who may still decide, and validate a decision.\nRead the installed file before using it; use only the props it exports.\nDocs: https://realgood.site/docs/components/approval-step.md\nVerify: run your typechecker.",
       "files": [
         {
           "path": "apps/v4/registry/crisp/lib/approval.ts",
@@ -187,9 +187,9 @@
       ],
       "meta": {
         "stage": "act",
-        "recipe": "https://regularui.com/docs/components/approval-step.md"
+        "recipe": "https://realgood.site/docs/components/approval-step.md"
       },
-      "docs": "A sign-off with a stated reason and meaning: approvers, the policy, and Approve or Reject with a confirm.\nRead the installed file before using it; use only the props it exports.\nDocs: https://regularui.com/docs/components/approval-step.md\nVerify: run your typechecker.",
+      "docs": "A sign-off with a stated reason and meaning: approvers, the policy, and Approve or Reject with a confirm.\nRead the installed file before using it; use only the props it exports.\nDocs: https://realgood.site/docs/components/approval-step.md\nVerify: run your typechecker.",
       "dependencies": [
         "lucide-react"
       ],
@@ -215,9 +215,9 @@
       ],
       "meta": {
         "stage": "record",
-        "recipe": "https://regularui.com/docs/components/audit-timeline.md"
+        "recipe": "https://realgood.site/docs/components/audit-timeline.md"
       },
-      "docs": "The shared AuditEvent type and pure helpers: build an event on the server (reason can be required), group by day in a time zone, filter and format times.\nRead the installed file before using it; use only the props it exports.\nDocs: https://regularui.com/docs/components/audit-timeline.md\nVerify: run your typechecker.",
+      "docs": "The shared AuditEvent type and pure helpers: build an event on the server (reason can be required), group by day in a time zone, filter and format times.\nRead the installed file before using it; use only the props it exports.\nDocs: https://realgood.site/docs/components/audit-timeline.md\nVerify: run your typechecker.",
       "files": [
         {
           "path": "apps/v4/registry/crisp/lib/audit-event.ts",
@@ -236,9 +236,9 @@
       ],
       "meta": {
         "stage": "record",
-        "recipe": "https://regularui.com/docs/components/audit-timeline.md"
+        "recipe": "https://realgood.site/docs/components/audit-timeline.md"
       },
-      "docs": "A read-only who-did-what-when-and-why list of recorded events, grouped by day, with outcome text and a visible reason.\nRead the installed file before using it; use only the props it exports.\nDocs: https://regularui.com/docs/components/audit-timeline.md\nVerify: run your typechecker.",
+      "docs": "A read-only who-did-what-when-and-why list of recorded events, grouped by day, with outcome text and a visible reason.\nRead the installed file before using it; use only the props it exports.\nDocs: https://realgood.site/docs/components/audit-timeline.md\nVerify: run your typechecker.",
       "dependencies": [
         "lucide-react"
       ],
@@ -264,9 +264,9 @@
       ],
       "meta": {
         "stage": "see",
-        "recipe": "https://regularui.com/docs/components/data-table.md"
+        "recipe": "https://realgood.site/docs/components/data-table.md"
       },
-      "docs": "Pure helpers for a list of rows: filter by named view with live counts, sort with nulls last, and keep a selection correct as rows change.\nRead the installed file before using it; use only the props it exports.\nDocs: https://regularui.com/docs/components/data-table.md\nVerify: run your typechecker.",
+      "docs": "Pure helpers for a list of rows: filter by named view with live counts, sort with nulls last, and keep a selection correct as rows change.\nRead the installed file before using it; use only the props it exports.\nDocs: https://realgood.site/docs/components/data-table.md\nVerify: run your typechecker.",
       "files": [
         {
           "path": "apps/v4/registry/crisp/lib/table-view.ts",
@@ -285,9 +285,9 @@
       ],
       "meta": {
         "stage": "see",
-        "recipe": "https://regularui.com/docs/components/data-table.md"
+        "recipe": "https://realgood.site/docs/components/data-table.md"
       },
-      "docs": "A table of rows with named saved views, selection, an as-of freshness line and an action slot fed the selected rows.\nRead the installed file before using it; use only the props it exports.\nDocs: https://regularui.com/docs/components/data-table.md\nVerify: run your typechecker.",
+      "docs": "A table of rows with named saved views, selection, an as-of freshness line and an action slot fed the selected rows.\nRead the installed file before using it; use only the props it exports.\nDocs: https://realgood.site/docs/components/data-table.md\nVerify: run your typechecker.",
       "dependencies": [
         "lucide-react"
       ],
@@ -315,9 +315,9 @@
       ],
       "meta": {
         "stage": "decide",
-        "recipe": "https://regularui.com/docs/components/alert-rules.md"
+        "recipe": "https://realgood.site/docs/components/alert-rules.md"
       },
-      "docs": "Pure helpers for reminder rules: validate a rule, check quiet hours across midnight and DST, find which reminders are due, and describe a rule in a sentence.\nRead the installed file before using it; use only the props it exports.\nDocs: https://regularui.com/docs/components/alert-rules.md\nVerify: run your typechecker.",
+      "docs": "Pure helpers for reminder rules: validate a rule, check quiet hours across midnight and DST, find which reminders are due, and describe a rule in a sentence.\nRead the installed file before using it; use only the props it exports.\nDocs: https://realgood.site/docs/components/alert-rules.md\nVerify: run your typechecker.",
       "files": [
         {
           "path": "apps/v4/registry/crisp/lib/alert-rules-lib.ts",
@@ -336,9 +336,9 @@
       ],
       "meta": {
         "stage": "decide",
-        "recipe": "https://regularui.com/docs/components/alert-rules.md"
+        "recipe": "https://realgood.site/docs/components/alert-rules.md"
       },
-      "docs": "An editor for reminder cadence, escalation and quiet hours, with a plain-language summary of each rule.\nRead the installed file before using it; use only the props it exports.\nDocs: https://regularui.com/docs/components/alert-rules.md\nVerify: run your typechecker.",
+      "docs": "An editor for reminder cadence, escalation and quiet hours, with a plain-language summary of each rule.\nRead the installed file before using it; use only the props it exports.\nDocs: https://realgood.site/docs/components/alert-rules.md\nVerify: run your typechecker.",
       "dependencies": [
         "lucide-react"
       ],
@@ -367,9 +367,9 @@
       "meta": {
         "stage": "see",
         "stageEnd": "record",
-        "recipe": "https://regularui.com/docs/components/calibration-desk.md"
+        "recipe": "https://realgood.site/docs/components/calibration-desk.md"
       },
-      "docs": "The whole arc on one screen: a table of gauges due, a rule, a two-role approval, a confirm-then-send and an audit timeline, on an in-memory server.\nRead the installed file before using it; use only the props it exports.\nReplace createMemoryServer() with real calls in one place: pass your own server prop. Your server must check the user and role, write the audit events and enforce quiet hours.\nDocs: https://regularui.com/docs/components/calibration-desk.md\nVerify: run your typechecker.",
+      "docs": "The whole arc on one screen: a table of gauges due, a rule, a two-role approval, a confirm-then-send and an audit timeline, on an in-memory server.\nRead the installed file before using it; use only the props it exports.\nReplace createMemoryServer() with real calls in one place: pass your own server prop. Your server must check the user and role, write the audit events and enforce quiet hours.\nDocs: https://realgood.site/docs/components/calibration-desk.md\nVerify: run your typechecker.",
       "dependencies": [
         "lucide-react"
       ],
@@ -409,9 +409,9 @@
       ],
       "meta": {
         "stage": "confirm",
-        "recipe": "https://regularui.com/docs/components/quiz.md"
+        "recipe": "https://realgood.site/docs/components/quiz.md"
       },
-      "docs": "Pure helpers for a quiz: grade a pick, tally a set of picks, build an empty pick list, and check that your questions are well formed (checkQuestions).\nRead the installed file before using it; use only the props it exports.\nDocs: https://regularui.com/docs/components/quiz.md\nVerify: run your typechecker, and run checkQuestions in a test against your own questions.",
+      "docs": "Pure helpers for a quiz: grade a pick, tally a set of picks, build an empty pick list, and check that your questions are well formed (checkQuestions).\nRead the installed file before using it; use only the props it exports.\nDocs: https://realgood.site/docs/components/quiz.md\nVerify: run your typechecker, and run checkQuestions in a test against your own questions.",
       "files": [
         {
           "path": "apps/v4/registry/crisp/lib/quiz.ts",
@@ -430,9 +430,9 @@
       ],
       "meta": {
         "stage": "confirm",
-        "recipe": "https://regularui.com/docs/components/quiz.md"
+        "recipe": "https://realgood.site/docs/components/quiz.md"
       },
-      "docs": "A set of questions answered by tapping: instant right or wrong, the right option revealed, one attempt each, then a score and Try again. Also exports QuizCard for a single controlled question.\nRead the installed file before using it; use only the props it exports.\nThe wording (\"Correct\", \"Not quite. The answer is B.\", \"N of M correct\", \"Try again\") is fixed; copy the file to change it. No persistence, timer or shuffling.\nDocs: https://regularui.com/docs/components/quiz.md\nVerify: run your typechecker.",
+      "docs": "A set of questions answered by tapping: instant right or wrong, the right option revealed, one attempt each, then a score and Try again. Also exports QuizCard for a single controlled question.\nRead the installed file before using it; use only the props it exports.\nThe wording (\"Correct\", \"Not quite. The answer is B.\", \"N of M correct\", \"Try again\") is fixed; copy the file to change it. No persistence, timer or shuffling.\nDocs: https://realgood.site/docs/components/quiz.md\nVerify: run your typechecker.",
       "dependencies": [
         "lucide-react"
       ],

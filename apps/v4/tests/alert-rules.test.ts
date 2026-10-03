@@ -600,7 +600,7 @@ describe("alert-rules docs page", () => {
 
   it("gives the exact install command and tells the agent to read the files", () => {
     expect(prompt).toContain(
-      "npx shadcn@latest add https://regularui.com/r/alert-rules.json"
+      "npx shadcn@latest add https://realgood.site/r/alert-rules.json"
     )
     expect(prompt.toLowerCase()).toContain("read the installed files")
   })

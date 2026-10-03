@@ -29,7 +29,7 @@ import { fileURLToPath } from "node:url"
 
 // Agent files always point at production, never at the localhost origin CI uses
 // to build the registry.
-export const PRODUCTION_ORIGIN = "https://regularui.com"
+export const PRODUCTION_ORIGIN = "https://realgood.site"
 
 // The placeholder the template uses wherever the registry origin goes.
 const ORIGIN_TOKEN = "__REGISTRY_ORIGIN__"
@@ -93,7 +93,7 @@ export function renderSkill(items, origin = PRODUCTION_ORIGIN) {
   const description =
     `Install and use crisp-ui, a shadcn registry of dashboard patterns for internal tools (${names.join(", ")}). ` +
     "Use when building an admin or internal-tool screen that shows how a job is going, lets a person choose who is notified and sends a message, " +
-    "or when the user mentions crisp-ui or regularui.com. UI only: it does not provide a backend and does not make anything compliant."
+    "or when the user mentions crisp-ui or realgood.site. UI only: it does not provide a backend and does not make anything compliant."
   const example = items.find((i) => i.name === "status-notify") ?? items[0]
 
   const storyRows = STAGES.map((s) => {

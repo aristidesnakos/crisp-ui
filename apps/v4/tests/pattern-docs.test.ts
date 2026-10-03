@@ -25,7 +25,7 @@ const REQUIRED_HEADINGS = [
 ]
 
 const MAX_PROMPT_LENGTH = 2500
-const REGISTRY_URL = "https://regularui.com/r/"
+const REGISTRY_URL = "https://realgood.site/r/"
 
 /** The story order: where each pattern sits, as "comes after" and "leads to". */
 const STORY: Record<string, { after: string[]; leadsTo: string[] }> = {
@@ -131,7 +131,7 @@ describe.each(pages)("pattern docs: %s", (page) => {
 
     it("installs this page's item from the registry, and only items that exist", () => {
       expect(prompt).toContain(`${REGISTRY_URL}${page}.json`)
-      const urls = [...prompt.matchAll(/https:\/\/regularui\.com\/r\/(\S+)/g)]
+      const urls = [...prompt.matchAll(/https:\/\/realgood\.site\/r\/(\S+)/g)]
       expect(urls.length).toBeGreaterThan(0)
       for (const [, rest] of urls) {
         const item = rest.replace(/\.json$/, "")

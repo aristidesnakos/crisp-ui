@@ -185,16 +185,16 @@ const [sending, setSending] = React.useState(false)
     const md = await mdxToMarkdown(
       "See [`status-strip`](/docs/components/status-strip), the [setup](/docs/installation#manual) and [docs](/docs). [Other](https://example.com/docs/x).",
       resolvers,
-      { origin: "https://regularui.com/" }
+      { origin: "https://realgood.site/" }
     )
 
     expect(md).toContain(
-      "[`status-strip`](https://regularui.com/docs/components/status-strip.md)"
+      "[`status-strip`](https://realgood.site/docs/components/status-strip.md)"
     )
     expect(md).toContain(
-      "[setup](https://regularui.com/docs/installation.md#manual)"
+      "[setup](https://realgood.site/docs/installation.md#manual)"
     )
-    expect(md).toContain("[docs](https://regularui.com/docs.md)")
+    expect(md).toContain("[docs](https://realgood.site/docs.md)")
     expect(md).toContain("[Other](https://example.com/docs/x)")
   })
 
@@ -203,9 +203,9 @@ const [sending, setSending] = React.useState(false)
       "```bash\nnpx shadcn@latest add https://<your-domain>/r/confirm-send.json\n```\n"
 
     expect(
-      await mdxToMarkdown(mdx, resolvers, { origin: "https://regularui.com/" })
+      await mdxToMarkdown(mdx, resolvers, { origin: "https://realgood.site/" })
     ).toBe(
-      "```bash\nnpx shadcn@latest add https://regularui.com/r/confirm-send.json\n```\n"
+      "```bash\nnpx shadcn@latest add https://realgood.site/r/confirm-send.json\n```\n"
     )
     // Without an origin the text is left as written.
     expect(await mdxToMarkdown(mdx, resolvers)).toBe(mdx)

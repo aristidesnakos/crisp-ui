@@ -12,7 +12,7 @@ The [Calibration desk](/docs/components/calibration-desk) is the arc already bui
 The prompt below tells the agent to install and read that block before writing anything, so it copies a working shape instead of guessing one:
 
 ```bash
-npx shadcn@latest add https://regularui.com/r/calibration-desk.json
+npx shadcn@latest add https://realgood.site/r/calibration-desk.json
 ```
 
 ## What the agent installs
@@ -44,10 +44,10 @@ Fill in:
 Sector examples, replace one: education: attendance follow-up (students, attendance officer, guardians) | manufacturing: calibration recall (gauges, Quality and Manufacturing, owners) | engineering: ECO release (change orders, three approvers, the people who build) | health: licence expiry (licences, compliance lead, staff)
 
 Read before writing. Install the worked example, then READ it. Do not guess props.
-npx shadcn@latest add https://regularui.com/r/calibration-desk.json
+npx shadcn@latest add https://realgood.site/r/calibration-desk.json
 Read components/calibration-desk.tsx and lib/calibration-desk*.ts. Then install the smallest pattern per stage not already added, and read each installed file before using it:
 See: status-strip, data-table. Decide: alert-rules (optional). Act: approval-step. Confirm: confirm-send. Record: audit-timeline.
-npx shadcn@latest add https://regularui.com/r/<name>.json
+npx shadcn@latest add https://realgood.site/r/<name>.json
 
 Contract: share one shape. An item (id, label, owner email, due), a request (item ids and approvers with decisions), and AuditEvent from audit-event. Selected rows set the "Send to N" count; approval enables the send; each send adds an audit event; the status counts come from the same data.
 

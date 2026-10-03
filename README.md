@@ -25,7 +25,7 @@ There is no package to upgrade: you install the source and own it.
 | `calibration-desk` | The whole See to Record arc on one screen, as a worked example      |
 
 ```bash
-npx shadcn@latest add https://regularui.com/r/status-notify.json
+npx shadcn@latest add https://realgood.site/r/status-notify.json
 ```
 
 ## Develop
