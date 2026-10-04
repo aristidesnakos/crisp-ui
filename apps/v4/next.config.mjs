@@ -4,9 +4,6 @@ import { createMDX } from "fumadocs-mdx/next"
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   devIndicators: false,
-  experimental: {
-    optimizePackageImports: ["@hugeicons/react", "@hugeicons/core-free-icons"],
-  },
   // The docs pages read component source from these folders at request time.
   outputFileTracingIncludes: {
     "/*": ["./registry/crisp/**/*", "./examples/**/*"],
