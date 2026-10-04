@@ -49,24 +49,12 @@ importers:
       '@hookform/resolvers':
         specifier: ^3.10.0
         version: 3.10.0(react-hook-form@7.62.0(react@19.2.3))(zod@3.25.76)
-      '@hugeicons/core-free-icons':
-        specifier: ^1.2.1
-        version: 1.2.1
-      '@hugeicons/react':
-        specifier: ^1.1.1
-        version: 1.1.1(react@19.2.3)
       '@internationalized/date':
         specifier: ^3.12.3
         version: 3.12.3
       '@paper-design/shaders-react':
         specifier: ^0.0.72
         version: 0.0.72(@types/react@19.2.2)(react@19.2.3)
-      '@phosphor-icons/react':
-        specifier: ^2.1.10
-        version: 2.1.10(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
-      '@remixicon/react':
-        specifier: ^4.7.0
-        version: 4.7.0(react@19.2.3)
       '@streamdown/code':
         specifier: ^1.1.1
         version: 1.1.1(react@19.2.3)
@@ -1263,14 +1251,6 @@ packages:
       react-hook-form: ^7.0.0
       zod: ^3.25 || ^4
 
-  '@hugeicons/core-free-icons@1.2.1':
-    resolution: {integrity: sha512-ho0QdGMkgL+kt+QsZocCsKvJou1rfyVQWARrxIhNLi+9tCKayUUtD9jlHgioaRphmskSl84TxrDm9Ae0G4Uu1g==}
-
-  '@hugeicons/react@1.1.1':
-    resolution: {integrity: sha512-BAbFVtx0XZ/yF2poPLFn0N9Ji6ebV/MpI5+WRqooFp3smQDwpL+72m+BBs4KAM5djgWUpg12weyc5SJtTsOwsw==}
-    peerDependencies:
-      react: '>=16.0.0'
-
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
     engines: {node: '>=18.18.0'}
@@ -1821,13 +1801,6 @@ packages:
 
   '@paper-design/shaders@0.0.72':
     resolution: {integrity: sha512-rk2BFuV5ood2DaivbxJC2jQMzaB434isDUzdUQ85Cy0OWnUMuxl8kyGMR74TDPyjo3EvcHIyreNLkJdRG+GfSA==}
-
-  '@phosphor-icons/react@2.1.10':
-    resolution: {integrity: sha512-vt8Tvq8GLjheAZZYa+YG/pW7HDbov8El/MANW8pOAz4eGxrwhnbfrQZq0Cp4q8zBEu8NIhHdnr+r8thnfRSNYA==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      react: '>= 16.8'
-      react-dom: '>= 16.8'
 
   '@polka/url@1.0.0-next.29':
     resolution: {integrity: sha512-wwQAWhWSuHaag8c4q/KN/vCoeOJYshAIvMQwD4GpSb3OiZklFfvAgmj0VCBBImRpuF/aFgIRzllXlVX93Jevww==}
@@ -2944,11 +2917,6 @@ packages:
         optional: true
       react-redux:
         optional: true
-
-  '@remixicon/react@4.7.0':
-    resolution: {integrity: sha512-ODBQjdbOjnFguCqctYkpDjERXOInNaBnRPDKfZOBvbzExBAwr2BaH/6AHFTg/UAFzBDkwtylfMT8iKPAkLwPLQ==}
-    peerDependencies:
-      react: '>=18.2.0'
 
   '@rollup/rollup-android-arm-eabi@4.61.1':
     resolution: {integrity: sha512-JnBB8MdXj45cajvTuO5FmPlvFVJRQgvrz1uSEl3NwqFnReAPGwb8EanbGi4z2nRaqLzjJSv5/JmycoTKlRZxHA==}
@@ -8586,12 +8554,6 @@ snapshots:
       react-hook-form: 7.62.0(react@19.2.3)
       zod: 3.25.76
 
-  '@hugeicons/core-free-icons@1.2.1': {}
-
-  '@hugeicons/react@1.1.1(react@19.2.3)':
-    dependencies:
-      react: 19.2.3
-
   '@humanfs/core@0.19.1': {}
 
   '@humanfs/node@0.16.7':
@@ -9049,11 +9011,6 @@ snapshots:
       '@types/react': 19.2.2
 
   '@paper-design/shaders@0.0.72': {}
-
-  '@phosphor-icons/react@2.1.10(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
-    dependencies:
-      react: 19.2.3
-      react-dom: 19.2.3(react@19.2.3)
 
   '@polka/url@1.0.0-next.29':
     optional: true
@@ -10221,10 +10178,6 @@ snapshots:
     optionalDependencies:
       react: 19.2.3
       react-redux: 9.2.0(@types/react@19.2.2)(react@19.2.3)(redux@5.0.1)
-
-  '@remixicon/react@4.7.0(react@19.2.3)':
-    dependencies:
-      react: 19.2.3
 
   '@rollup/rollup-android-arm-eabi@4.61.1':
     optional: true
