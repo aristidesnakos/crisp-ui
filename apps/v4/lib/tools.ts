@@ -98,7 +98,7 @@ export const TRACKER_MOMENTS: MomentItem[] = [
 ]
 
 /**
- * Sites Ari built with Real Good Site parts (his own builds, 2026-10-06), so
+ * Sites Ari built with Real Good Site parts (confirmed by Ari, 2026-10-06), so
  * the label is "Built with", not "Trusted by". List only a site that really
  * uses the parts. Shown as wordmarks; swap in each brand's logo file later.
  */
@@ -111,5 +111,4 @@ export const IN_USE: { name: string; href: string; sector: string }[] = [
     sector: "Construction",
   },
   { name: "Outbreak Files", href: "https://outbreakfiles.com", sector: "Health" },
-  { name: "Mangood", href: "https://mangood.app", sector: "Health" },
 ]
