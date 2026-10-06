@@ -7,13 +7,13 @@ import { BellRing, CircleAlert, CircleCheck, Clock, Lock } from "lucide-react"
 import {
   DEMO_NOW,
   EXAMPLES,
-  ORG,
-  ROSTER,
   historyFor,
   needsAttention,
+  ORG,
+  ROSTER,
   statusText,
-  type TrackExample,
   type TrackedPerson,
+  type TrackExample,
 } from "@/components/marketing/tracker-data"
 import type { AuditEvent } from "@/registry/crisp/lib/audit-event"
 import { AuditTimeline } from "@/registry/crisp/ui/audit-timeline"
@@ -107,7 +107,7 @@ function WordInput({
         autoComplete="off"
         size={Math.max(value.length, placeholder.length, 3)}
         onChange={(e) => onChange(e.target.value)}
-        className="max-w-full min-w-[3ch] border-b-2 border-dashed border-brand/50 bg-transparent px-1 text-center text-brand italic outline-none [field-sizing:content] placeholder:text-muted-foreground/50 hover:border-brand focus:border-solid focus:border-brand"
+        className="[field-sizing:content] max-w-full min-w-[3ch] border-b-2 border-dashed border-brand/50 bg-transparent px-1 text-center text-brand italic outline-none placeholder:text-muted-foreground/50 hover:border-brand focus:border-solid focus:border-brand"
       />
     </>
   )
@@ -173,9 +173,7 @@ export function TrainingTrackerDemo({ className }: { className?: string }) {
   )?.id
 
   const attention = needsAttention(ROSTER)
-  const [view, setView] = React.useState<"attention" | "everyone">(
-    "attention"
-  )
+  const [view, setView] = React.useState<"attention" | "everyone">("attention")
   const [selected, setSelected] = React.useState<Set<string>>(
     () => new Set(needsAttention(ROSTER).map((p) => p.id))
   )

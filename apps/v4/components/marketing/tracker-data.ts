@@ -96,14 +96,38 @@ export const EXAMPLES: TrackExample[] = [
 
 /** Where the same list lives. Kinds of workplace, not customers. */
 export const EVERYWHERE: { where: string; lists: string[] }[] = [
-  { where: "Schools", lists: ["Safeguarding training", "First aid", "Staff checks"] },
-  { where: "Building sites", lists: ["Site inductions", "Working at height", "Plant tickets"] },
-  { where: "Training providers", lists: ["Course completion", "Certificates", "Renewals"] },
-  { where: "Clinics and care", lists: ["Fire safety", "Staff licences", "Life support"] },
-  { where: "Restaurants", lists: ["Food hygiene", "Allergen training", "Fire drills"] },
-  { where: "Warehouses and fleets", lists: ["Forklift licences", "Driving licence checks", "Manual handling"] },
-  { where: "Clubs and charities", lists: ["Background checks", "Volunteer inductions", "Coaching badges"] },
-  { where: "Offices", lists: ["Data protection", "Policy sign-offs", "Security training"] },
+  {
+    where: "Schools",
+    lists: ["Safeguarding training", "First aid", "Staff checks"],
+  },
+  {
+    where: "Building sites",
+    lists: ["Site inductions", "Working at height", "Plant tickets"],
+  },
+  {
+    where: "Training providers",
+    lists: ["Course completion", "Certificates", "Renewals"],
+  },
+  {
+    where: "Clinics and care",
+    lists: ["Fire safety", "Staff licences", "Life support"],
+  },
+  {
+    where: "Restaurants",
+    lists: ["Food hygiene", "Allergen training", "Fire drills"],
+  },
+  {
+    where: "Warehouses and fleets",
+    lists: ["Forklift licences", "Driving licence checks", "Manual handling"],
+  },
+  {
+    where: "Clubs and charities",
+    lists: ["Background checks", "Volunteer inductions", "Coaching badges"],
+  },
+  {
+    where: "Offices",
+    lists: ["Data protection", "Policy sign-offs", "Security training"],
+  },
 ]
 
 export const ORG = {

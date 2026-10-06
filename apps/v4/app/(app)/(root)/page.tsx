@@ -69,8 +69,14 @@ const STEPS = [
 ]
 
 const BUILT_IN = [
-  ["The count before every send", "Nobody emails the whole company by accident."],
-  ["A reason on every sign-off", "Decisions still explain themselves months later."],
+  [
+    "The count before every send",
+    "Nobody emails the whole company by accident.",
+  ],
+  [
+    "A reason on every sign-off",
+    "Decisions still explain themselves months later.",
+  ],
   [
     "A record that writes itself",
     "Every reminder, sign-off and failure, saved by the server, not the browser.",
@@ -117,9 +123,9 @@ export default function IndexPage() {
             </h1>
             <p className="max-w-2xl text-lg text-pretty text-muted-foreground md:text-xl">
               Start from a finished tracker for training, certificates and
-              sign-offs. Describe it in plain words and your AI assistant
-              makes it yours. Reminders, sign-offs and a record you can show
-              anyone who asks come built in.
+              sign-offs. Describe it in plain words and your AI assistant makes
+              it yours. Reminders, sign-offs and a record you can show anyone
+              who asks come built in.
             </p>
             <div className="flex flex-wrap justify-center gap-3">
               <Button size="lg" asChild>
@@ -311,9 +317,9 @@ export default function IndexPage() {
               <h3 className="font-display text-2xl">Still yours to decide</h3>
               <p className="text-sm text-pretty text-muted-foreground">
                 Who gets access, how long you keep records, and what your
-                policies require. Real Good Site makes your rules easy to follow.
-                It does not make you compliant on its own, and we will never
-                claim it does.
+                policies require. Real Good Site makes your rules easy to
+                follow. It does not make you compliant on its own, and we will
+                never claim it does.
               </p>
               <p className="text-sm text-pretty text-muted-foreground">
                 Your people&apos;s records live in accounts you own. We never
@@ -359,9 +365,9 @@ export default function IndexPage() {
               </h2>
               <p className="text-lg text-pretty text-muted-foreground">
                 Every tool ships with step-by-step instructions written for AI
-                assistants, plus checks it must run and show you before it
-                calls the job done. Developers and assistants can read every
-                page as plain text.
+                assistants, plus checks it must run and show you before it calls
+                the job done. Developers and assistants can read every page as
+                plain text.
               </p>
               <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm font-medium">
                 <Link href="/docs/ai" className="underline underline-offset-4">

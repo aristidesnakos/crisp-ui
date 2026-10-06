@@ -1,9 +1,9 @@
 import {
+  Instrument_Serif as FontDisplay,
   Geist_Mono as FontMono,
   Noto_Sans_Arabic as FontNotoSansArabic,
   Noto_Sans_Hebrew as FontNotoSansHebrew,
   Geist as FontSans,
-  Instrument_Serif as FontDisplay,
 } from "next/font/google"
 import { cn } from "cn"
 

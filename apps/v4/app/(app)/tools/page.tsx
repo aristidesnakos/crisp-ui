@@ -46,9 +46,14 @@ export default function ToolsPage() {
                 Tell us the job. The most requested tool gets built next.
               </p>
             </div>
-            <p className="text-sm font-medium text-brand">
-              Request form goes here
-            </p>
+            <a
+              href="https://github.com/aristidesnakos/crisp-ui/issues/new?title=Tool%20request%3A%20"
+              target="_blank"
+              rel="noreferrer"
+              className="text-sm font-medium text-brand underline-offset-4 hover:underline"
+            >
+              Request a tool
+            </a>
           </div>
         </div>
       </DevFeedback>

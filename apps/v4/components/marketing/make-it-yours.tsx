@@ -5,7 +5,10 @@ import { Check, Copy, ExternalLink } from "lucide-react"
 
 import { handoffLinks } from "@/lib/prompt-links"
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard"
-import { EXAMPLES, type TrackExample } from "@/components/marketing/tracker-data"
+import {
+  EXAMPLES,
+  type TrackExample,
+} from "@/components/marketing/tracker-data"
 import { ExamplePicker } from "@/components/marketing/training-tracker-demo"
 import { Button } from "@/registry/new-york-v4/ui/button"
 import { Input } from "@/registry/new-york-v4/ui/input"
@@ -128,9 +131,7 @@ export function MakeItYours() {
                 htmlFor={`${formId}-${q.key}`}
                 className="flex items-baseline gap-2 font-medium"
               >
-                <span className="font-display text-xl text-brand">
-                  {i + 1}
-                </span>
+                <span className="font-display text-xl text-brand">{i + 1}</span>
                 {q.label}
               </label>
               <Input

@@ -19,7 +19,12 @@ export const TOOLS: Tool[] = [
     slug: "training-tracker",
     name: "Training tracker",
     job: "Know who's done it, chase who hasn't, and prove it later.",
-    examples: ["safety training", "certificates", "licences", "background checks"],
+    examples: [
+      "safety training",
+      "certificates",
+      "licences",
+      "background checks",
+    ],
     status: "available",
     href: "/tools/training-tracker",
   },
@@ -110,5 +115,9 @@ export const IN_USE: { name: string; href: string; sector: string }[] = [
     href: "https://rapidsafesystems.au",
     sector: "Construction",
   },
-  { name: "Outbreak Files", href: "https://outbreakfiles.com", sector: "Health" },
+  {
+    name: "Outbreak Files",
+    href: "https://outbreakfiles.com",
+    sector: "Health",
+  },
 ]

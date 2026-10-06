@@ -1,7 +1,7 @@
 import { type Metadata } from "next"
 import Link from "next/link"
-import { Check } from "lucide-react"
 import { cn } from "cn"
+import { Check } from "lucide-react"
 
 import { DevFeedback } from "@/components/dev/dev-feedback"
 import { Eyebrow, Section } from "@/components/marketing/section"
@@ -184,7 +184,12 @@ export default function PricingPage() {
       </DevFeedback>
 
       <DevFeedback name="Pricing.Faq">
-        <Section id="faq" tone="paper" eyebrow="Questions" title="Fair questions">
+        <Section
+          id="faq"
+          tone="paper"
+          eyebrow="Questions"
+          title="Fair questions"
+        >
           <Accordion type="single" collapsible className="max-w-3xl">
             {FAQ.map(([q, a]) => (
               <AccordionItem key={q} value={q}>
