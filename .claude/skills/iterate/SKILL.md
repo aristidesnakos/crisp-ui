@@ -36,7 +36,11 @@ Names follow the section that was wrapped:
 | `Docs.<slug>.Header` | page title block in `apps/v4/app/(app)/docs/[[...slug]]/page.tsx`, text from `apps/v4/content/docs/<slug>.mdx` |
 | `Docs.<slug>.Body` | `apps/v4/content/docs/<slug>.mdx` (for example `components/status-notify`) |
 | `Preview.<demo-name>` | the demo `apps/v4/examples/radix/<demo-name>.tsx`, which renders the component in `apps/v4/registry/crisp/` |
-| `Landing.Hero`, `Landing.Demo` | `apps/v4/app/(app)/(root)/page.tsx` |
+| `Landing.<Section>` (Hero, Demo, WhyNow, HowItWorks, Moments, Audit, Tools, Agents, Pricing, FinalCta) | `apps/v4/app/(app)/(root)/page.tsx`; the demo is `apps/v4/components/marketing/training-tracker-demo.tsx` with data in `tracker-data.ts`; tool cards and moments copy in `apps/v4/lib/tools.ts` |
+| `Tools.<Section>` | `apps/v4/app/(app)/tools/page.tsx`, cards from `apps/v4/lib/tools.ts` |
+| `Tool.TrainingTracker.<Section>` | `apps/v4/app/(app)/tools/training-tracker/page.tsx`; `MakeItYours` is `apps/v4/components/marketing/make-it-yours.tsx` |
+| `Pricing.<Section>` | `apps/v4/app/(app)/pricing/page.tsx` |
+| `Footer` | `apps/v4/components/site-footer.tsx` |
 
 Confirm a wrapper exists with `grep -rn 'DevFeedback' apps/v4/app apps/v4/components`. A note on a `Preview.*` is usually about the component itself, so edit `registry/crisp/` and then check the docs props table and demo still match.
 
