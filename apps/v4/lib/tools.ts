@@ -5,9 +5,11 @@ export type ToolStatus = "available" | "free" | "next"
 
 export type Tool = {
   slug: string
+  /** Named by the job, never by an industry. */
   name: string
   job: string
-  industries: string[]
+  /** What people use it for, in their words. Industries only appear here. */
+  examples: string[]
   status: ToolStatus
   href?: string
 }
@@ -16,45 +18,45 @@ export const TOOLS: Tool[] = [
   {
     slug: "training-tracker",
     name: "Training tracker",
-    job: "Know who's trained, chase who isn't, and prove it later.",
-    industries: ["Schools", "Construction", "Training providers"],
+    job: "Know who's done it, chase who hasn't, and prove it later.",
+    examples: ["safety training", "certificates", "licences", "background checks"],
     status: "available",
     href: "/tools/training-tracker",
   },
   {
+    slug: "policy-sign-offs",
+    name: "Policy sign-offs",
+    job: "Get everyone to read and accept a new policy by a date, and show who did.",
+    examples: ["handbook updates", "data protection", "codes of conduct"],
+    status: "next",
+  },
+  {
+    slug: "approvals",
+    name: "Approvals",
+    job: "Requests that need a yes from the right person, with the reason kept.",
+    examples: ["purchases", "time off", "changes to a plan"],
+    status: "next",
+  },
+  {
+    slug: "inspections",
+    name: "Inspections and checks",
+    job: "Recurring checks: who checked what, when, and what failed.",
+    examples: ["fire doors", "vehicles", "equipment"],
+    status: "next",
+  },
+  {
     slug: "calibration-desk",
     name: "Calibration recall desk",
-    job: "Recall overdue gauges with a two-person sign-off and a full record.",
-    industries: ["Manufacturing"],
+    job: "A complete worked example: recall overdue gauges with a two-person sign-off.",
+    examples: ["inspections", "recalls", "two-person approval"],
     status: "free",
     href: "/docs/components/calibration-desk",
   },
   {
-    slug: "attendance-follow-up",
-    name: "Attendance follow-up",
-    job: "See who is absent today and email the right families, with a record of every message.",
-    industries: ["Schools"],
-    status: "next",
-  },
-  {
-    slug: "site-inductions",
-    name: "Site inductions",
-    job: "Check every operative is inducted and in date before they start work.",
-    industries: ["Construction"],
-    status: "next",
-  },
-  {
-    slug: "submittal-log",
-    name: "Submittals and RFIs",
-    job: "Track what is waiting on whom, route approvals, and keep every revision.",
-    industries: ["Construction"],
-    status: "next",
-  },
-  {
-    slug: "compliance-report",
-    name: "Monthly compliance report",
-    job: "One page for the board: who is in date, what changed, what is overdue.",
-    industries: ["Any team"],
+    slug: "incident-log",
+    name: "Incident log",
+    job: "Report it, review it, follow it up and close it, with every step on record.",
+    examples: ["accidents", "near misses", "complaints"],
     status: "next",
   },
 ]
@@ -93,4 +95,21 @@ export const TRACKER_MOMENTS: MomentItem[] = [
     quote: "Who did what, when and why",
     text: "Written by the server every time, ready when someone asks you to prove it.",
   },
+]
+
+/**
+ * Sites Ari built with Real Good Site parts (his own builds, 2026-10-06), so
+ * the label is "Built with", not "Trusted by". List only a site that really
+ * uses the parts. Shown as wordmarks; swap in each brand's logo file later.
+ */
+export const IN_USE: { name: string; href: string; sector: string }[] = [
+  { name: "Setian", href: "https://setian.ai", sector: "Education" },
+  { name: "MichiKanji", href: "https://michikanji.com", sector: "Education" },
+  {
+    name: "RapidSafeSystems",
+    href: "https://rapidsafesystems.au",
+    sector: "Construction",
+  },
+  { name: "Outbreak Files", href: "https://outbreakfiles.com", sector: "Health" },
+  { name: "Mangood", href: "https://mangood.app", sector: "Health" },
 ]

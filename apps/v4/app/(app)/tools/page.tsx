@@ -8,7 +8,7 @@ import { Eyebrow } from "@/components/marketing/section"
 export const metadata: Metadata = {
   title: "Tools",
   description:
-    "Finished tools for jobs that need a paper trail: training, attendance, site inductions, submittals and more.",
+    "Finished tools for jobs that need a paper trail: training, sign-offs, approvals, inspections and incidents.",
 }
 
 export default function ToolsPage() {

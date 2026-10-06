@@ -13,7 +13,7 @@ import { Button } from "@/registry/new-york-v4/ui/button"
 export const metadata: Metadata = {
   title: "Training tracker",
   description:
-    "Know who's trained, chase who isn't, and prove it later. A finished training tracker for schools, building sites and training providers.",
+    "Know who's done it, chase who hasn't, and prove it later. A finished tracker for training, certificates, licences and sign-offs.",
 }
 
 const FREE = [
@@ -58,12 +58,12 @@ export default function TrainingTrackerPage() {
               Training tracker
             </span>
           </nav>
-          <Eyebrow>Schools · Construction · Training providers</Eyebrow>
+          <Eyebrow>Training · Certificates · Licences · Sign-offs</Eyebrow>
           <h1 className="font-display text-6xl leading-[0.95] tracking-tight md:text-8xl">
             Training tracker
           </h1>
           <p className="max-w-2xl text-xl text-pretty text-muted-foreground">
-            Know who&apos;s trained, chase who isn&apos;t, and prove it later.
+            Know who&apos;s done it, chase who hasn&apos;t, and prove it later.
           </p>
           <div className="flex flex-wrap items-center gap-3">
             <Button size="lg" asChild>

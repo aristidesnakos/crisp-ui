@@ -3,10 +3,11 @@ import Link from "next/link"
 import { ArrowRight, Check, X } from "lucide-react"
 
 import { siteConfig } from "@/lib/config"
-import { TOOLS, TRACKER_MOMENTS } from "@/lib/tools"
+import { IN_USE, TOOLS, TRACKER_MOMENTS } from "@/lib/tools"
 import { DevFeedback } from "@/components/dev/dev-feedback"
 import { Moments, ToolCard } from "@/components/marketing/moments"
 import { Eyebrow, Section } from "@/components/marketing/section"
+import { EVERYWHERE } from "@/components/marketing/tracker-data"
 import { TrainingTrackerDemo } from "@/components/marketing/training-tracker-demo"
 import { Button } from "@/registry/new-york-v4/ui/button"
 
@@ -55,7 +56,7 @@ const OLD_WAYS = [
 const STEPS = [
   {
     title: "Try it with sample data",
-    text: "Click through the real tool before you sign up for anything. Switch between a school, a building site and a training provider.",
+    text: "Click through the real tool before you sign up for anything. Type what you track and watch it change to match.",
   },
   {
     title: "Describe your team",
@@ -68,7 +69,7 @@ const STEPS = [
 ]
 
 const BUILT_IN = [
-  ["The count before every send", "Nobody emails the whole school by accident."],
+  ["The count before every send", "Nobody emails the whole company by accident."],
   ["A reason on every sign-off", "Decisions still explain themselves months later."],
   [
     "A record that writes itself",
@@ -109,15 +110,16 @@ export default function IndexPage() {
       <DevFeedback name="Landing.Hero">
         <section className="px-4">
           <div className="mx-auto flex max-w-5xl flex-col items-center gap-7 pt-20 pb-12 text-center md:pt-28">
-            <Eyebrow>For schools, building sites and training teams</Eyebrow>
+            <Eyebrow>For whoever keeps the spreadsheet</Eyebrow>
             <h1 className="font-display text-5xl leading-[0.95] tracking-tight text-balance sm:text-6xl md:text-7xl lg:text-[5.5rem]">
               You know the job.{" "}
               <em className="text-brand">Now you can build the tool.</em>
             </h1>
             <p className="max-w-2xl text-lg text-pretty text-muted-foreground md:text-xl">
-              Start from a finished training tracker. Describe your team in
-              plain words and your AI assistant makes it yours. Reminders,
-              sign-offs and the record an inspector asks for come built in.
+              Start from a finished tracker for training, certificates and
+              sign-offs. Describe it in plain words and your AI assistant
+              makes it yours. Reminders, sign-offs and a record you can show
+              anyone who asks come built in.
             </p>
             <div className="flex flex-wrap justify-center gap-3">
               <Button size="lg" asChild>
@@ -145,12 +147,66 @@ export default function IndexPage() {
         </section>
       </DevFeedback>
 
+      <DevFeedback name="Landing.InUse">
+        <section aria-labelledby="in-use-title" className="px-4 pb-16">
+          <div className="mx-auto flex max-w-5xl flex-col items-center gap-5">
+            <h2
+              id="in-use-title"
+              className="text-xs font-medium tracking-[0.16em] text-muted-foreground uppercase"
+            >
+              Built with Real Good Site
+            </h2>
+            <ul className="flex list-none flex-wrap items-start justify-center gap-x-10 gap-y-5 p-0 md:gap-x-14">
+              {IN_USE.map((brand) => (
+                <li key={brand.name}>
+                  <a
+                    href={brand.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="group flex flex-col items-center gap-1 rounded-md outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                  >
+                    <span className="font-display text-2xl text-foreground/70 transition-colors group-hover:text-foreground md:text-3xl">
+                      {brand.name}
+                    </span>
+                    <span className="text-[11px] tracking-[0.14em] text-muted-foreground uppercase">
+                      {brand.sector}
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      </DevFeedback>
+
       <DevFeedback name="Landing.Demo">
         <section aria-label="The training tracker, live" className="px-4 pb-24">
           <div className="mx-auto max-w-6xl">
             <TrainingTrackerDemo />
           </div>
         </section>
+      </DevFeedback>
+
+      <DevFeedback name="Landing.Everywhere">
+        <Section
+          id="everywhere"
+          align="center"
+          className="pt-4 md:pt-8"
+          eyebrow="One list, everywhere"
+          title="Wherever proof matters, someone keeps this list"
+          lede="The names change from place to place. The job does not: who has done it, who has not, and who signed it off."
+        >
+          <ul className="grid list-none gap-px overflow-hidden rounded-2xl border bg-border p-0 sm:grid-cols-2 lg:grid-cols-4">
+            {EVERYWHERE.map(({ where, lists }) => (
+              <li key={where} className="flex flex-col gap-2 bg-background p-6">
+                <h3 className="font-display text-2xl leading-tight">{where}</h3>
+                <p className="text-sm text-pretty text-muted-foreground">
+                  {lists.join(" · ")}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </Section>
       </DevFeedback>
 
       <DevFeedback name="Landing.WhyNow">

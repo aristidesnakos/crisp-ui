@@ -6,11 +6,13 @@ import { BellRing, CircleAlert, CircleCheck, Clock, Lock } from "lucide-react"
 
 import {
   DEMO_NOW,
-  INDUSTRIES,
-  INDUSTRY_ORDER,
+  EXAMPLES,
+  ORG,
+  ROSTER,
+  historyFor,
   needsAttention,
   statusText,
-  type IndustryId,
+  type TrackExample,
   type TrackedPerson,
 } from "@/components/marketing/tracker-data"
 import type { AuditEvent } from "@/registry/crisp/lib/audit-event"
@@ -28,40 +30,86 @@ import {
 } from "@/registry/new-york-v4/ui/table"
 
 const MINUTE = 60 * 1000
+const FIRST = EXAMPLES[0]
 
-export function IndustryPicker({
-  value,
-  onChange,
-  label = "Show it for",
+/** Starting points: what is tracked, and one kind of place that tracks it. */
+export function ExamplePicker({
+  activeId,
+  onPick,
+  label = "Examples",
 }: {
-  value: IndustryId
-  onChange: (id: IndustryId) => void
+  activeId?: string
+  onPick: (example: TrackExample) => void
   label?: string
 }) {
   return (
     <div
       role="group"
       aria-label={label}
-      className="inline-flex justify-center gap-0.5 rounded-full border bg-background p-1 shadow-xs sm:gap-1"
+      className="flex flex-wrap justify-center gap-2"
     >
-      {INDUSTRY_ORDER.map((id) => (
+      {EXAMPLES.map((example) => (
         <button
-          key={id}
+          key={example.id}
           type="button"
-          aria-pressed={value === id}
-          onClick={() => onChange(id)}
+          aria-pressed={activeId === example.id}
+          onClick={() => onPick(example)}
           className={cn(
-            "rounded-full px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-colors outline-none sm:px-4 focus-visible:ring-[3px] focus-visible:ring-ring/50",
-            value === id
-              ? "bg-foreground text-background"
-              : "text-muted-foreground hover:text-foreground"
+            "rounded-full border px-3 py-1 text-sm whitespace-nowrap transition-colors outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50",
+            activeId === example.id
+              ? "border-foreground bg-foreground text-background"
+              : "bg-background text-muted-foreground hover:border-foreground/40 hover:text-foreground"
           )}
         >
-          <span className="sm:hidden">{INDUSTRIES[id].shortLabel}</span>
-          <span className="hidden sm:inline">{INDUSTRIES[id].label}</span>
+          {example.training}
+          <span
+            className={cn(
+              "ml-1.5",
+              activeId === example.id
+                ? "text-background/70"
+                : "text-muted-foreground/90"
+            )}
+          >
+            · {example.where}
+          </span>
         </button>
       ))}
     </div>
+  )
+}
+
+/** An inline, fill-in-the-blank input that grows with its text. */
+function WordInput({
+  label,
+  value,
+  placeholder,
+  maxLength,
+  onChange,
+}: {
+  label: string
+  value: string
+  placeholder: string
+  maxLength: number
+  onChange: (value: string) => void
+}) {
+  const id = React.useId()
+  return (
+    <>
+      <label htmlFor={id} className="sr-only">
+        {label}
+      </label>
+      <input
+        id={id}
+        value={value}
+        placeholder={placeholder}
+        maxLength={maxLength}
+        spellCheck={false}
+        autoComplete="off"
+        size={Math.max(value.length, placeholder.length, 3)}
+        onChange={(e) => onChange(e.target.value)}
+        className="max-w-full min-w-[3ch] border-b-2 border-dashed border-brand/50 bg-transparent px-1 text-center text-brand italic outline-none [field-sizing:content] placeholder:text-muted-foreground/50 hover:border-brand focus:border-solid focus:border-brand"
+      />
+    </>
   )
 }
 
@@ -109,42 +157,37 @@ function StatusCell({ person }: { person: TrackedPerson }) {
 }
 
 /**
- * The Real Good Site training tracker, live, on made-up people. It is built
- * from the open building blocks (status strip, confirm send, audit timeline).
- * Nothing is sent or saved; the record is local state.
+ * The Real Good Site training tracker, live, on made-up people. The visitor
+ * types what they track and who they track, and the whole screen speaks their
+ * words. Built from the open building blocks (status strip, confirm send,
+ * audit timeline). Nothing is sent or saved; the record is local state.
  */
-export function TrainingTrackerDemo({
-  defaultIndustry = "school",
-  className,
-}: {
-  defaultIndustry?: IndustryId
-  className?: string
-}) {
-  const [industryId, setIndustryId] = React.useState(defaultIndustry)
-  const industry = INDUSTRIES[industryId]
-  const attention = needsAttention(industry.roster)
+export function TrainingTrackerDemo({ className }: { className?: string }) {
+  const [training, setTraining] = React.useState(FIRST.training)
+  const [people, setPeople] = React.useState(FIRST.people)
+  const [where, setWhere] = React.useState(FIRST.where)
+  const what = training.trim() || "Your training"
+  const who = people.trim() || "people"
+  const activeId = EXAMPLES.find(
+    (e) => e.training === training && e.people === people
+  )?.id
 
+  const attention = needsAttention(ROSTER)
   const [view, setView] = React.useState<"attention" | "everyone">(
     "attention"
   )
   const [selected, setSelected] = React.useState<Set<string>>(
-    () => new Set(needsAttention(industry.roster).map((p) => p.id))
+    () => new Set(needsAttention(ROSTER).map((p) => p.id))
   )
-  const [events, setEvents] = React.useState<AuditEvent[]>(industry.history)
-  const [sends, setSends] = React.useState(0)
+  const [sent, setSent] = React.useState<AuditEvent[]>([])
   const [sending, setSending] = React.useState(false)
   const [sentCount, setSentCount] = React.useState<number | null>(null)
   const [reminded, setReminded] = React.useState<Set<string>>(new Set())
 
-  function pickIndustry(id: IndustryId) {
-    const next = INDUSTRIES[id]
-    setIndustryId(id)
-    setView("attention")
-    setSelected(new Set(needsAttention(next.roster).map((p) => p.id)))
-    setEvents(next.history)
-    setSends(0)
-    setSentCount(null)
-    setReminded(new Set())
+  function pick(example: TrackExample) {
+    setTraining(example.training)
+    setPeople(example.people)
+    setWhere(example.where)
   }
 
   function toggle(id: string) {
@@ -165,38 +208,65 @@ export function TrainingTrackerDemo({
 
   async function send() {
     const n = selected.size
-    const who = new Set(selected)
+    const recipients = new Set(selected)
     setSending(true)
     await new Promise((resolve) => setTimeout(resolve, 900))
-    const count = sends + 1
+    const count = sent.length + 1
     const event: AuditEvent = {
-      id: `${industry.id}-send-${count}`,
+      id: `send-${count}`,
       at: new Date(DEMO_NOW.getTime() + count * 2 * MINUTE).toISOString(),
-      actor: industry.sender,
+      actor: ORG.sender,
       action: "sent a reminder to",
-      target: `${n} ${n === 1 ? industry.person : industry.people}`,
+      target: `${n} ${n === 1 ? "person" : who}`,
       outcome: "succeeded",
-      detail: `${industry.training}. First name and training name only.`,
+      detail: `${what}. First name and what is due, nothing else.`,
     }
-    setEvents((prev) => [event, ...prev])
-    setReminded((prev) => new Set([...prev, ...who]))
-    setSends(count)
+    setSent((prev) => [event, ...prev])
+    setReminded((prev) => new Set([...prev, ...recipients]))
     setSentCount(n)
     setSending(false)
   }
 
   const counts = {
-    current: industry.roster.filter((p) => p.status === "current").length,
-    due: industry.roster.filter((p) => p.status === "due").length,
-    overdue: industry.roster.filter((p) => p.status === "overdue").length,
+    current: ROSTER.filter((p) => p.status === "current").length,
+    due: ROSTER.filter((p) => p.status === "due").length,
+    overdue: ROSTER.filter((p) => p.status === "overdue").length,
   }
-  const rows = view === "attention" ? attention : industry.roster
+  const rows = view === "attention" ? attention : ROSTER
   const allSelected = selected.size === attention.length
   const someSelected = selected.size > 0 && !allSelected
+  const events = [...sent, ...historyFor(what, who)]
 
   return (
-    <div className={cn("flex flex-col items-center gap-5", className)}>
-      <IndustryPicker value={industryId} onChange={pickIndustry} />
+    <div className={cn("flex flex-col items-center gap-6", className)}>
+      <div className="flex w-full flex-col items-center gap-4">
+        <p className="text-[11px] font-medium tracking-[0.14em] text-brand uppercase">
+          Try it with your own words
+        </p>
+        <div className="flex max-w-full flex-wrap items-baseline justify-center gap-x-3 gap-y-1 text-center font-display text-3xl leading-tight md:text-4xl">
+          <span>Track</span>
+          <WordInput
+            label="What you track"
+            value={training}
+            placeholder="what"
+            maxLength={48}
+            onChange={setTraining}
+          />
+          <span>for</span>
+          <WordInput
+            label="Who you track"
+            value={people}
+            placeholder="who"
+            maxLength={24}
+            onChange={setPeople}
+          />
+        </div>
+        <ExamplePicker
+          activeId={activeId}
+          onPick={pick}
+          label="Or start from one of these"
+        />
+      </div>
 
       <div className="w-full overflow-hidden rounded-2xl border bg-card text-left text-card-foreground shadow-[0_30px_80px_-40px_rgb(0_0_0/0.45)]">
         <div className="flex items-center gap-3 border-b bg-muted/50 px-4 py-2.5">
@@ -207,25 +277,20 @@ export function TrainingTrackerDemo({
           </div>
           <div className="mx-auto flex min-w-0 items-center gap-1.5 rounded-md bg-background px-3 py-1 text-xs text-muted-foreground">
             <Lock className="size-3 shrink-0" aria-hidden="true" />
-            <span className="truncate">{industry.host}</span>
+            <span className="truncate">{ORG.host}</span>
           </div>
           <div className="w-[42px]" aria-hidden="true" />
         </div>
 
         <div className="flex flex-wrap items-end justify-between gap-3 border-b px-5 py-4 md:px-6">
           <div className="min-w-0">
-            <p className="text-xs text-muted-foreground">{industry.org}</p>
-            <p className="font-medium">
-              {industry.training}{" "}
-              <span className="font-normal text-muted-foreground">
-                · renewed {industry.renewal}
-              </span>
-            </p>
+            <p className="text-xs text-muted-foreground">Your {where}</p>
+            <p className="font-medium break-words">{what}</p>
           </div>
           <p className="text-xs text-muted-foreground">
             Signed in as{" "}
-            <span className="text-foreground">{industry.sender.name}</span>,{" "}
-            {industry.sender.role}
+            <span className="text-foreground">{ORG.sender.name}</span>,{" "}
+            {ORG.sender.role}
           </p>
         </div>
 
@@ -233,7 +298,7 @@ export function TrainingTrackerDemo({
           <div className="flex min-w-0 flex-col gap-7 p-5 md:p-6">
             <Moment n={1} label="See">
               <StatusStrip
-                headlineNoun={industry.headlineNoun}
+                headlineNoun={`${who} up to date`}
                 segments={[
                   {
                     key: "current",
@@ -265,8 +330,8 @@ export function TrainingTrackerDemo({
               >
                 {(
                   [
-                    ["attention", `Needs attention`, attention.length],
-                    ["everyone", "Everyone", industry.roster.length],
+                    ["attention", "Needs attention", attention.length],
+                    ["everyone", "Everyone", ROSTER.length],
                   ] as const
                 ).map(([id, label, n]) => (
                   <button
@@ -294,7 +359,7 @@ export function TrainingTrackerDemo({
                     <TableRow>
                       <TableHead className="w-10">
                         <Checkbox
-                          aria-label={`Select every ${industry.person} who needs a reminder`}
+                          aria-label="Select everyone who needs a reminder"
                           checked={
                             allSelected
                               ? true
@@ -335,7 +400,7 @@ export function TrainingTrackerDemo({
                             <div className="flex flex-col">
                               <span className="font-medium">{person.name}</span>
                               <span className="text-xs text-muted-foreground">
-                                {person.role}
+                                {person.team}
                               </span>
                             </div>
                           </TableCell>
@@ -368,9 +433,8 @@ export function TrainingTrackerDemo({
                   aria-hidden="true"
                 />
                 <span>
-                  Reminders go 30 and 7 days before it expires, then weekly.
-                  After two, {industry.cc} is copied. Never between 9pm and
-                  8am.
+                  Reminders go 30 and 7 days before it is due, then weekly.
+                  After two, {ORG.cc} is copied. Never between 9pm and 8am.
                 </span>
               </p>
             </Moment>
@@ -379,10 +443,10 @@ export function TrainingTrackerDemo({
               <div className="flex flex-wrap items-center gap-3">
                 <ConfirmSend
                   count={selected.size}
-                  noun={industry.person}
-                  nounPlural={industry.people}
+                  noun="person"
+                  nounPlural={who}
                   label="Send reminder"
-                  emptyReason={`Select the ${industry.people} to remind first`}
+                  emptyReason="Select who to remind first"
                   sending={sending}
                   sentCount={sentCount}
                   onSend={send}
@@ -400,7 +464,9 @@ export function TrainingTrackerDemo({
                 events={events}
                 timeZone="UTC"
                 locale="en-GB"
-                now={new Date(DEMO_NOW.getTime() + (sends + 1) * 2 * MINUTE)}
+                now={
+                  new Date(DEMO_NOW.getTime() + (sent.length + 1) * 2 * MINUTE)
+                }
                 initialCount={5}
                 headingLevel={4}
               />
@@ -410,8 +476,8 @@ export function TrainingTrackerDemo({
       </div>
 
       <p className="text-center text-sm text-muted-foreground">
-        Made-up people. Pick some, send a reminder, and watch the record write
-        itself. Nothing is sent or saved.
+        Made-up people. Type what you track, pick who to remind, and send.
+        Nothing is sent or saved.
       </p>
     </div>
   )

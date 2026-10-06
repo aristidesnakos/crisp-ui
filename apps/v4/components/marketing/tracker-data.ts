@@ -1,44 +1,116 @@
-// Sample data for the Real Good Site training tracker mockup. Every person,
-// organisation and address here is made up. The clock is fixed so the server
-// and the browser render the same thing and the story reads the same each time.
+// Sample data for the Real Good Site training tracker mockup. Every person and
+// organisation here is made up. The clock is fixed so the server and the
+// browser render the same thing and the story reads the same each time.
+//
+// The tracker is not for one industry. Visitors describe WHAT they track and
+// WHO they track in their own words; the examples below only seed that.
 import type { AuditEvent } from "@/registry/crisp/lib/audit-event"
 
 export const DEMO_NOW = new Date("2026-10-06T09:30:00Z")
-
-export type IndustryId = "school" | "construction" | "training"
 
 export type PersonStatus = "overdue" | "due" | "current"
 
 export type TrackedPerson = {
   id: string
   name: string
-  role: string
+  team: string
   status: PersonStatus
-  /** Days past expiry when overdue, days until expiry otherwise. */
+  /** Days past the due date when overdue, days until it otherwise. */
   days: number
 }
 
-export type Industry = {
-  id: IndustryId
-  /** Picker label. */
-  label: string
-  /** Picker label on narrow screens. */
-  shortLabel: string
-  /** Who the picker is for, in their own words. */
-  audience: string
-  org: string
-  host: string
+/**
+ * A starting point: what is tracked, and one kind of place that tracks it.
+ * Many places, one list. These are examples of the job, not customers.
+ */
+export type TrackExample = {
+  id: string
+  /** What people must complete, as it reads in "Track ___ for staff". */
   training: string
-  renewal: string
-  /** Plural noun for the people tracked. */
+  /** Who must complete it, plural. */
   people: string
-  person: string
-  headlineNoun: string
-  sender: { name: string; role: string }
+  /** A kind of place, as in "Your ___". */
+  where: string
+  renewal: string
   approver: string
-  cc: string
-  roster: TrackedPerson[]
-  history: AuditEvent[]
+}
+
+export const EXAMPLES: TrackExample[] = [
+  {
+    id: "school",
+    training: "Safeguarding training",
+    people: "staff",
+    where: "school",
+    renewal: "every year",
+    approver: "Safeguarding lead",
+  },
+  {
+    id: "site",
+    training: "Site inductions",
+    people: "contractors",
+    where: "building site",
+    renewal: "before their first day on site",
+    approver: "Site manager",
+  },
+  {
+    id: "course",
+    training: "Course completion",
+    people: "learners",
+    where: "training academy",
+    renewal: "by the end of the course",
+    approver: "Course lead",
+  },
+  {
+    id: "clinic",
+    training: "Fire safety training",
+    people: "staff",
+    where: "dental practice",
+    renewal: "every year",
+    approver: "Practice manager",
+  },
+  {
+    id: "club",
+    training: "Background checks",
+    people: "volunteers",
+    where: "football club",
+    renewal: "every 3 years",
+    approver: "Volunteer coordinator",
+  },
+  {
+    id: "kitchen",
+    training: "Food hygiene certificates",
+    people: "kitchen staff",
+    where: "restaurant",
+    renewal: "every 3 years",
+    approver: "Head chef",
+  },
+  {
+    id: "warehouse",
+    training: "Forklift licences",
+    people: "operators",
+    where: "warehouse",
+    renewal: "every 3 years",
+    approver: "Warehouse manager",
+  },
+]
+
+/** Where the same list lives. Kinds of workplace, not customers. */
+export const EVERYWHERE: { where: string; lists: string[] }[] = [
+  { where: "Schools", lists: ["Safeguarding training", "First aid", "Staff checks"] },
+  { where: "Building sites", lists: ["Site inductions", "Working at height", "Plant tickets"] },
+  { where: "Training providers", lists: ["Course completion", "Certificates", "Renewals"] },
+  { where: "Clinics and care", lists: ["Fire safety", "Staff licences", "Life support"] },
+  { where: "Restaurants", lists: ["Food hygiene", "Allergen training", "Fire drills"] },
+  { where: "Warehouses and fleets", lists: ["Forklift licences", "Driving licence checks", "Manual handling"] },
+  { where: "Clubs and charities", lists: ["Background checks", "Volunteer inductions", "Coaching badges"] },
+  { where: "Offices", lists: ["Data protection", "Policy sign-offs", "Security training"] },
+]
+
+export const ORG = {
+  name: "Your team",
+  host: "tracker.your-team.example",
+  sender: { name: "Joy Okafor", role: "Office manager" },
+  cc: "their manager",
 }
 
 const DAY = 24 * 60 * 60 * 1000
@@ -49,257 +121,96 @@ function at(daysAgo: number, time: string) {
 }
 
 function roster(
-  prefix: string,
   overdue: [string, string, number][],
   due: [string, string, number][],
   current: [string, string][]
 ): TrackedPerson[] {
   let n = 0
-  const id = () => `${prefix}-${++n}`
+  const id = () => `p-${++n}`
   return [
-    ...overdue.map(([name, role, days]) => ({
+    ...overdue.map(([name, team, days]) => ({
       id: id(),
       name,
-      role,
+      team,
       status: "overdue" as const,
       days,
     })),
-    ...due.map(([name, role, days]) => ({
+    ...due.map(([name, team, days]) => ({
       id: id(),
       name,
-      role,
+      team,
       status: "due" as const,
       days,
     })),
-    ...current.map(([name, role], i) => ({
+    ...current.map(([name, team], i) => ({
       id: id(),
       name,
-      role,
+      team,
       status: "current" as const,
       days: 60 + i * 23,
     })),
   ]
 }
 
-export const INDUSTRIES: Record<IndustryId, Industry> = {
-  school: {
-    id: "school",
-    label: "School",
-    shortLabel: "School",
-    audience: "School and trust staff",
-    org: "Oakfield Primary",
-    host: "training.oakfield-primary.example",
-    training: "Safeguarding refresher",
-    renewal: "every year",
-    people: "staff",
-    person: "staff member",
-    headlineNoun: "staff up to date",
-    sender: { name: "Joy Okafor", role: "School business manager" },
-    approver: "Designated safeguarding lead",
-    cc: "their line manager",
-    roster: roster(
-      "sch",
-      [
-        ["Tom Reyes", "Site caretaker", 40],
-        ["Dan Whitlock", "Teaching assistant", 12],
-        ["Priya Shah", "Year 4 teacher", 3],
-      ],
-      [
-        ["Grace Liu", "Office manager", 6],
-        ["Sam Osei", "PE teacher", 11],
-        ["Mia Novak", "SENCo", 19],
-        ["Ben Carter", "Year 2 teacher", 27],
-      ],
-      [
-        ["Hannah Price", "Headteacher"],
-        ["Omar Haddad", "Year 6 teacher"],
-        ["Ruth Adeyemi", "Deputy head"],
-        ["Leo Fischer", "Year 1 teacher"],
-        ["Isla Grant", "Teaching assistant"],
-        ["Kwame Boateng", "Year 5 teacher"],
-        ["Sofia Rossi", "Reception teacher"],
-        ["Arjun Mehta", "IT technician"],
-        ["Ella Brooks", "Lunchtime supervisor"],
-        ["Noah Kim", "Year 3 teacher"],
-        ["Zara Ali", "Teaching assistant"],
-      ]
-    ),
-    history: [
-      {
-        id: "sch-h1",
-        at: at(1, "15:10"),
-        actor: { name: "Hannah Price", role: "Designated safeguarding lead" },
-        action: "signed off the refresher for",
-        target: "Isla Grant",
-        reason: "Certificate checked against the course record",
-        outcome: "succeeded",
-      },
-      {
-        id: "sch-h2",
-        at: at(1, "08:00"),
-        actor: "Reminder rule",
-        action: "sent a 30-day reminder to",
-        target: "2 staff",
-        outcome: "succeeded",
-        detail: "First name and training name only",
-      },
-      {
-        id: "sch-h3",
-        at: at(3, "16:45"),
-        actor: { name: "Joy Okafor", role: "School business manager" },
-        action: "changed the reminder rule",
-        reason: "Agreed at the staff meeting",
-        detail: "Copy line managers after 2 reminders",
-      },
-    ],
-  },
-  construction: {
-    id: "construction",
-    label: "Construction",
-    shortLabel: "Construction",
-    audience: "Site and safety managers",
-    org: "Harbour Street build",
-    host: "site.harbour-street.example",
-    training: "Site induction and working at height",
-    renewal: "every 3 years",
-    people: "operatives",
-    person: "operative",
-    headlineNoun: "operatives cleared to work",
-    sender: { name: "Marcus Hale", role: "Site manager" },
-    approver: "Site manager",
-    cc: "their subcontractor's supervisor",
-    roster: roster(
-      "con",
-      [
-        ["Kofi Mensah", "Groundworker", 15],
-        ["Liam Byrne", "Scaffolder, Northline", 9],
-        ["Ewa Kowalski", "Electrician, Brightwire", 2],
-      ],
-      [
-        ["Jack Turner", "Site carpenter", 5],
-        ["Aisha Rahman", "Plant operator", 14],
-        ["Rory Doyle", "Bricklayer", 21],
-        ["Nina Petrova", "Steel fixer", 28],
-      ],
-      [
-        ["Dev Patel", "Banksman"],
-        ["Sean Murphy", "Bricklayer"],
-        ["Lena Vogel", "Site engineer"],
-        ["Chris Obi", "Labourer"],
-        ["Tomasz Nowak", "Plasterer"],
-        ["Ian Clarke", "Roofer, Skyline"],
-        ["Fatima Noor", "Health and safety advisor"],
-        ["Ollie Wright", "Apprentice joiner"],
-        ["Gabriel Costa", "Plumber, Flowfix"],
-        ["Ryan Hughes", "Dumper driver"],
-        ["Megan Shaw", "Site administrator"],
-      ]
-    ),
-    history: [
-      {
-        id: "con-h1",
-        at: at(1, "07:20"),
-        actor: { name: "Marcus Hale", role: "Site manager" },
-        action: "cleared to work",
-        target: "Dev Patel",
-        reason: "Induction done on site, card seen",
-        outcome: "succeeded",
-      },
-      {
-        id: "con-h2",
-        at: at(1, "06:00"),
-        actor: "Reminder rule",
-        action: "sent a 30-day reminder to",
-        target: "3 operatives",
-        outcome: "succeeded",
-        detail: "First name and training name only",
-      },
-      {
-        id: "con-h3",
-        at: at(2, "13:05"),
-        actor: { name: "Fatima Noor", role: "Health and safety advisor" },
-        action: "refused clearance for",
-        target: "Kofi Mensah",
-        reason: "Working at height certificate not provided",
-        outcome: "blocked",
-      },
-    ],
-  },
-  training: {
-    id: "training",
-    label: "Training provider",
-    shortLabel: "Training",
-    audience: "Course leads and training coordinators",
-    org: "Northgate Skills",
-    host: "learn.northgate-skills.example",
-    training: "First aid at work certificate",
-    renewal: "every 3 years",
-    people: "learners",
-    person: "learner",
-    headlineNoun: "learners certified",
-    sender: { name: "Rosa Díaz", role: "Training coordinator" },
-    approver: "Course lead",
-    cc: "their employer contact",
-    roster: roster(
-      "trn",
-      [
-        ["Chloe Martin", "Care home, cohort B", 21],
-        ["Josh Evans", "Warehouse, cohort A", 8],
-        ["Amara Okoye", "Care home, cohort B", 1],
-      ],
-      [
-        ["Freya Lund", "Retail, cohort C", 4],
-        ["Mohammed Aziz", "Warehouse, cohort A", 10],
-        ["Holly Jenkins", "Retail, cohort C", 17],
-        ["Pete Lawson", "Care home, cohort B", 25],
-      ],
-      [
-        ["Yuki Tanaka", "Retail, cohort C"],
-        ["Ben Adler", "Warehouse, cohort A"],
-        ["Precious Moyo", "Care home, cohort B"],
-        ["Luca Bianchi", "Retail, cohort C"],
-        ["Sara Lindqvist", "Warehouse, cohort A"],
-        ["Kemi Adebayo", "Care home, cohort B"],
-        ["Owen Price", "Retail, cohort C"],
-        ["Ines Duarte", "Warehouse, cohort A"],
-        ["Ravi Kumar", "Care home, cohort B"],
-        ["Abby Collins", "Retail, cohort C"],
-        ["Hugo Martin", "Warehouse, cohort A"],
-      ]
-    ),
-    history: [
-      {
-        id: "trn-h1",
-        at: at(1, "14:30"),
-        actor: { name: "Dr. Alan Reid", role: "Course lead" },
-        action: "issued the certificate to",
-        target: "Kemi Adebayo",
-        reason: "Practical assessment passed",
-        outcome: "succeeded",
-      },
-      {
-        id: "trn-h2",
-        at: at(1, "09:00"),
-        actor: "Reminder rule",
-        action: "sent a 30-day reminder to",
-        target: "4 learners",
-        outcome: "succeeded",
-        detail: "First name and course name only",
-      },
-      {
-        id: "trn-h3",
-        at: at(4, "11:15"),
-        actor: "Email service",
-        action: "could not deliver a reminder to",
-        target: "1 learner",
-        outcome: "failed",
-        detail: "Address bounced. Flagged for the coordinator.",
-      },
-    ],
-  },
-}
+export const ROSTER: TrackedPerson[] = roster(
+  [
+    ["Tom Reyes", "Warehouse", 40],
+    ["Dan Whitlock", "Field team", 12],
+    ["Priya Shah", "Front desk", 3],
+  ],
+  [
+    ["Grace Liu", "Office", 6],
+    ["Sam Osei", "Operations", 11],
+    ["Mia Novak", "Finance", 19],
+    ["Ben Carter", "Kitchen", 27],
+  ],
+  [
+    ["Hannah Price", "Manager"],
+    ["Omar Haddad", "Operations"],
+    ["Ruth Adeyemi", "Office"],
+    ["Leo Fischer", "Warehouse"],
+    ["Isla Grant", "Front desk"],
+    ["Kwame Boateng", "Field team"],
+    ["Sofia Rossi", "Kitchen"],
+    ["Arjun Mehta", "IT"],
+    ["Ella Brooks", "Finance"],
+    ["Noah Kim", "Operations"],
+    ["Zara Ali", "Warehouse"],
+  ]
+)
 
-export const INDUSTRY_ORDER: IndustryId[] = ["school", "construction", "training"]
+/** What the record already holds, in the visitor's own words. */
+export function historyFor(training: string, people: string): AuditEvent[] {
+  return [
+    {
+      id: "h1",
+      at: at(1, "15:10"),
+      actor: { name: "Hannah Price", role: "Manager" },
+      action: "confirmed",
+      target: "Isla Grant is up to date",
+      reason: "Evidence checked and attached",
+      outcome: "succeeded",
+      detail: training,
+    },
+    {
+      id: "h2",
+      at: at(1, "08:00"),
+      actor: "Reminder rule",
+      action: "sent a 30-day reminder to",
+      target: `2 ${people}`,
+      outcome: "succeeded",
+      detail: `${training}. First name and what is due, nothing else.`,
+    },
+    {
+      id: "h3",
+      at: at(3, "16:45"),
+      actor: ORG.sender,
+      action: "changed the reminder rule",
+      reason: "Agreed at the team meeting",
+      detail: "Copy managers after 2 reminders",
+    },
+  ]
+}
 
 /** The people a reminder would go to: everyone not up to date. */
 export function needsAttention(people: TrackedPerson[]) {

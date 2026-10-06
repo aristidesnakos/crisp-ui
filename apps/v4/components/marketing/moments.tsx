@@ -44,26 +44,14 @@ export function ToolCard({
         featured && "md:p-8"
       )}
     >
-      <div className="flex items-start justify-between gap-3">
-        <ul className="flex list-none flex-wrap gap-1.5 p-0">
-          {tool.industries.map((industry) => (
-            <li
-              key={industry}
-              className="rounded-full bg-muted px-2.5 py-0.5 text-xs text-muted-foreground"
-            >
-              {industry}
-            </li>
-          ))}
-        </ul>
-        <span
-          className={cn(
-            "shrink-0 text-xs font-medium",
-            tool.status === "available" ? "text-brand" : "text-muted-foreground"
-          )}
-        >
-          {STATUS_LABEL[tool.status]}
-        </span>
-      </div>
+      <span
+        className={cn(
+          "text-xs font-medium",
+          tool.status === "available" ? "text-brand" : "text-muted-foreground"
+        )}
+      >
+        {STATUS_LABEL[tool.status]}
+      </span>
       <h3
         className={cn(
           "font-display leading-tight",
@@ -88,6 +76,9 @@ export function ToolCard({
         )}
       >
         {tool.job}
+      </p>
+      <p className="text-sm text-muted-foreground">
+        For {tool.examples.join(", ")}
       </p>
       {tool.href ? (
         <span className="mt-auto inline-flex items-center gap-1 pt-2 text-sm font-medium">

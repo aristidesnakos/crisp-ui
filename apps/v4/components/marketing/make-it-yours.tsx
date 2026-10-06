@@ -5,12 +5,8 @@ import { Check, Copy, ExternalLink } from "lucide-react"
 
 import { handoffLinks } from "@/lib/prompt-links"
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard"
-import {
-  INDUSTRIES,
-  type Industry,
-  type IndustryId,
-} from "@/components/marketing/tracker-data"
-import { IndustryPicker } from "@/components/marketing/training-tracker-demo"
+import { EXAMPLES, type TrackExample } from "@/components/marketing/tracker-data"
+import { ExamplePicker } from "@/components/marketing/training-tracker-demo"
 import { Button } from "@/registry/new-york-v4/ui/button"
 import { Input } from "@/registry/new-york-v4/ui/input"
 
@@ -25,7 +21,7 @@ const QUESTIONS: { key: keyof Answers; label: string; hint: string }[] = [
   {
     key: "who",
     label: "Who are you tracking?",
-    hint: "Roughly how many, and where.",
+    hint: "Roughly how many, in your own words.",
   },
   {
     key: "what",
@@ -44,12 +40,12 @@ const QUESTIONS: { key: keyof Answers; label: string; hint: string }[] = [
   },
 ]
 
-function answersFor(industry: Industry): Answers {
+function answersFor(example: TrackExample): Answers {
   return {
-    who: `${industry.roster.length} ${industry.people} at ${industry.org}`,
-    what: `${industry.training}, renewed ${industry.renewal}`,
-    signsOff: industry.approver,
-    alsoHears: `${industry.cc}, after two reminders`,
+    who: `About 18 ${example.people} at our ${example.where}`,
+    what: `${example.training}, ${example.renewal}`,
+    signsOff: example.approver,
+    alsoHears: "Their manager, after two reminders",
   }
 }
 
@@ -85,9 +81,11 @@ If anything is unclear, ask me instead of guessing.`
 }
 
 export function MakeItYours() {
-  const [industryId, setIndustryId] = React.useState<IndustryId>("school")
+  const [exampleId, setExampleId] = React.useState<string | undefined>(
+    EXAMPLES[0].id
+  )
   const [answers, setAnswers] = React.useState<Answers>(() =>
-    answersFor(INDUSTRIES.school)
+    answersFor(EXAMPLES[0])
   )
   const { copyToClipboard, isCopied } = useCopyToClipboard()
   const formId = React.useId()
@@ -100,9 +98,9 @@ export function MakeItYours() {
     (l) => l.id !== "lovable" && l.id !== "claude-desktop" && l.href
   )
 
-  function pick(id: IndustryId) {
-    setIndustryId(id)
-    setAnswers(answersFor(INDUSTRIES[id]))
+  function pick(example: TrackExample) {
+    setExampleId(example.id)
+    setAnswers(answersFor(example))
   }
 
   return (
@@ -112,10 +110,10 @@ export function MakeItYours() {
           <p className="text-sm text-muted-foreground">
             Start from an example, then change anything.
           </p>
-          <div>
-            <IndustryPicker
-              value={industryId}
-              onChange={pick}
+          <div className="[&>div]:justify-start">
+            <ExamplePicker
+              activeId={exampleId}
+              onPick={pick}
               label="Start from an example"
             />
           </div>
@@ -139,9 +137,10 @@ export function MakeItYours() {
                 id={`${formId}-${q.key}`}
                 value={answers[q.key]}
                 aria-describedby={`${formId}-${q.key}-hint`}
-                onChange={(e) =>
+                onChange={(e) => {
+                  setExampleId(undefined)
                   setAnswers((prev) => ({ ...prev, [q.key]: e.target.value }))
-                }
+                }}
               />
               <p
                 id={`${formId}-${q.key}-hint`}
