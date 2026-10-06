@@ -1,9 +1,11 @@
+import Link from "next/link"
+
 import { siteConfig } from "@/lib/config"
 import { source } from "@/lib/source"
-import { GitHubLink } from "@/components/github-link"
 import { MainNav } from "@/components/main-nav"
 import { MobileNav } from "@/components/mobile-nav"
 import { ModeSwitcher } from "@/components/mode-switcher"
+import { Button } from "@/registry/new-york-v4/ui/button"
 import { Separator } from "@/registry/new-york-v4/ui/separator"
 
 export function SiteHeader() {
@@ -20,7 +22,10 @@ export function SiteHeader() {
           />
           <MainNav items={siteConfig.navItems} className="hidden lg:flex" />
           <div className="ml-auto flex items-center gap-2 md:flex-1 md:justify-end">
-            <GitHubLink />
+            {/* Real Good Site mockup: a CTA instead of a GitHub star count. */}
+            <Button asChild size="sm">
+              <Link href="/tools/training-tracker">Try it free</Link>
+            </Button>
             <Separator orientation="vertical" />
             <ModeSwitcher />
           </div>

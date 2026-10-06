@@ -21,6 +21,9 @@
   --font-sans: var(--font-sans);
   --font-heading: var(--font-heading);
   --font-mono: var(--font-mono);
+  --font-display: var(--font-display);
+  --color-brand: var(--brand);
+  --color-paper: var(--paper);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -72,6 +75,9 @@
 
 :root {
   --radius: 0.625rem;
+  /* Real Good Site accent: warm terracotta, AA on white for small text. */
+  --brand: oklch(0.52 0.14 42);
+  --paper: oklch(0.975 0.01 80);
   --background: oklch(1 0 0);
   --foreground: oklch(0% 0 0);
   --card: oklch(1 0 0);
@@ -119,6 +125,8 @@
 }
 
 .dark {
+  --brand: oklch(0.8 0.11 70);
+  --paper: oklch(0.19 0.008 70);
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);

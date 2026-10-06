@@ -1,23 +1,31 @@
 export const siteConfig = {
-  name: "crisp-ui",
+  name: "Real Good Site",
   url: process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:4000",
   description:
-    "Patterns for dashboards where people depend on a job and need to hear how it is going. Open code, installed with the shadcn CLI.",
+    "Finished tools for whoever keeps the spreadsheet: training, certificates, sign-offs and approvals. Describe it in plain words and your AI assistant makes it yours, with reminders and a record built in.",
   links: {
     github: "https://github.com/aristidesnakos/crisp-ui",
   },
   navItems: [
     {
-      href: "/",
-      label: "Home",
+      href: "/tools",
+      label: "Tools",
     },
     {
-      href: "/docs",
-      label: "Docs",
+      href: "/#how-it-works",
+      label: "How it works",
     },
     {
       href: "/docs/components",
-      label: "Patterns",
+      label: "Building blocks",
+    },
+    {
+      href: "/docs/ai",
+      label: "For AI assistants",
+    },
+    {
+      href: "/pricing",
+      label: "Pricing",
     },
   ],
 }
