@@ -55,7 +55,7 @@ const PLANS = [
     price: "€900",
     note: "from, once",
     blurb: "We set it up and hand it over working.",
-    cta: { label: "Talk to us", href: "https://cal.com/ari-nakos/chat" },
+    cta: { label: "Chat with us", href: "https://cal.com/ari-nakos/chat" },
     features: [
       "Everything in Pro",
       "Your people and training loaded from your spreadsheet",
