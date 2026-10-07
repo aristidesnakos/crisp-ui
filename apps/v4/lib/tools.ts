@@ -149,7 +149,7 @@ export const SHOWCASE: ShowcaseItem[] = [
     name: "Outbreak Files",
     href: "https://outbreakfiles.com",
     sector: "Health",
-    image: "/showcase/outbreak-files.webp",
+    image: "/showcase/outbreak-files-2026-10-07.webp",
     alt: "Outbreak Files home page",
     kind: "built",
   },
