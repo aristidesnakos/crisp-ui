@@ -1,6 +1,6 @@
 import { cn } from "cn"
 
-// The crisp-ui mark, inline so it follows the site's theme toggle (an <img>
+// The Real Good Site mark, inline so it follows the site's theme toggle (an <img>
 // of icon.svg can only follow the OS colour scheme). The geometry and colours
 // are brand/mark.svg; tests/brand-mark.test.ts fails if they drift apart.
 export function BrandMark({

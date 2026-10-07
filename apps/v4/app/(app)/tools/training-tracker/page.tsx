@@ -7,6 +7,7 @@ import { DevFeedback } from "@/components/dev/dev-feedback"
 import { MakeItYours } from "@/components/marketing/make-it-yours"
 import { Moments } from "@/components/marketing/moments"
 import { Eyebrow, Section } from "@/components/marketing/section"
+import { EVERYWHERE } from "@/components/marketing/tracker-data"
 import { TrainingTrackerDemo } from "@/components/marketing/training-tracker-demo"
 import { Button } from "@/registry/new-york-v4/ui/button"
 
@@ -109,10 +110,31 @@ export default function TrainingTrackerPage() {
         </Section>
       </DevFeedback>
 
+      <DevFeedback name="Tool.TrainingTracker.Everywhere">
+        <Section
+          id="everywhere"
+          tone="paper"
+          align="center"
+          eyebrow="One list, everywhere"
+          title="Wherever proof matters, someone keeps this list"
+          lede="The names change from place to place. The job does not: who has done it, who has not, and who signed it off."
+        >
+          <ul className="grid list-none gap-px overflow-hidden rounded-2xl border bg-border p-0 sm:grid-cols-2 lg:grid-cols-4">
+            {EVERYWHERE.map(({ where, lists }) => (
+              <li key={where} className="flex flex-col gap-2 bg-background p-6">
+                <h3 className="font-display text-2xl leading-tight">{where}</h3>
+                <p className="text-sm text-pretty text-muted-foreground">
+                  {lists.join(" · ")}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </Section>
+      </DevFeedback>
+
       <DevFeedback name="Tool.TrainingTracker.Plans">
         <Section
           id="plans"
-          tone="paper"
           eyebrow="Free and Pro"
           title="Try everything free. Pay once to go live."
         >
@@ -168,6 +190,7 @@ export default function TrainingTrackerPage() {
       <DevFeedback name="Tool.TrainingTracker.Yours">
         <Section
           id="what-stays-yours"
+          tone="paper"
           eyebrow="Honest limits"
           title="What stays yours"
         >

@@ -36,9 +36,9 @@ Names follow the section that was wrapped:
 | `Docs.<slug>.Header` | page title block in `apps/v4/app/(app)/docs/[[...slug]]/page.tsx`, text from `apps/v4/content/docs/<slug>.mdx` |
 | `Docs.<slug>.Body` | `apps/v4/content/docs/<slug>.mdx` (for example `components/status-notify`) |
 | `Preview.<demo-name>` | the demo `apps/v4/examples/radix/<demo-name>.tsx`, which renders the component in `apps/v4/registry/crisp/` |
-| `Landing.<Section>` (Hero, InUse, Demo, Everywhere, WhyNow, HowItWorks, Moments, Audit, Tools, Agents, Pricing, FinalCta) | `apps/v4/app/(app)/(root)/page.tsx`; the demo is `apps/v4/components/marketing/training-tracker-demo.tsx` with data in `tracker-data.ts`; tool cards, moments copy and the "In use at" brands in `apps/v4/lib/tools.ts` |
+| `Landing.<Section>` (Hero, Showcase, HowItWorks, Audit, FinalCta) | `apps/v4/app/(app)/(root)/page.tsx`; the Showcase grid is `apps/v4/components/marketing/showcase-grid.tsx` with tiles (`SHOWCASE`) in `apps/v4/lib/tools.ts` and screenshots in `apps/v4/public/showcase/`; section spacing (`space="roomy"`) is in `apps/v4/components/marketing/section.tsx` |
 | `Tools.<Section>` | `apps/v4/app/(app)/tools/page.tsx`, cards from `apps/v4/lib/tools.ts` |
-| `Tool.TrainingTracker.<Section>` | `apps/v4/app/(app)/tools/training-tracker/page.tsx`; `MakeItYours` is `apps/v4/components/marketing/make-it-yours.tsx` |
+| `Tool.TrainingTracker.<Section>` (Hero, Demo, MakeItYours, Moments, Everywhere, Plans, Yours, BuiltFrom) | `apps/v4/app/(app)/tools/training-tracker/page.tsx`; the Demo is `apps/v4/components/marketing/training-tracker-demo.tsx` with data in `tracker-data.ts`, which also holds the `EVERYWHERE` grid; `MakeItYours` is `apps/v4/components/marketing/make-it-yours.tsx`; Moments copy (`TRACKER_MOMENTS`) is in `apps/v4/lib/tools.ts` |
 | `Pricing.<Section>` | `apps/v4/app/(app)/pricing/page.tsx` |
 | `Footer` | `apps/v4/components/site-footer.tsx` |
 

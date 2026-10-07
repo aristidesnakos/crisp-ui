@@ -28,6 +28,7 @@ export function Section({
   lede,
   tone = "plain",
   align = "start",
+  space = "default",
   className,
   children,
 }: {
@@ -37,6 +38,8 @@ export function Section({
   lede?: React.ReactNode
   tone?: "plain" | "paper"
   align?: "start" | "center"
+  /** "roomy" gives the calmer, taller rhythm the landing uses. */
+  space?: "default" | "roomy"
   className?: string
   children?: React.ReactNode
 }) {
@@ -45,7 +48,8 @@ export function Section({
       id={id}
       aria-labelledby={title ? `${id}-title` : undefined}
       className={cn(
-        "scroll-mt-16 py-20 md:py-28",
+        "scroll-mt-16",
+        space === "roomy" ? "py-28 md:py-40" : "py-20 md:py-28",
         tone === "paper" && "bg-paper",
         className
       )}
@@ -54,7 +58,8 @@ export function Section({
         {eyebrow || title || lede ? (
           <header
             className={cn(
-              "mb-12 flex max-w-2xl flex-col gap-4",
+              "flex max-w-2xl flex-col gap-4",
+              space === "roomy" ? "mb-14 md:mb-20" : "mb-12",
               align === "center" && "mx-auto items-center text-center"
             )}
           >

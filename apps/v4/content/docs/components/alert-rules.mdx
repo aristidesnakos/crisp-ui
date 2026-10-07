@@ -14,9 +14,9 @@ It is the **Decide** stage of See, Decide, Act, Confirm, Record: it settles _whe
   more. The server that sends the messages must read the saved rule and apply
   quiet hours and escalation itself, with the helpers below or its own code. If
   only the screen knows about quiet hours, a script, a retry or a second tool
-  will send at 3 am. crisp-ui does not make anything compliant: it gives you a
-  clear way to set and review the rule, and the rest is your backend and your
-  own legal advice.
+  will send at 3 am. Real Good Site does not make anything compliant: it gives
+  you a clear way to set and review the rule, and the rest is your backend and
+  your own legal advice.
 </Callout>
 
 ## Installation
@@ -130,7 +130,7 @@ The editor is controlled. It never saves anything. It calls `onChange` with the 
 
 - **Cadence is days before the due date.** `[30, 14, 7, 1]` means one reminder 30 days before, one 14 days before, and so on. Days are whole numbers, each at most once, shown largest first after `normalizeRule`.
 - **Escalation is days after the due date.** `escalateAfterDays: 3` with `escalateTo: "supervisor@example.org"` means: if the item is still open three days after it was due, tell that address. Days and address come as a pair.
-- **Escalation goes to an email address.** Contacts in crisp-ui are email only, as in [`recipient-roster`](/docs/components/recipient-roster). There are no phone numbers.
+- **Escalation goes to an email address.** Contacts in Real Good Site are email only, as in [`recipient-roster`](/docs/components/recipient-roster). There are no phone numbers.
 - **Quiet hours are a daily window on a wall clock.** `{ start: "21:00", end: "08:00", timeZone: "America/New_York" }` means nothing is sent from 9:00 pm up to, but not including, 8:00 am in New York. The window may cross midnight. The start minute is quiet and the end minute is not.
 - **The time zone is a name, not an offset.** `America/New_York` follows daylight saving, so on the night the clocks go forward the window is 10 real hours and on the night they go back it is 12. `+05:30` style offsets are refused. Zones with half-hour offsets, such as `Asia/Kolkata`, work.
 - **Quiet hours off means any hour,** and the summary says so: "Can send at any hour."
@@ -159,7 +159,7 @@ const { passed, next, pastDue } = remindersDue(
 // 3. Before sending, ask whether now is allowed. If not, hold it until it is.
 const sendAt = nextAllowedSendTime(new Date(), rule.quietHours)
 if (sendAt.getTime() > Date.now()) {
-  holdUntil(sendAt) // your scheduler, not part of crisp-ui
+  holdUntil(sendAt) // your scheduler, not part of Real Good Site
 } else {
   send()
 }

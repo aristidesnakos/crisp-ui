@@ -102,22 +102,63 @@ export const TRACKER_MOMENTS: MomentItem[] = [
   },
 ]
 
+export type ShowcaseItem = {
+  name: string
+  href: string
+  /** Shown small and uppercase under the name. */
+  sector: string
+  /** A 1280×800 WebP in public/showcase. */
+  image: string
+  alt: string
+  /** "built" is a real site made with the parts; "start" is our own tool. */
+  kind: "built" | "start"
+}
+
 /**
- * Sites Ari built with Real Good Site parts (confirmed by Ari, 2026-10-06), so
- * the label is "Built with", not "Trusted by". List only a site that really
- * uses the parts. Shown as wordmarks; swap in each brand's logo file later.
+ * The landing's showcase grid. The first four are sites Ari built with Real Good Site
+ * parts (confirmed by Ari, 2026-10-06), so the label is "Built with", never
+ * "Trusted by". List only a site that really uses the parts. The last tile is
+ * the training tracker, shown as the place to start, not as a customer.
  */
-export const IN_USE: { name: string; href: string; sector: string }[] = [
-  { name: "Setian", href: "https://setian.ai", sector: "Education" },
-  { name: "MichiKanji", href: "https://michikanji.com", sector: "Education" },
+export const SHOWCASE: ShowcaseItem[] = [
+  {
+    name: "Setian",
+    href: "https://setian.ai",
+    sector: "Education",
+    image: "/showcase/setian-hero.webp",
+    alt: "Setian home page hero: one clear calendar per child",
+    kind: "built",
+  },
+  {
+    name: "MichiKanji",
+    href: "https://michikanji.com/kanji/n5/quiz",
+    sector: "Education",
+    image: "/showcase/michikanji-quiz.webp",
+    alt: "MichiKanji JLPT N5 kanji quiz, question 1 of 10",
+    kind: "built",
+  },
   {
     name: "RapidSafeSystems",
-    href: "https://rapidsafesystems.au",
+    href: "https://rapidsafesystems.au/#pricing",
     sector: "Construction",
+    image: "/showcase/rapidsafesystems-pricing.webp",
+    alt: "RapidSafeSystems pricing: SWMS credits and an Enterprise plan",
+    kind: "built",
   },
   {
     name: "Outbreak Files",
     href: "https://outbreakfiles.com",
     sector: "Health",
+    image: "/showcase/outbreak-files.webp",
+    alt: "Outbreak Files home page",
+    kind: "built",
+  },
+  {
+    name: "Training tracker",
+    href: "/tools/training-tracker",
+    sector: "Yours next",
+    image: "/showcase/training-tracker.webp",
+    alt: "The training tracker with sample data",
+    kind: "start",
   },
 ]

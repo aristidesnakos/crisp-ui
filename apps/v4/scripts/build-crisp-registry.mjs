@@ -1,4 +1,4 @@
-// Builds the crisp-ui registry into public/r/<name>.json with the stock
+// Builds the Real Good Site registry into public/r/<name>.json with the stock
 // `shadcn build`. Cross-item dependencies are absolute URLs, so the origin the
 // registry will be served from is injected here:
 //   CRISP_REGISTRY_ORIGIN=https://your-domain pnpm --filter=v4 crisp:build
@@ -23,4 +23,4 @@ execFileSync(
   ["exec", "shadcn", "build", "registry-crisp.json", "--output", "public/r"],
   { stdio: "inherit" }
 )
-console.log(`crisp-ui registry built for ${origin}`)
+console.log(`Real Good Site registry built for ${origin}`)

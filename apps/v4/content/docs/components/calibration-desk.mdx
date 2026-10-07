@@ -12,8 +12,8 @@ Try it in the preview. Select overdue rows, request approval, switch **View as**
 <Callout>
   **This is a UI. The server behind the preview is a stand-in kept in memory.**
   Hiding a button is not access control. Your server must verify who the user is
-  and what role they hold, write the audit events, and enforce quiet hours.
-  crisp-ui does not make a tool compliant with any regulation, and none of this
+  and what role they hold, write the audit events, and enforce quiet hours. Real
+  Good Site does not make a tool compliant with any regulation, and none of this
   is legal or compliance advice.
 </Callout>
 
@@ -148,7 +148,7 @@ const myServer: CalibrationDeskServer = {
 - **The in-memory server is a stand-in.** It forgets everything on reload, has no email, and the "View as" switch is not a login.
 - **One notice per owner.** Owners must not see each other, so do not put them on one To line. The send is all or nothing: there is no per-recipient delivery log and no partial failure.
 - **One request at a time, and only this scenario.** The nouns (gauge, recall) and the rules in `planRecall` are this example's. Rename them and change the rules for your own, and keep the hand-offs.
-- **It is not compliance.** crisp-ui does not make a tool compliant with ISO 9001, FDA, FERPA, HIPAA or anything else.
+- **It is not compliance.** Real Good Site does not make a tool compliant with ISO 9001, FDA, FERPA, HIPAA or anything else.
 - **Not tested with a screen reader.** This composition has not been checked with one. Run your own keyboard and screen reader check before relying on it.
 
 ## Agent prompt

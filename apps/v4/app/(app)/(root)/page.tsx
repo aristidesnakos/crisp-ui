@@ -1,14 +1,12 @@
 import { type Metadata } from "next"
 import Link from "next/link"
-import { ArrowRight, Check, X } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 
 import { siteConfig } from "@/lib/config"
-import { IN_USE, TOOLS, TRACKER_MOMENTS } from "@/lib/tools"
+import { SHOWCASE } from "@/lib/tools"
 import { DevFeedback } from "@/components/dev/dev-feedback"
-import { Moments, ToolCard } from "@/components/marketing/moments"
 import { Eyebrow, Section } from "@/components/marketing/section"
-import { EVERYWHERE } from "@/components/marketing/tracker-data"
-import { TrainingTrackerDemo } from "@/components/marketing/training-tracker-demo"
+import { ShowcaseGrid } from "@/components/marketing/showcase-grid"
 import { Button } from "@/registry/new-york-v4/ui/button"
 
 const title = "You know the job. Now you can build the tool."
@@ -37,21 +35,6 @@ export const metadata: Metadata = {
     images: ["/og.png"],
   },
 }
-
-const OLD_WAYS = [
-  {
-    name: "A spreadsheet",
-    text: "Free and familiar. It never reminds anyone, and it can't show who changed what.",
-  },
-  {
-    name: "Off-the-shelf software",
-    text: "Built around someone else's process, priced per seat, and slow to buy.",
-  },
-  {
-    name: "A developer",
-    text: "Exactly what you want, if you have the budget and a few spare months.",
-  },
-]
 
 const STEPS = [
   {
@@ -92,366 +75,158 @@ const BUILT_IN = [
   ],
 ] as const
 
-const PLANS = [
-  {
-    name: "Free",
-    price: "€0",
-    text: "Every tool with sample data, and instructions for your AI assistant.",
-  },
-  {
-    name: "Pro",
-    price: "€149",
-    text: "One tool, live: sign-in, your own database, reminders and the record. One-time.",
-  },
-  {
-    name: "Done for you",
-    price: "from €900",
-    text: "We set it up with your people and your email, and hand it over working.",
-  },
-]
-
-export default function IndexPage() {
+function LandingHero() {
   return (
-    <div className="flex flex-1 flex-col">
-      <DevFeedback name="Landing.Hero">
-        <section className="px-4">
-          <div className="mx-auto flex max-w-5xl flex-col items-center gap-7 pt-20 pb-12 text-center md:pt-28">
-            <Eyebrow>For whoever keeps the spreadsheet</Eyebrow>
-            <h1 className="font-display text-5xl leading-[0.95] tracking-tight text-balance sm:text-6xl md:text-7xl lg:text-[5.5rem]">
-              You know the job.{" "}
-              <em className="text-brand">Now you can build the tool.</em>
-            </h1>
-            <p className="max-w-2xl text-lg text-pretty text-muted-foreground md:text-xl">
-              Start from a finished tracker for training, certificates and
-              sign-offs. Describe it in plain words and your AI assistant makes
-              it yours. Reminders, sign-offs and a record you can show anyone
-              who asks come built in.
-            </p>
-            <div className="flex flex-wrap justify-center gap-3">
-              <Button size="lg" asChild>
-                <Link href="/tools/training-tracker">
-                  Try the training tracker
-                </Link>
-              </Button>
-              <Button size="lg" variant="outline" asChild>
-                <Link href="#how-it-works">See how it works</Link>
-              </Button>
-            </div>
-            <ul className="flex list-none flex-wrap justify-center gap-x-6 gap-y-2 p-0 text-sm text-muted-foreground">
-              {[
-                "Free to try with sample data",
-                "Your records stay in your own account",
-                "Works with Lovable, Claude and Cursor",
-              ].map((item) => (
-                <li key={item} className="inline-flex items-center gap-1.5">
-                  <Check className="size-4 text-brand" aria-hidden="true" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
-      </DevFeedback>
-
-      <DevFeedback name="Landing.InUse">
-        <section aria-labelledby="in-use-title" className="px-4 pb-16">
-          <div className="mx-auto flex max-w-5xl flex-col items-center gap-5">
-            <h2
-              id="in-use-title"
-              className="text-xs font-medium tracking-[0.16em] text-muted-foreground uppercase"
-            >
-              Built with Real Good Site
-            </h2>
-            <ul className="flex list-none flex-wrap items-start justify-center gap-x-10 gap-y-5 p-0 md:gap-x-14">
-              {IN_USE.map((brand) => (
-                <li key={brand.name}>
-                  <a
-                    href={brand.href}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="group flex flex-col items-center gap-1 rounded-md outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
-                  >
-                    <span className="font-display text-2xl text-foreground/70 transition-colors group-hover:text-foreground md:text-3xl">
-                      {brand.name}
-                    </span>
-                    <span className="text-[11px] tracking-[0.14em] text-muted-foreground uppercase">
-                      {brand.sector}
-                    </span>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
-      </DevFeedback>
-
-      <DevFeedback name="Landing.Demo">
-        <section aria-label="The training tracker, live" className="px-4 pb-24">
-          <div className="mx-auto max-w-6xl">
-            <TrainingTrackerDemo />
-          </div>
-        </section>
-      </DevFeedback>
-
-      <DevFeedback name="Landing.Everywhere">
-        <Section
-          id="everywhere"
-          align="center"
-          className="pt-4 md:pt-8"
-          eyebrow="One list, everywhere"
-          title="Wherever proof matters, someone keeps this list"
-          lede="The names change from place to place. The job does not: who has done it, who has not, and who signed it off."
-        >
-          <ul className="grid list-none gap-px overflow-hidden rounded-2xl border bg-border p-0 sm:grid-cols-2 lg:grid-cols-4">
-            {EVERYWHERE.map(({ where, lists }) => (
-              <li key={where} className="flex flex-col gap-2 bg-background p-6">
-                <h3 className="font-display text-2xl leading-tight">{where}</h3>
-                <p className="text-sm text-pretty text-muted-foreground">
-                  {lists.join(" · ")}
-                </p>
-              </li>
-            ))}
-          </ul>
-        </Section>
-      </DevFeedback>
-
-      <DevFeedback name="Landing.WhyNow">
-        <Section
-          id="why-now"
-          tone="paper"
-          eyebrow="Why now"
-          title="Until now, there were three ways to get this tool. None of them fit."
-        >
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            {OLD_WAYS.map((way) => (
-              <div
-                key={way.name}
-                className="flex flex-col gap-3 rounded-2xl border bg-background/60 p-6"
-              >
-                <X
-                  className="size-5 text-muted-foreground"
-                  aria-hidden="true"
-                />
-                <h3 className="text-lg font-medium">{way.name}</h3>
-                <p className="text-sm text-pretty text-muted-foreground">
-                  {way.text}
-                </p>
-              </div>
-            ))}
-            <div className="flex flex-col gap-3 rounded-2xl border-2 border-brand bg-background p-6">
-              <Check className="size-5 text-brand" aria-hidden="true" />
-              <h3 className="text-lg font-medium">
-                Now: a finished tool you shape in plain words
-              </h3>
-              <p className="text-sm text-pretty text-muted-foreground">
-                AI assistants can write software for anyone. We hand yours a
-                tested starting point, so you get a working tool, not an
-                experiment.
-              </p>
-            </div>
-          </div>
-        </Section>
-      </DevFeedback>
-
-      <DevFeedback name="Landing.HowItWorks">
-        <Section
-          id="how-it-works"
-          eyebrow="How it works"
-          title="From sample to yours in three steps"
-        >
-          <ol className="grid list-none gap-10 p-0 md:grid-cols-3">
-            {STEPS.map((step, i) => (
-              <li key={step.title} className="flex flex-col gap-3">
-                <span className="font-display text-6xl leading-none text-brand">
-                  {i + 1}
-                </span>
-                <h3 className="text-xl font-medium">{step.title}</h3>
-                <p className="text-pretty text-muted-foreground">{step.text}</p>
-              </li>
-            ))}
-          </ol>
-          <Link
-            href="/tools/training-tracker#make-it-yours"
-            className="mt-12 inline-flex items-center gap-1.5 font-medium underline-offset-4 hover:underline"
-          >
-            Answer the four questions now
-            <ArrowRight className="size-4" aria-hidden="true" />
-          </Link>
-        </Section>
-      </DevFeedback>
-
-      <DevFeedback name="Landing.Moments">
-        <Section
-          id="moments"
-          tone="paper"
-          eyebrow="Inside every tool"
-          title="Five moments, in the order careful teams already work"
-          lede="See what is happening, decide who hears, act safely, confirm it worked, and keep the record. Every Real Good Site tool follows the same path, so the next one already feels familiar."
-        >
-          <Moments items={TRACKER_MOMENTS} />
-        </Section>
-      </DevFeedback>
-
-      <DevFeedback name="Landing.Audit">
-        <Section
-          id="built-for-the-audit"
-          eyebrow="Built for the audit, not the demo"
-          title="Ready for the day someone asks you to prove it"
-        >
-          <div className="grid gap-10 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)]">
-            <ul className="grid list-none gap-x-8 gap-y-6 p-0 sm:grid-cols-2">
-              {BUILT_IN.map(([name, text]) => (
-                <li key={name} className="flex gap-3">
-                  <Check
-                    className="mt-1 size-4 shrink-0 text-brand"
-                    aria-hidden="true"
-                  />
-                  <div className="flex flex-col gap-1">
-                    <h3 className="font-medium">{name}</h3>
-                    <p className="text-sm text-muted-foreground">{text}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-            <div className="flex flex-col gap-3 rounded-2xl bg-muted/60 p-6">
-              <h3 className="font-display text-2xl">Still yours to decide</h3>
-              <p className="text-sm text-pretty text-muted-foreground">
-                Who gets access, how long you keep records, and what your
-                policies require. Real Good Site makes your rules easy to
-                follow. It does not make you compliant on its own, and we will
-                never claim it does.
-              </p>
-              <p className="text-sm text-pretty text-muted-foreground">
-                Your people&apos;s records live in accounts you own. We never
-                store them.
-              </p>
-            </div>
-          </div>
-        </Section>
-      </DevFeedback>
-
-      <DevFeedback name="Landing.Tools">
-        <Section
-          id="tools"
-          tone="paper"
-          eyebrow="Tools"
-          title="Start with the tracker. More tools are on the way."
-        >
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {TOOLS.map((tool) => (
-              <ToolCard key={tool.slug} tool={tool} />
-            ))}
-          </div>
-          <Link
-            href="/tools"
-            className="mt-8 inline-flex items-center gap-1.5 font-medium underline-offset-4 hover:underline"
-          >
-            All tools
-            <ArrowRight className="size-4" aria-hidden="true" />
-          </Link>
-        </Section>
-      </DevFeedback>
-
-      <DevFeedback name="Landing.Agents">
-        <Section id="for-ai-assistants">
-          <div className="grid items-center gap-10 lg:grid-cols-2">
-            <div className="flex flex-col gap-4">
-              <Eyebrow>For AI assistants</Eyebrow>
-              <h2
-                id="for-ai-assistants-title"
-                className="font-display text-4xl leading-[1.05] tracking-tight text-balance md:text-5xl"
-              >
-                Your assistant gets instructions, not guesses
-              </h2>
-              <p className="text-lg text-pretty text-muted-foreground">
-                Every tool ships with step-by-step instructions written for AI
-                assistants, plus checks it must run and show you before it calls
-                the job done. Developers and assistants can read every page as
-                plain text.
-              </p>
-              <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm font-medium">
-                <Link href="/docs/ai" className="underline underline-offset-4">
-                  How assistants use it
-                </Link>
-                <Link
-                  href="/docs/components"
-                  className="underline underline-offset-4"
-                >
-                  Building blocks
-                </Link>
-                <a href="/llms.txt" className="underline underline-offset-4">
-                  llms.txt
-                </a>
-              </div>
-            </div>
-            <div className="overflow-hidden rounded-2xl border bg-foreground text-background">
-              <p className="border-b border-background/15 px-5 py-3 text-sm font-medium">
-                From the training tracker&apos;s instructions
-              </p>
-              <pre className="overflow-auto px-5 py-4 font-mono text-[12.5px] leading-relaxed whitespace-pre-wrap text-background/85">
-                {`Before you say you are done, run these
-checks and show me the results
-1. Reminding 7 people adds exactly one
-   entry to the record.
-2. A sign-off without a reason is refused.
-3. Someone who is not a manager cannot send
-   reminders, even by calling the server.
-4. Everything works with the keyboard alone.
-
-If anything is unclear, ask me instead
-of guessing.`}
-              </pre>
-            </div>
-          </div>
-        </Section>
-      </DevFeedback>
-
-      <DevFeedback name="Landing.Pricing">
-        <Section
-          id="pricing"
-          tone="paper"
-          eyebrow="Pricing"
-          title="Try free. Pay when it's real."
-        >
-          <div className="grid gap-4 md:grid-cols-3">
-            {PLANS.map((plan) => (
-              <div
-                key={plan.name}
-                className="flex flex-col gap-2 rounded-2xl border bg-background p-6"
-              >
-                <h3 className="font-medium">{plan.name}</h3>
-                <p className="font-display text-4xl">{plan.price}</p>
-                <p className="text-sm text-pretty text-muted-foreground">
-                  {plan.text}
-                </p>
-              </div>
-            ))}
-          </div>
-          <Link
-            href="/pricing"
-            className="mt-8 inline-flex items-center gap-1.5 font-medium underline-offset-4 hover:underline"
-          >
-            Compare plans
-            <ArrowRight className="size-4" aria-hidden="true" />
-          </Link>
-        </Section>
-      </DevFeedback>
-
-      <DevFeedback name="Landing.FinalCta">
-        <section className="px-4 py-24 md:py-32">
-          <div className="mx-auto flex max-w-3xl flex-col items-center gap-7 text-center">
-            <h2 className="font-display text-5xl leading-[1] tracking-tight text-balance md:text-6xl">
-              The tool your team needs is{" "}
-              <em className="text-brand">closer than you think.</em>
-            </h2>
+    <DevFeedback name="Landing.Hero">
+      <section className="px-4">
+        <div className="mx-auto flex max-w-5xl flex-col items-center gap-8 pt-28 pb-20 text-center md:pt-40 md:pb-28">
+          <Eyebrow>For whoever keeps the spreadsheet</Eyebrow>
+          <h1 className="font-display text-5xl leading-[0.95] tracking-tight text-balance sm:text-6xl md:text-7xl lg:text-[5.5rem]">
+            You know the job.{" "}
+            <em className="text-brand">Now you can build the tool.</em>
+          </h1>
+          <p className="max-w-2xl text-lg text-pretty text-muted-foreground md:text-xl">
+            Start from a finished tracker for training, certificates and
+            sign-offs. Describe it in plain words and your AI assistant makes it
+            yours. Reminders, sign-offs and a record you can show anyone who
+            asks come built in.
+          </p>
+          <div className="mt-2 flex flex-wrap justify-center gap-3">
             <Button size="lg" asChild>
               <Link href="/tools/training-tracker">
                 Try the training tracker
               </Link>
             </Button>
+            <Button size="lg" variant="outline" asChild>
+              <Link href="#how-it-works">See how it works</Link>
+            </Button>
           </div>
-        </section>
-      </DevFeedback>
+        </div>
+      </section>
+    </DevFeedback>
+  )
+}
+
+function LandingShowcase() {
+  return (
+    <DevFeedback name="Landing.Showcase">
+      <Section
+        id="built-with"
+        space="roomy"
+        align="center"
+        className="pt-8 md:pt-12"
+        eyebrow="Built with Real Good Site"
+        title="Real sites, built from these parts"
+      >
+        <ShowcaseGrid items={SHOWCASE} />
+      </Section>
+    </DevFeedback>
+  )
+}
+
+function LandingHowItWorks() {
+  return (
+    <DevFeedback name="Landing.HowItWorks">
+      <Section
+        id="how-it-works"
+        space="roomy"
+        tone="paper"
+        eyebrow="How it works"
+        title="From sample to yours in three steps"
+        lede="A spreadsheet never reminds anyone, off-the-shelf software fits someone else's process, and a developer takes months. Now you start from a finished tool and shape it in plain words."
+      >
+        <ol className="grid list-none gap-12 p-0 md:grid-cols-3 md:gap-14">
+          {STEPS.map((step, i) => (
+            <li key={step.title} className="flex flex-col gap-3">
+              <span className="font-display text-6xl leading-none text-brand">
+                {i + 1}
+              </span>
+              <h3 className="text-xl font-medium">{step.title}</h3>
+              <p className="text-pretty text-muted-foreground">{step.text}</p>
+            </li>
+          ))}
+        </ol>
+        <Link
+          href="/tools/training-tracker#make-it-yours"
+          className="mt-14 inline-flex items-center gap-1.5 font-medium underline-offset-4 hover:underline"
+        >
+          Answer the four questions now
+          <ArrowRight className="size-4" aria-hidden="true" />
+        </Link>
+      </Section>
+    </DevFeedback>
+  )
+}
+
+function LandingAudit() {
+  return (
+    <DevFeedback name="Landing.Audit">
+      <Section
+        id="built-for-the-audit"
+        space="roomy"
+        eyebrow="Built for the audit, not the demo"
+        title="Ready for the day someone asks you to prove it"
+        lede="Your people's records live in accounts you own. We never store them."
+      >
+        <dl className="grid max-w-4xl gap-x-16 gap-y-10 sm:grid-cols-2">
+          {BUILT_IN.map(([name, text]) => (
+            <div key={name} className="flex flex-col gap-1.5">
+              <dt className="font-display text-2xl leading-tight">{name}</dt>
+              <dd className="text-pretty text-muted-foreground">{text}</dd>
+            </div>
+          ))}
+        </dl>
+        <p className="mt-14 max-w-2xl text-sm text-pretty text-muted-foreground">
+          Who gets access, how long you keep records and what your policies
+          require stay yours to decide. Real Good Site makes your rules easy to
+          follow. It does not make you compliant on its own, and we will never
+          claim it does.
+        </p>
+      </Section>
+    </DevFeedback>
+  )
+}
+
+function LandingFinalCta() {
+  return (
+    <DevFeedback name="Landing.FinalCta">
+      <section className="bg-paper px-4 py-28 md:py-40">
+        <div className="mx-auto flex max-w-3xl flex-col items-center gap-8 text-center">
+          <h2 className="font-display text-5xl leading-[1] tracking-tight text-balance md:text-6xl">
+            The tool your team needs is{" "}
+            <em className="text-brand">closer than you think.</em>
+          </h2>
+          <p className="text-lg text-pretty text-muted-foreground">
+            Free to try with sample data. Pay once when it goes live.
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
+            <Button size="lg" asChild>
+              <Link href="/tools/training-tracker">
+                Try the training tracker
+              </Link>
+            </Button>
+            <Link
+              href="/pricing"
+              className="inline-flex items-center gap-1.5 font-medium underline-offset-4 hover:underline"
+            >
+              See pricing
+              <ArrowRight className="size-4" aria-hidden="true" />
+            </Link>
+          </div>
+        </div>
+      </section>
+    </DevFeedback>
+  )
+}
+
+export default function IndexPage() {
+  return (
+    <div className="flex flex-1 flex-col">
+      <LandingHero />
+      <LandingShowcase />
+      <LandingHowItWorks />
+      <LandingAudit />
+      <LandingFinalCta />
     </div>
   )
 }
