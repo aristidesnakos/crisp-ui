@@ -1,6 +1,6 @@
 <p align="center"><img src="apps/v4/public/icon.svg" alt="" width="72" height="72"></p>
 
-# crisp-ui
+# Real Good Site
 
 Reusable dashboard patterns as a [shadcn registry](https://ui.shadcn.com/docs/registry). Each one is a piece of a real admin dashboard, extracted so you can copy it into your own project with the stock `shadcn` CLI.
 
@@ -44,4 +44,4 @@ Registry items are declared in `apps/v4/registry-crisp.template.json` and their 
 
 ## Attribution
 
-crisp-ui is a fork of [shadcn/ui](https://github.com/shadcn-ui/ui) and keeps its MIT licence. The docs shell and registry format are theirs; the items under `apps/v4/registry/crisp` are ours. See [LICENSE.md](./LICENSE.md).
+Real Good Site (this repository, `crisp-ui`) is a fork of [shadcn/ui](https://github.com/shadcn-ui/ui) and keeps its MIT licence. The docs shell and registry format are theirs; the items under `apps/v4/registry/crisp` are ours. See [LICENSE.md](./LICENSE.md).
