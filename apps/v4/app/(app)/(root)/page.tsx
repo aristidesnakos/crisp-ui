@@ -1,39 +1,47 @@
-import { type Metadata } from "next"
+import { type Metadata, type ResolvingMetadata } from "next"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 
-import { siteConfig } from "@/lib/config"
+import { heroCopy, siteConfig } from "@/lib/config"
 import { SHOWCASE } from "@/lib/tools"
 import { DevFeedback } from "@/components/dev/dev-feedback"
 import { Eyebrow, Section } from "@/components/marketing/section"
 import { ShowcaseGrid } from "@/components/marketing/showcase-grid"
 import { Button } from "@/registry/new-york-v4/ui/button"
 
-const title = "You know the job. Now you can build the tool."
+const title = `${heroCopy.lead} ${heroCopy.emphasis}`
 const metadataTitle = `${siteConfig.name} - ${title}`
 const description = siteConfig.description
 
 export const dynamic = "force-static"
 export const revalidate = false
 
-export const metadata: Metadata = {
-  title: { absolute: metadataTitle },
-  description,
-  alternates: { canonical: "/" },
-  openGraph: {
-    type: "website",
-    url: "/",
-    title: metadataTitle,
+export async function generateMetadata(
+  _props: unknown,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  // This openGraph replaces the layout's whole object, so carry over the card
+  // app/opengraph-image.tsx put there. Twitter falls back to it.
+  const { openGraph } = await parent
+
+  return {
+    title: { absolute: metadataTitle },
     description,
-    siteName: siteConfig.name,
-    images: ["/og.png"],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: metadataTitle,
-    description,
-    images: ["/og.png"],
-  },
+    alternates: { canonical: "/" },
+    openGraph: {
+      type: "website",
+      url: "/",
+      title: metadataTitle,
+      description,
+      siteName: siteConfig.name,
+      images: openGraph?.images,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: metadataTitle,
+      description,
+    },
+  }
 }
 
 const STEPS = [
@@ -80,10 +88,9 @@ function LandingHero() {
     <DevFeedback name="Landing.Hero">
       <section className="px-4">
         <div className="mx-auto flex max-w-5xl flex-col items-center gap-8 pt-28 pb-20 text-center md:pt-40 md:pb-28">
-          <Eyebrow>For whoever keeps the spreadsheet</Eyebrow>
+          <Eyebrow>{heroCopy.eyebrow}</Eyebrow>
           <h1 className="font-display text-5xl leading-[0.95] tracking-tight text-balance sm:text-6xl md:text-7xl lg:text-[5.5rem]">
-            You know the job.{" "}
-            <em className="text-brand">Now you can build the tool.</em>
+            {heroCopy.lead} <em className="text-brand">{heroCopy.emphasis}</em>
           </h1>
           <p className="max-w-2xl text-lg text-pretty text-muted-foreground md:text-xl">
             Start from a finished tracker for training, certificates and

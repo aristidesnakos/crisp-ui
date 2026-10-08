@@ -26,6 +26,13 @@ const nextConfig = {
         destination: "/docs/components/:name",
         permanent: true,
       },
+      // The social card used to be a static PNG. Anything that still links to
+      // it gets the generated one (app/opengraph-image.tsx).
+      {
+        source: "/og.png",
+        destination: "/opengraph-image",
+        permanent: true,
+      },
     ]
   },
   rewrites() {
