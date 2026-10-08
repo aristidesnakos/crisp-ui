@@ -32,12 +32,12 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   description: siteConfig.description,
   keywords: [
-    "React",
-    "Tailwind CSS",
-    "dashboard",
-    "status",
-    "notifications",
-    "component registry",
+    "training tracker",
+    "training records",
+    "certificates",
+    "calibration",
+    "building blocks",
+    "shadcn",
   ],
   openGraph: {
     type: "website",

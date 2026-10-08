@@ -120,16 +120,16 @@ const SCALE = 5.2
 const ogSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
   <style>
     ${flat(ink, violet)}
-    .name{font:600 136px 'Avenir Next',Avenir,Helvetica,sans-serif;letter-spacing:-4px;fill:${ink}}
+    .name{font:600 88px 'Avenir Next',Avenir,Helvetica,sans-serif;letter-spacing:-2.5px;fill:${ink}}
     .tag{font:400 40px 'Avenir Next',Avenir,Helvetica,sans-serif;fill:${ink};fill-opacity:.78}
     .foot{font:500 26px 'Avenir Next',Avenir,Helvetica,sans-serif;letter-spacing:.5px;fill:${ink};fill-opacity:.55}
   </style>
   <rect width="1200" height="630" fill="${cream}"/>
   <g transform="translate(${96 - 6 * SCALE} ${(630 - 54 * SCALE) / 2 - 4 * SCALE}) scale(${SCALE})">${shapes}</g>
-  <text class="name" x="446" y="316">crisp-ui</text>
-  <text class="tag" x="450" y="398">Patterns for dashboards</text>
-  <text class="tag" x="450" y="448">people depend on.</text>
-  <text class="foot" x="450" y="536">Open code, installed with the shadcn CLI</text>
+  <text class="name" x="446" y="296">Real Good Site</text>
+  <text class="tag" x="450" y="378">Finished tools for whoever</text>
+  <text class="tag" x="450" y="428">keeps the spreadsheet.</text>
+  <text class="foot" x="450" y="536">realgood.site</text>
 </svg>`
 execFileSync("rsvg-convert", ["-w", 1200, "-h", 630, "-o", out("og.png")], { input: ogSvg })
 flatten(out("og.png"), cream)

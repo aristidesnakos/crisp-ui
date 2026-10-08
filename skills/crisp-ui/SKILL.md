@@ -1,6 +1,6 @@
 ---
 name: crisp-ui
-description: "Install and use Real Good Site, a shadcn registry of dashboard patterns for internal tools (status-strip, status-notify, table-view, data-table, calibration-desk, recipient-roster, alert-rules-lib, alert-rules, save-bar, confirm-send, approval, approval-step, notify-envelope, quiz-lib, quiz, audit-event, audit-timeline). Use when building an admin or internal-tool screen that shows how a job is going, lets a person choose who is notified and sends a message, or when the user mentions Real Good Site, realgood.site or crisp-ui. UI only: it does not provide a backend and does not make anything compliant."
+description: "Install and use the Real Good Site building blocks, the UI parts its finished tools are made of, published as a shadcn registry (status-strip, status-notify, table-view, data-table, calibration-desk, recipient-roster, alert-rules-lib, alert-rules, save-bar, confirm-send, approval, approval-step, notify-envelope, quiz-lib, quiz, audit-event, audit-timeline). Use when building an admin or internal-tool screen that shows how a job is going, lets a person choose who is notified and sends a message, or when the user mentions Real Good Site, realgood.site or crisp-ui. UI only: it does not provide a backend and does not make anything compliant."
 license: MIT
 ---
 
@@ -8,7 +8,7 @@ license: MIT
 
 # Real Good Site
 
-Real Good Site is a shadcn registry of dashboard patterns for internal tools. You install the source into the project with the stock `shadcn` CLI and then own it; there is no package to upgrade. It is UI only.
+Real Good Site makes finished tools for whoever keeps the spreadsheet. These are its building blocks, the UI parts those tools are made of, published as a shadcn registry. You install the source into the project with the stock `shadcn` CLI and then own it; there is no package to upgrade. It is UI only.
 
 ## Install
 

@@ -91,7 +91,7 @@ const GENERATED =
 export function renderSkill(items, origin = PRODUCTION_ORIGIN) {
   const names = items.map((i) => i.name)
   const description =
-    `Install and use Real Good Site, a shadcn registry of dashboard patterns for internal tools (${names.join(", ")}). ` +
+    `Install and use the Real Good Site building blocks, the UI parts its finished tools are made of, published as a shadcn registry (${names.join(", ")}). ` +
     "Use when building an admin or internal-tool screen that shows how a job is going, lets a person choose who is notified and sends a message, " +
     "or when the user mentions Real Good Site, realgood.site or crisp-ui. UI only: it does not provide a backend and does not make anything compliant."
   const example = items.find((i) => i.name === "status-notify") ?? items[0]
@@ -117,7 +117,7 @@ ${GENERATED}
 
 # Real Good Site
 
-Real Good Site is a shadcn registry of dashboard patterns for internal tools. You install the source into the project with the stock \`shadcn\` CLI and then own it; there is no package to upgrade. It is UI only.
+Real Good Site makes finished tools for whoever keeps the spreadsheet. These are its building blocks, the UI parts those tools are made of, published as a shadcn registry. You install the source into the project with the stock \`shadcn\` CLI and then own it; there is no package to upgrade. It is UI only.
 
 ## Install
 
@@ -183,7 +183,7 @@ export function renderSnippet(items, origin = PRODUCTION_ORIGIN) {
 
 ## Real Good Site
 
-Real Good Site is a shadcn registry of dashboard patterns for internal tools. UI only. Index for agents: ${origin}/llms.txt
+Real Good Site makes finished tools for whoever keeps the spreadsheet. Its building blocks, the UI parts those tools are made of, are published as a shadcn registry. UI only. Index for agents: ${origin}/llms.txt
 
 Install: \`npx shadcn@latest add ${origin}/r/<item>.json\`, for example \`npx shadcn@latest add ${example.installUrl}\`. Docs for an item: \`${origin}/docs/components/<item>.md\`.
 

@@ -2,7 +2,7 @@
 
 ## Real Good Site
 
-Real Good Site is a shadcn registry of dashboard patterns for internal tools. UI only. Index for agents: https://realgood.site/llms.txt
+Real Good Site makes finished tools for whoever keeps the spreadsheet. Its building blocks, the UI parts those tools are made of, are published as a shadcn registry. UI only. Index for agents: https://realgood.site/llms.txt
 
 Install: `npx shadcn@latest add https://realgood.site/r/<item>.json`, for example `npx shadcn@latest add https://realgood.site/r/status-notify.json`. Docs for an item: `https://realgood.site/docs/components/<item>.md`.
 

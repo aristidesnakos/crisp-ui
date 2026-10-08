@@ -1,7 +1,7 @@
 {
-  "name": "crisp-ui",
-  "short_name": "crisp-ui",
-  "description": "Patterns for dashboards where people depend on a job and need to hear how it is going.",
+  "name": "Real Good Site",
+  "short_name": "Real Good",
+  "description": "Finished tools for whoever keeps the spreadsheet, starting with a training tracker.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
