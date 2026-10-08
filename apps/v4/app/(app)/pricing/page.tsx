@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 const PLANS = [
   {
     name: "Free",
-    price: "€0",
+    price: "$0",
     note: "forever",
     blurb: "See every tool working and build with the open parts.",
     cta: { label: "Try the tracker", href: "/tools/training-tracker" },
@@ -35,7 +35,7 @@ const PLANS = [
   },
   {
     name: "Pro",
-    price: "€149",
+    price: "$149",
     note: "once, per tool",
     blurb: "Take one tool live in accounts you own.",
     cta: { label: "Go live", href: "/tools/training-tracker#plans" },
@@ -52,7 +52,7 @@ const PLANS = [
   },
   {
     name: "Done for you",
-    price: "€900",
+    price: "$900",
     note: "from, once",
     blurb: "We set it up and hand it over working.",
     cta: { label: "Chat with us", href: "https://cal.com/ari-nakos/chat" },
