@@ -1,14 +1,42 @@
-import { type Metadata } from "next"
+import { type Metadata, type ResolvingMetadata } from "next"
 
+import { siteConfig } from "@/lib/config"
 import { TOOLS } from "@/lib/tools"
 import { DevFeedback } from "@/components/dev/dev-feedback"
 import { ToolCard } from "@/components/marketing/moments"
 import { Eyebrow } from "@/components/marketing/section"
 
-export const metadata: Metadata = {
-  title: "Tools",
-  description:
-    "Finished tools for jobs that need a paper trail. The training tracker is ready; sign-offs, approvals, inspections and incidents are coming next.",
+const title = "Tools"
+const description =
+  "Finished tools for jobs that need a paper trail. The training tracker is ready; sign-offs, approvals, inspections and incidents are coming next."
+
+export async function generateMetadata(
+  _props: unknown,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  // This openGraph replaces the layout's whole object, so carry over the
+  // layout's card. Twitter falls back to it.
+  const { openGraph } = await parent
+  const socialTitle = `${title} - ${siteConfig.name}`
+
+  return {
+    title,
+    description,
+    alternates: { canonical: "/tools" },
+    openGraph: {
+      type: "website",
+      url: "/tools",
+      title: socialTitle,
+      description,
+      siteName: siteConfig.name,
+      images: openGraph?.images,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: socialTitle,
+      description,
+    },
+  }
 }
 
 export default function ToolsPage() {
