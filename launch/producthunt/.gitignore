@@ -1,0 +1,3 @@
+# Recordings and raw frames stay local; log.jsonl, notes and step screenshots are committed.
+runs/**/*.mp4
+runs/**/*.mov
