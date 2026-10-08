@@ -78,6 +78,11 @@ const STORY: Record<string, { after: string[]; leadsTo: string[] }> = {
     after: ["status-strip"],
     leadsTo: [],
   },
+  // The finished training tracker: the same five stages, for a training list.
+  "training-tracker": {
+    after: ["status-strip"],
+    leadsTo: [],
+  },
 }
 
 const meta = JSON.parse(readText(path.join(docsDir, "meta.json"))) as {

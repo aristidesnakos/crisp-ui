@@ -101,4 +101,12 @@ export const Components: Record<string, any> = {
       ) || "calibration-desk-demo"
     return { default: mod.default || mod[exportName] }
   }),
+  "training-tracker-demo": React.lazy(async () => {
+    const mod = await import("@/examples/radix/training-tracker-demo")
+    const exportName =
+      Object.keys(mod).find(
+        (key) => typeof mod[key] === "function" || typeof mod[key] === "object"
+      ) || "training-tracker-demo"
+    return { default: mod.default || mod[exportName] }
+  }),
 }

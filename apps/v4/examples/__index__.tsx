@@ -52,5 +52,9 @@ export const ExamplesIndex: Record<string, Record<string, any>> = {
       name: "calibration-desk-demo",
       filePath: "examples/radix/calibration-desk-demo.tsx",
     },
+    "training-tracker-demo": {
+      name: "training-tracker-demo",
+      filePath: "examples/radix/training-tracker-demo.tsx",
+    },
   },
 }

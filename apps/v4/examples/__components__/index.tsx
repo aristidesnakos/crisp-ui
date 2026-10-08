@@ -26,6 +26,7 @@ const shards: Record<
       "data-table-demo",
       "alert-rules-demo",
       "calibration-desk-demo",
+      "training-tracker-demo",
     ]),
   },
 }

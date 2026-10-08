@@ -1,6 +1,6 @@
 ---
 name: crisp-ui
-description: "Install and use Real Good Site, a shadcn registry of dashboard patterns for internal tools (status-strip, status-notify, table-view, data-table, calibration-desk, recipient-roster, alert-rules-lib, alert-rules, save-bar, confirm-send, approval, approval-step, notify-envelope, quiz-lib, quiz, audit-event, audit-timeline). Use when building an admin or internal-tool screen that shows how a job is going, lets a person choose who is notified and sends a message, or when the user mentions Real Good Site, realgood.site or crisp-ui. UI only: it does not provide a backend and does not make anything compliant."
+description: "Install and use Real Good Site, a shadcn registry of dashboard patterns for internal tools (status-strip, status-notify, table-view, data-table, calibration-desk, training-tracker, recipient-roster, alert-rules-lib, alert-rules, save-bar, confirm-send, approval, approval-step, notify-envelope, quiz-lib, quiz, audit-event, audit-timeline). Use when building an admin or internal-tool screen that shows how a job is going, lets a person choose who is notified and sends a message, or when the user mentions Real Good Site, realgood.site or crisp-ui. UI only: it does not provide a backend and does not make anything compliant."
 license: MIT
 ---
 
@@ -38,7 +38,7 @@ Pick items in this order. It is a recommended path for a workflow screen, not a 
 
 | Stage | Question | Items |
 | --- | --- | --- |
-| See | What is happening? | `status-strip`, `status-notify`, `table-view`, `data-table`, `calibration-desk` |
+| See | What is happening? | `status-strip`, `status-notify`, `table-view`, `data-table`, `calibration-desk`, `training-tracker` |
 | Decide | What needs me, and who hears? | `recipient-roster`, `alert-rules-lib`, `alert-rules` |
 | Act | Do it safely. | `save-bar`, `confirm-send`, `approval`, `approval-step` |
 | Confirm | Did it work, who knows? | `notify-envelope`, `quiz-lib`, `quiz` |
@@ -53,6 +53,7 @@ Pick items in this order. It is a recommended path for a workflow screen, not a 
 | `table-view` | see | Pure helpers for a list of rows: named views with counts, a stable sort, and selection that drops rows that are no longer there. | `npx shadcn@latest add https://realgood.site/r/table-view.json` | https://realgood.site/docs/components/data-table.md |
 | `data-table` | see | A table of rows with named saved views and live counts, row selection, an action slot that receives the selected rows, and stale, empty, no-match and error states. | `npx shadcn@latest add https://realgood.site/r/data-table.json` | https://realgood.site/docs/components/data-table.md |
 | `calibration-desk` | see to record | The whole arc on one screen, as a worked example: gauges due for calibration (status strip and data table), a reminder rule, a two-role approval, a confirm-then-send to owners, and an audit timeline of every decision, send and failure. Runs on an in-memory server you replace with real calls. | `npx shadcn@latest add https://realgood.site/r/calibration-desk.json` | https://realgood.site/docs/components/calibration-desk.md |
+| `training-tracker` | see to record | A finished training tracker on one screen: who is up to date (status strip and a Needs attention or Everyone table), a reminder you confirm with the count before it goes, a sign-off that needs a written reason, and a record of every reminder, sign-off, refusal and failure. Runs on an in-memory server you replace with real calls. | `npx shadcn@latest add https://realgood.site/r/training-tracker.json` | https://realgood.site/docs/components/training-tracker.md |
 | `recipient-roster` | decide | One list of people with a switch per channel, per-channel limits, paste-to-add and inline validation. | `npx shadcn@latest add https://realgood.site/r/recipient-roster.json` | https://realgood.site/docs/components/recipient-roster.md |
 | `alert-rules-lib` | decide | Pure helpers for reminder rules: validate a rule, test and move past quiet hours in any time zone (DST-safe), list which reminders are due, and describe a rule in a sentence. | `npx shadcn@latest add https://realgood.site/r/alert-rules-lib.json` | https://realgood.site/docs/components/alert-rules.md |
 | `alert-rules` | decide | An editor for reminder cadence, escalation and quiet hours, with inline validation and a plain-language summary under each rule. Edits a saved rule; it does not send or schedule. | `npx shadcn@latest add https://realgood.site/r/alert-rules.json` | https://realgood.site/docs/components/alert-rules.md |

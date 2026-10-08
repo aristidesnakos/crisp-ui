@@ -399,6 +399,49 @@
       ]
     },
     {
+      "name": "training-tracker",
+      "type": "registry:block",
+      "title": "Training tracker",
+      "description": "A finished training tracker on one screen: who is up to date (status strip and a Needs attention or Everyone table), a reminder you confirm with the count before it goes, a sign-off that needs a written reason, and a record of every reminder, sign-off, refusal and failure. Runs on an in-memory server you replace with real calls.",
+      "categories": [
+        "dashboard",
+        "workflow"
+      ],
+      "meta": {
+        "stage": "see",
+        "stageEnd": "record",
+        "recipe": "https://realgood.site/docs/components/training-tracker.md"
+      },
+      "docs": "A training tracker on one screen: who is up to date, a reminder confirmed with the count, a sign-off with a written reason and an audit timeline, on an in-memory server.\nRead the installed file before using it; use only the props it exports.\nReplace createMemoryServer() with real calls in one place: pass your own server prop, backed by your sign-in and database. Your server must check the user and role (only managers and admins send reminders or sign off), write the audit events (one per send, sign-off, refusal and failure) and enforce quiet hours (no reminders 21:00 to 08:00).\nDocs: https://realgood.site/docs/components/training-tracker.md\nVerify: run your typechecker, then the four checks on the docs page.",
+      "dependencies": [
+        "lucide-react"
+      ],
+      "registryDependencies": [
+        "button",
+        "switch",
+        "aristidesnakos/crisp-ui/status-strip",
+        "aristidesnakos/crisp-ui/data-table",
+        "aristidesnakos/crisp-ui/alert-rules-lib",
+        "aristidesnakos/crisp-ui/confirm-send",
+        "aristidesnakos/crisp-ui/audit-event",
+        "aristidesnakos/crisp-ui/audit-timeline"
+      ],
+      "files": [
+        {
+          "path": "apps/v4/registry/crisp/blocks/training-tracker.tsx",
+          "type": "registry:component"
+        },
+        {
+          "path": "apps/v4/registry/crisp/lib/training-tracker-lib.ts",
+          "type": "registry:lib"
+        },
+        {
+          "path": "apps/v4/registry/crisp/lib/training-tracker-server.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
       "name": "quiz-lib",
       "type": "registry:lib",
       "title": "Quiz helpers",
