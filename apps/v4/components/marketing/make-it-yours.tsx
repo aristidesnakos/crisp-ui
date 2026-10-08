@@ -65,7 +65,7 @@ Steps
 1. Install the finished tool, then read every installed file before changing anything:
    npx shadcn@latest add https://realgood.site/r/training-tracker.json
 2. Replace the sample people and training with ours. Keep the layout.
-3. Connect sign-in and the database with the Real Good Site setup file. Do not write your own access rules.
+3. Replace createMemoryServer() with our own server, in one place, using our sign-in and our database. Keep every rule below and make the checks pass.
 
 Rules that must stay true
 - Show the number of people before any reminder goes out.
