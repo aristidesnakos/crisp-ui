@@ -4,6 +4,7 @@ import { cn } from "cn"
 import { Check } from "lucide-react"
 
 import { siteConfig } from "@/lib/config"
+import { PRO_FEATURES, PRO_PRICE } from "@/lib/plans"
 import { DevFeedback } from "@/components/dev/dev-feedback"
 import { Eyebrow, Section } from "@/components/marketing/section"
 import {
@@ -16,7 +17,7 @@ import { Button } from "@/registry/new-york-v4/ui/button"
 
 const title = "Pricing"
 const description =
-  "Try every tool free with sample data. Pay once to take a tool live in your own account, or have us set it up for you."
+  "Free to try with sample data, and the building blocks are open source. Paid setup for going live is coming soon; ask us if you want help now."
 
 export async function generateMetadata(
   _props: unknown,
@@ -52,30 +53,24 @@ const PLANS = [
     name: "Free",
     price: "$0",
     note: "forever",
-    blurb: "See every tool working and build with the open parts.",
+    blurb: "See the tracker working and build with the open parts.",
     cta: { label: "Try the tracker", href: "/tools/training-tracker" },
     features: [
-      "Every tool with sample data",
+      "The training tracker with sample data",
       "Instructions for your AI assistant",
       "All building blocks, open source (MIT)",
-      "The calibration recall desk, complete",
+      "The calibration recall desk, as a worked example",
     ],
   },
   {
     name: "Pro",
-    price: "$149",
+    price: PRO_PRICE,
     note: "once, per tool",
-    blurb: "Take one tool live in accounts you own.",
-    cta: { label: "Go live", href: "/tools/training-tracker#plans" },
+    blurb: "Not open yet. Take one tool live in accounts you own.",
+    cta: { label: "Ask about Pro", href: "https://cal.com/ari-nakos/chat" },
     featured: true,
-    features: [
-      "Sign-in with roles: staff, managers, admins",
-      "Your own database, with access rules we have tested",
-      "A record that writes itself and cannot be edited",
-      "Certificate uploads and spreadsheet import",
-      "One-click setup",
-      "12 months of updates",
-    ],
+    soon: true,
+    features: PRO_FEATURES,
   },
   {
     name: "Done for you",
@@ -84,7 +79,7 @@ const PLANS = [
     blurb: "We set it up and hand it over working.",
     cta: { label: "Chat with us", href: "https://cal.com/ari-nakos/chat" },
     features: [
-      "Everything in Pro",
+      "The tracker connected to your own sign-in and database",
       "Your people and training loaded from your spreadsheet",
       "Email sent from your own address",
       "A walkthrough with your team",
@@ -103,7 +98,7 @@ const COSTS = [
 const FAQ = [
   [
     "Do I need to know how to code?",
-    "No. You answer four questions and hand the result to an AI assistant such as Lovable or Claude. The instructions tell it to ask you rather than guess. Pro setup is one click.",
+    "You don't write code. You answer four questions and hand the result to an AI assistant such as Lovable or Claude, which does the building. The instructions tell it to ask you rather than guess, and to show you the results of its checks. You still read those results and create the accounts it asks for.",
   ],
   [
     "Where do our records live?",
@@ -111,15 +106,15 @@ const FAQ = [
   ],
   [
     "Does this make us compliant?",
-    "No tool can do that on its own. Real Good Site makes the careful way the easy way: a count before every send, a reason on every sign-off, and a record that writes itself. Access, retention and policy stay your decisions.",
+    "No tool can do that on its own. Real Good Site makes the careful way the easy way: a count before every send, a reason on every sign-off, and a record your server writes. Access, retention and policy stay your decisions.",
   ],
   [
     "What is open source?",
-    "Every building block, under the MIT licence, on GitHub. The finished Pro tools, their setup and their updates are what you pay for.",
+    "Every building block, under the MIT licence, on GitHub. What we plan to charge for is the setup: sign-in, database rules and updates. Paid setup is not open yet.",
   ],
   [
     "Can I set it up for my clients?",
-    "Yes. Buy Pro once per client, or ask us about terms for agencies.",
+    "Yes. The building blocks are MIT-licensed, so you can use them for clients today. Paid setup is coming soon; ask us about terms for agencies.",
   ],
 ]
 
@@ -133,8 +128,8 @@ export default function PricingPage() {
             Try free. Pay when it&apos;s real.
           </h1>
           <p className="max-w-xl text-lg text-pretty text-muted-foreground">
-            No subscription to us. Pay once per tool, and run it in accounts you
-            own.
+            Free today. When paid setup opens, there is no subscription to us:
+            you pay once per tool and run it in accounts you own.
           </p>
         </header>
       </DevFeedback>
@@ -152,9 +147,9 @@ export default function PricingPage() {
               <div className="flex flex-col gap-1">
                 <div className="flex items-center justify-between">
                   <h2 className="font-medium">{plan.name}</h2>
-                  {plan.featured ? (
+                  {plan.soon ? (
                     <span className="rounded-full bg-brand px-2.5 py-0.5 text-xs font-medium text-background">
-                      Most teams
+                      Coming soon
                     </span>
                   ) : null}
                 </div>

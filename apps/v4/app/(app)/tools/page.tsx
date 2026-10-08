@@ -50,8 +50,9 @@ export default function ToolsPage() {
             Finished tools for jobs that need a paper trail
           </h1>
           <p className="max-w-2xl text-lg text-pretty text-muted-foreground">
-            Each one works the moment you open it, with sample data. Make it
-            yours in plain words, then take it live in your own account.
+            The training tracker works the moment you open it, with sample data.
+            Make it yours in plain words, then have your AI assistant connect it
+            to your own accounts. The other tools are on the way.
           </p>
         </header>
       </DevFeedback>

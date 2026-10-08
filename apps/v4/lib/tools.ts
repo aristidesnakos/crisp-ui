@@ -88,17 +88,17 @@ export const TRACKER_MOMENTS: MomentItem[] = [
   {
     stage: "Act",
     quote: "Send to 7 people?",
-    text: "Every send shows the count first. Every sign-off asks for a reason.",
+    text: "Every message shows the count first, and nothing goes until you confirm.",
   },
   {
     stage: "Confirm",
     quote: "Sent to 7",
-    text: "You see what happened, including what failed and how to try again.",
+    text: "You see what happened. If a send fails, it says so and the button works again.",
   },
   {
     stage: "Record",
     quote: "Who did what, when and why",
-    text: "Written by the server every time, ready when someone asks you to prove it.",
+    text: "One entry for every message and failure, written by your server, so you can show it when someone asks.",
   },
 ]
 
