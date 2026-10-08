@@ -2,9 +2,9 @@
 
 # Real Good Site
 
-Reusable dashboard patterns as a [shadcn registry](https://ui.shadcn.com/docs/registry). Each one is a piece of a real admin dashboard, extracted so you can copy it into your own project with the stock `shadcn` CLI.
+The building blocks behind the finished tools on [realgood.site](https://realgood.site), as a [shadcn registry](https://ui.shadcn.com/docs/registry). Copy any of them into your own project with the stock `shadcn` CLI, or point your AI assistant at the site and have it do that for you.
 
-There is no package to upgrade: you install the source and own it.
+There is no package to upgrade: you install the source and own it. The blocks are UI only. Sending, storage and access control are yours to build.
 
 ## Items
 
@@ -13,8 +13,12 @@ There is no package to upgrade: you install the source and own it.
 | `status-notify`    | The whole status-and-notify pattern, wired together                 |
 | `status-strip`     | Headline number, segmented bar, legend and an action slot           |
 | `recipient-roster` | One list of people with a switch per channel                        |
+| `table-view`       | Pure helpers: named views with counts, stable sort, selection       |
+| `data-table`       | Rows with saved views, live counts, selection and an action slot    |
 | `confirm-send`     | Click, confirm with the count, send, "Sent to N"                    |
 | `save-bar`         | "Unsaved changes" with Discard and Save, hidden when clean          |
+| `approval`         | Pure helpers: settle an approval under an all, any or minimum rule  |
+| `approval-step`    | A sign-off with a stated reason, behind an inline confirm           |
 | `notify-envelope`  | Pure helpers: roster from lists, list comparison, one-message To/Cc |
 | `quiz`             | Tap an answer, see at once whether it was right; score and retry    |
 | `quiz-lib`         | Pure helpers: grade a pick, tally picks, check your questions       |

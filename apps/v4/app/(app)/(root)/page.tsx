@@ -47,15 +47,15 @@ export async function generateMetadata(
 const STEPS = [
   {
     title: "Try it with sample data",
-    text: "Click through the real tool before you sign up for anything. Type what you track and watch it change to match.",
+    text: "Click through the tracker with sample data. Type what you track and watch it change to match. Nothing is sent or saved.",
   },
   {
     title: "Describe your team",
     text: "Answer four questions: who you track, what they must complete, who signs off and who else hears. We turn your answers into instructions your AI assistant follows.",
   },
   {
-    title: "Go live in your own account",
-    text: "One click sets up sign-in and your database in accounts you own. Your people's records never pass through us.",
+    title: "Connect it to your own accounts",
+    text: "Your assistant swaps the demo server for your own sign-in and database, then runs the checks and shows you the results. The accounts are yours, and your people's records never pass through us.",
   },
 ]
 
@@ -69,16 +69,16 @@ const BUILT_IN = [
     "Decisions still explain themselves months later.",
   ],
   [
-    "A record that writes itself",
-    "Every send, sign-off and failure, saved by the server, not the browser.",
+    "A record your server writes",
+    "Every send, sign-off and failure is one entry, written by your server rather than the browser. The screen only displays it.",
   ],
   [
     "No personal details in emails",
     "First name and training name. Nothing else.",
   ],
   [
-    "Usable by everyone",
-    "Works with a keyboard and a screen reader, with text that meets WCAG AA contrast.",
+    "Made for keyboards",
+    "Real buttons, labelled fields and proper tables. We have not yet tested with a screen reader, and contrast follows your theme, so check both before you rely on it.",
   ],
 ] as const
 
@@ -94,8 +94,8 @@ function LandingHero() {
           <p className="max-w-2xl text-lg text-pretty text-muted-foreground md:text-xl">
             Start from a finished tracker for training, certificates and
             sign-offs. Describe it in plain words and your AI assistant makes it
-            yours. Sign-offs and a record you can show anyone who asks come
-            built in.
+            yours. The screens for sign-offs and a record of who did what come
+            ready; your assistant connects them to your own database.
           </p>
           <div className="mt-2 flex flex-wrap justify-center gap-3">
             <Button size="lg" asChild>
@@ -170,8 +170,8 @@ function LandingAudit() {
       <Section
         id="built-for-the-audit"
         space="roomy"
-        eyebrow="Built for the audit, not the demo"
-        title="Ready for the day someone asks you to prove it"
+        eyebrow="Built for the day someone asks"
+        title="A record you can show when someone asks"
         lede="Your people's records live in accounts you own. We never store them."
       >
         <dl className="grid max-w-4xl gap-x-16 gap-y-10 sm:grid-cols-2">
@@ -186,7 +186,9 @@ function LandingAudit() {
           Who gets access, how long you keep records and what your policies
           require stay yours to decide. Real Good Site makes your rules easy to
           follow. It does not make you compliant on its own, and we will never
-          claim it does.
+          claim it does. The screens are ours; the server side is built in your
+          own accounts, so read what your assistant built before you invite your
+          team.
         </p>
       </Section>
     </DevFeedback>
@@ -203,7 +205,7 @@ function LandingFinalCta() {
             <em className="text-brand">closer than you think.</em>
           </h2>
           <p className="text-lg text-pretty text-muted-foreground">
-            Free to try with sample data. Pay once when it goes live.
+            Free to try with sample data. The building blocks are open source.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
             <Button size="lg" asChild>

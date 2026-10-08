@@ -3,6 +3,7 @@ import Link from "next/link"
 import { Check, ChevronRight } from "lucide-react"
 
 import { siteConfig } from "@/lib/config"
+import { PRO_FEATURES, PRO_PRICE } from "@/lib/plans"
 import { TRACKER_MOMENTS } from "@/lib/tools"
 import { DevFeedback } from "@/components/dev/dev-feedback"
 import { MakeItYours } from "@/components/marketing/make-it-yours"
@@ -51,15 +52,6 @@ const FREE = [
   "The open building blocks it is made from",
 ]
 
-const PRO = [
-  "Sign-in with roles: staff, managers, admins",
-  "Your own database, with access rules we have tested",
-  "A record that writes itself and cannot be edited",
-  "Certificate uploads and spreadsheet import",
-  "One-click setup in accounts you own",
-  "12 months of updates",
-]
-
 const BLOCKS = [
   ["Status strip", "/docs/components/status-strip"],
   ["Data table", "/docs/components/data-table"],
@@ -98,10 +90,10 @@ export default function TrainingTrackerPage() {
               <Link href="#make-it-yours">Make it yours</Link>
             </Button>
             <Button size="lg" variant="outline" asChild>
-              <Link href="/pricing">Go live with Pro</Link>
+              <Link href="/pricing">See pricing</Link>
             </Button>
             <p className="text-sm text-muted-foreground">
-              Free with sample data · Pro is $149, once
+              Free with sample data · Paid setup is coming soon
             </p>
           </div>
         </header>
@@ -163,7 +155,7 @@ export default function TrainingTrackerPage() {
         <Section
           id="plans"
           eyebrow="Free and Pro"
-          title="Try everything free. Pay once to go live."
+          title="Try it free. Paid setup is coming."
         >
           <div className="grid gap-4 md:grid-cols-2">
             <div className="flex flex-col gap-5 rounded-2xl border bg-background p-6 md:p-8">
@@ -186,20 +178,25 @@ export default function TrainingTrackerPage() {
             <div className="flex flex-col gap-5 rounded-2xl border-2 border-brand bg-background p-6 md:p-8">
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <h3 className="font-medium">Pro</h3>
+                  <h3 className="flex items-center gap-2 font-medium">
+                    Pro
+                    <span className="rounded-full bg-brand px-2.5 py-0.5 text-xs font-medium text-background">
+                      Coming soon
+                    </span>
+                  </h3>
                   <p className="font-display text-5xl">
-                    $149{" "}
+                    {PRO_PRICE}{" "}
                     <span className="font-sans text-base text-muted-foreground">
                       once
                     </span>
                   </p>
                 </div>
-                <Button asChild>
-                  <Link href="/pricing">Go live</Link>
+                <Button asChild variant="outline">
+                  <Link href="/pricing">See pricing</Link>
                 </Button>
               </div>
               <ul className="flex list-none flex-col gap-2.5 p-0 text-sm">
-                {PRO.map((item) => (
+                {PRO_FEATURES.map((item) => (
                   <li key={item} className="flex gap-2">
                     <Check
                       className="mt-0.5 size-4 shrink-0 text-brand"
