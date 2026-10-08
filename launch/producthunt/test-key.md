@@ -43,6 +43,13 @@ Sources: `runs/2026-10-08/notes.md` (run 1: fill + Create draft) and `runs/2026-
 | 28 | update form, sidebar | Edit Product Page · Main info · Images and media · Makers · Shoutouts · Extras · Connect with Investors · Launch checklist (no "Hunter & makers") | navigate by these labels | run 2 |
 | 29 | public row after Create draft | Productivity · Open Source · GitHub; "Human Resources" (chosen third) hidden | in the Create draft question | run 2 |
 | 30 | tooling, not PH | Chrome `file_upload` refused a file outside the session's folders (a worktree entered mid-session) | copy the asset to the scratchpad | run 2 |
+| 31 | step 0, product.md | stale against the live site: "remind" where the site says "message", "real reminders" on Pro, gallery shot 1 of the old demo (Ari's no-reminders rule, 2026-10-08) | flagged in the question round, synced, diff shown, approved before filling | run 3 |
+| 32 | iRecord Home | series names live in `~/Movies/iRecord/Projects/*/project.json` (`"series"`); "Plan next lecture…" reopens the series' OLDEST unfinished recording, not a fresh one | series reuse asked in step 0; a NEW recording planned with the same name | run 3 |
+| 33 | iRecord window picker | lists windows by the ACTIVE tab's title: the extension's window reads "New Tab" until the user clicks the Product Hunt tab | PH loaded first, tab activated by the user, title checked in `app_list_windows` before picking | run 3 |
+| 34 | iRecord Ready screen | the Window picker is a popover: background clicks are refused ("modal sheet"); Escape cancels the whole sheet; the Camera button does not say On/Off | display-scope clicks after `request_full_control`; popover closed by its own button; camera popover opened and read | run 3 |
+| 35 | iRecord preview, Stage Manager | "delivers N of N pt wide": 394 with Chrome in the strip while AX bounds say 1280×900; the user's "it's on stage" was wrong | gate N ≥ 500 before Record; `scripts/probe-take.sh` within 5 s | run 3 |
+| 36 | `~/Movies/iRecord/Projects/` | other sessions record there (dev QA `--drive-capture` take "Untitled Recording 4", 3360×2100, camera on) | not treated as the run's video, never deleted | run 3 |
+| 37 | tooling | `capture-gallery.cjs` found no `puppeteer-core` in a fresh worktree | `PUPPETEER_FROM=<main checkout>` | run 3 |
 
 ## Grades: run 2 (2026-10-08 test, scope B, dedicated worktree)
 
@@ -105,6 +112,7 @@ unless SKILL.md has since gained a question for it (then grade the question):
 | Run | Scope | Log rows | Minutes | Context tokens | Stops beyond the round and saves |
 |---|---|---|---|---|---|
 | 2026-10-08 run 1 | fill + Create draft, iRecord on | 40 | 11.5 | not recorded | questions asked as they came |
+| 2026-10-08 run 3 (recording setup) | iRecord on, stopped before Record; no PH form touched | n/a | ~70 | not measured | 5 mid-run user notes (series, from scratch, PH tab first, fan-out, notes); rows 31–37 |
 | 2026-10-08 retest | A (no save) + edit path | 57 | 18.5 | 220,668 (27% of the 5-hour window) | 4 |
 
 Target: zero stops beyond the question round and saves, and fewer than 57 rows for scope A.
