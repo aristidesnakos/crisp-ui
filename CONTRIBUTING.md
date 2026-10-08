@@ -36,10 +36,12 @@ With `pnpm --filter=v4 dev` running, right-click any section of the site and cho
 
 ## Brand assets
 
-`brand/mark.svg` is the only hand-edited brand file; its `<style>` block holds the palette. Everything else (`icon.svg`, the favicons, touch and manifest icons, `og.png`) is generated from it:
+`brand/mark.svg` is the only hand-edited brand file; its `<style>` block holds the palette. Everything else (`icon.svg`, the favicons, touch and manifest icons) is generated from it:
 
 ```bash
 node scripts/build-brand.mjs   # needs rsvg-convert and magick (brew install librsvg imagemagick)
 ```
 
 Commit the regenerated files. The header's inline mark (`apps/v4/components/brand-mark.tsx`) copies the geometry by hand, and `tests/brand-mark.test.ts` fails if it drifts from the source. Judge any change to the mark at 16px, not at 512.
+
+The social card is not a file: `apps/v4/app/opengraph-image.tsx` renders it at build time from the landing hero copy (`heroCopy` in `apps/v4/lib/config.ts`), the fonts in `apps/v4/assets/fonts/` and hex copies of the `--paper` and `--brand` tokens. Open `/opengraph-image` on the dev server to see it; `tests/opengraph-image.test.ts` fails if its colours drift from `globals.css`.

@@ -17,12 +17,6 @@ import "@/app/globals.css"
 import "@/app/typeset.css"
 
 const siteUrl = getSiteUrl()
-const ogImage = {
-  url: "/og.png",
-  width: 1200,
-  height: 630,
-  alt: siteConfig.name,
-}
 
 export const metadata: Metadata = {
   title: {
@@ -46,13 +40,13 @@ export const metadata: Metadata = {
     title: siteConfig.name,
     description: siteConfig.description,
     siteName: siteConfig.name,
-    images: [ogImage],
+    // No images here: app/opengraph-image.tsx adds the card, and Twitter
+    // falls back to it.
   },
   twitter: {
     card: "summary_large_image",
     title: siteConfig.name,
     description: siteConfig.description,
-    images: [ogImage],
   },
   icons: {
     icon: [

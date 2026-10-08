@@ -9,8 +9,8 @@
     ("a job needs your attention"). The silhouette is the whole idea, so it
     must still read at 16px; judge any change there, not at 512.
 
-    Palette (read by the build script, which derives the tiles and the OG card
-    from these four values, so this block is the one place to change a colour):
+    Palette (read by the build script, which derives the tiles from these four
+    values, so this block is the one place to change a colour):
       light page: ink body, violet dot.
       dark page:  cream body, soft-violet dot (also used on the dark app tile).
   -->

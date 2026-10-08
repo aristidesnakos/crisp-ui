@@ -30,6 +30,14 @@ export const siteConfig = {
   ],
 }
 
+// The landing hero. The page and the social card (app/opengraph-image.tsx)
+// both read it, so a link preview never shows an old headline.
+export const heroCopy = {
+  eyebrow: "For whoever keeps the spreadsheet",
+  lead: "You know the job.",
+  emphasis: "Now you can build the tool.",
+}
+
 export const META_THEME_COLORS = {
   light: "#ffffff",
   dark: "#0a0a0a",

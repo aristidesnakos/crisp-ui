@@ -1,3 +1,4 @@
+import { type ResolvingMetadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { mdxComponents } from "@/mdx-components"
@@ -30,9 +31,12 @@ export function generateStaticParams() {
   return source.generateParams()
 }
 
-export async function generateMetadata(props: {
-  params: Promise<{ slug: string[] }>
-}) {
+export async function generateMetadata(
+  props: {
+    params: Promise<{ slug: string[] }>
+  },
+  parent: ResolvingMetadata
+) {
   const params = await props.params
   const page = source.getPage(params.slug)
 
@@ -60,14 +64,13 @@ export async function generateMetadata(props: {
       type: "article",
       url: absoluteUrl(page.url),
       // A page's openGraph replaces the layout's rather than merging, so the
-      // shared image is repeated here.
-      images: [{ url: "/og.png", width: 1200, height: 630 }],
+      // card app/opengraph-image.tsx put there is carried over.
+      images: (await parent).openGraph?.images,
     },
     twitter: {
       card: "summary_large_image",
       title: doc.title,
       description: doc.description,
-      images: ["/og.png"],
     },
   }
 }
