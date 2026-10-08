@@ -2,7 +2,8 @@
 
 Facts and copy for one Product Hunt post. Every claim has a source, and if a source changes, this file is
 wrong until it is corrected. Live claims only: anything the site says that is not built or not proven is
-listed under *Not claimed*. Checked 2026-10-08 against main `24a36cfc` and the live site.
+listed under *Not claimed*. Checked 2026-10-08 against main `24a36cfc` and the live site. Wording re-synced
+later that day against main `e07f18f0` and the live demo (remind → message; gallery shot 1 re-shot).
 
 **Status: DRAFT SAVED 2026-10-08:** https://www.producthunt.com/products/real-good-site?launch=real-good-site (run notes: `runs/2026-10-08/notes.md`). **DRAFT ONLY.** Pro and its one-click setup are not built, and the prices are placeholders. The end
 state is Product Hunt's "Create draft". Never Schedule or Launch.
@@ -28,7 +29,7 @@ state is Product Hunt's "Create draft". Never Schedule or Launch.
 PH's limit is 500 (form, 2026-10-08); 260 kept as the house limit.
 
 > A training tracker for whoever keeps the spreadsheet. Try it free with made-up people, no sign-up: see
-> who's up to date, due or overdue, pick who to remind and see the count before you send. Each send
+> who's up to date, due or overdue, pick who to message and see the count before you send. Each send
 > lands on the record. Built from open-source (MIT) parts.
 
 ### First comment
@@ -39,8 +40,8 @@ PH's limit is 500 (form, 2026-10-08); 260 kept as the house limit.
 > runs out next month, who still hasn't signed. Usually it's a spreadsheet, and the chasing happens by hand.
 >
 > Real Good Site starts with a tracker for that job. You can try it now with made-up people: type what you
-> track and who, see who's up to date, due or overdue, pick who to remind and press Send. It tells you how
-> many people it is about to remind before anything happens, and the send lands on a record of who did
+> track and who, see who's up to date, due or overdue, pick who to message and press Send. It tells you how
+> many people it is about to message before anything happens, and the send lands on a record of who did
 > what and when. Nothing is sent or saved in the demo.
 >
 > It's made from building blocks I've used on my own sites: Setian, MichiKanji, RapidSafeSystems and
@@ -48,7 +49,7 @@ PH's limit is 500 (form, 2026-10-08); 260 kept as the house limit.
 > there's a complete free example: a calibration recall desk with a two-person sign-off.
 >
 > What isn't ready yet, said plainly: Pro, which takes the tracker live in your own accounts (sign-in,
-> your own database, real reminders) for $149 once per tool, is what I'm building next, along with policy
+> your own database) for $149 once per tool, is what I'm building next, along with policy
 > sign-offs, approvals, inspections and an incident log. I'd love to hear which list you keep and what it
 > should do for you.
 
@@ -64,7 +65,7 @@ PH's limit is 500 (form, 2026-10-08); 260 kept as the house limit.
 | Tracker covers training, certificates, licences | `apps/v4/lib/tools.ts` training-tracker `examples`; tracker page eyebrow |
 | Free to try with made-up people, no sign-up, nothing sent or saved | `components/marketing/training-tracker-demo.tsx` footer ("Made-up people… Nothing is sent or saved."); no sign-in exists on the site |
 | Up to date / due / overdue | `training-tracker-demo.tsx` StatusStrip segments ("up to date", "due in 30 days", "overdue") |
-| Pick who to remind; count shown before send | `training-tracker-demo.tsx` `ConfirmSend` (`count={selected.size}`); `tools.ts` TRACKER_MOMENTS "Every send shows the count first" |
+| Pick who to message; count shown before send | `training-tracker-demo.tsx` `ConfirmSend` (`label="Send message"`, `count={selected.size}`); `tools.ts` TRACKER_MOMENTS "Every send shows the count first" |
 | Each send lands on the record | `training-tracker-demo.tsx` `sent` events prepended to the `AuditTimeline` |
 | Building blocks open source, MIT | `LICENSE.md`; pricing page Free plan; every `/r/<item>.json` checked returns 200 (status-strip, confirm-send, audit-timeline, approval-step, alert-rules, data-table, calibration-desk) |
 | Instructions written for AI assistants | `/docs/ai` (live 200); `skills/crisp-ui/SKILL.md` |
@@ -80,7 +81,7 @@ PH's limit is 500 (form, 2026-10-08); 260 kept as the house limit.
 | On the site today | Why it stays out |
 |---|---|
 | "Describe it in plain words and your AI assistant makes it yours" / "Make it yours" | The four-question output tells the assistant to run `npx shadcn@latest add https://realgood.site/r/training-tracker.json` (`components/marketing/make-it-yours.tsx:66`), which is **404** on the live site. |
-| "One click sets up sign-in, your database and email reminders" / Pro's feature list | Pro is not built (memory `project_crisp_ui_positioning.md`). The post names Pro and its price only, as not ready. |
+| "One click sets up sign-in and your database in accounts you own" (landing, `app/(app)/(root)/page.tsx:58`) / Pro's feature list | Pro is not built (memory `project_crisp_ui_positioning.md`). The post names Pro and its price only, as not ready. Reminders are never claimed: the site has none (Ari, 2026-10-08). |
 | Done for you, from $900 | Placeholder price; not mentioned. |
 | "We never store your records" / "never pass through us" | No backend exists yet, so the claim is unproven. |
 | "Works with Lovable, Claude and Cursor" | No evals yet. |
