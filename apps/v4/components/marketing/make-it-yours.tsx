@@ -39,7 +39,7 @@ const QUESTIONS: { key: keyof Answers; label: string; hint: string }[] = [
   {
     key: "alsoHears",
     label: "Who else hears when someone falls behind?",
-    hint: "For example a line manager, after two reminders.",
+    hint: "For example their line manager.",
   },
 ]
 
@@ -48,7 +48,7 @@ function answersFor(example: TrackExample): Answers {
     who: `About 18 ${example.people} at our ${example.where}`,
     what: `${example.training}, ${example.renewal}`,
     signsOff: example.approver,
-    alsoHears: "Their manager, after two reminders",
+    alsoHears: "Their line manager",
   }
 }
 
@@ -68,16 +68,15 @@ Steps
 3. Connect sign-in and the database with the Real Good Site setup file. Do not write your own access rules.
 
 Rules that must stay true
-- Show the number of people before any reminder goes out.
+- Show the number of people before any message goes out.
 - A sign-off needs a written reason.
-- Every reminder, sign-off and failure adds one entry to the record, written by the server.
-- No reminders between 9pm and 8am.
+- Every message, sign-off and failure adds one entry to the record, written by the server.
 - Emails contain the person's first name and the training name, nothing else personal.
 
 Before you say you are done, run these checks and show me the results
-1. Reminding 7 people adds exactly one entry to the record.
+1. Messaging 7 people adds exactly one entry to the record.
 2. A sign-off without a reason is refused.
-3. Someone who is not a manager cannot send reminders, even by calling the server directly.
+3. Someone who is not a manager cannot send messages, even by calling the server directly.
 4. Everything can be done with the keyboard alone.
 
 If anything is unclear, ask me instead of guessing.`
