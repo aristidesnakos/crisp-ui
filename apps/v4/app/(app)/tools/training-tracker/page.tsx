@@ -102,7 +102,7 @@ export default function TrainingTrackerPage() {
               <Link href="/pricing">Go live with Pro</Link>
             </Button>
             <p className="text-sm text-muted-foreground">
-              Free with sample data · Pro is €149, once
+              Free with sample data · Pro is $149, once
             </p>
           </div>
         </header>
@@ -170,7 +170,7 @@ export default function TrainingTrackerPage() {
             <div className="flex flex-col gap-5 rounded-2xl border bg-background p-6 md:p-8">
               <div>
                 <h3 className="font-medium">Free</h3>
-                <p className="font-display text-5xl">€0</p>
+                <p className="font-display text-5xl">$0</p>
               </div>
               <ul className="flex list-none flex-col gap-2.5 p-0 text-sm">
                 {FREE.map((item) => (
@@ -189,7 +189,7 @@ export default function TrainingTrackerPage() {
                 <div>
                   <h3 className="font-medium">Pro</h3>
                   <p className="font-display text-5xl">
-                    €149{" "}
+                    $149{" "}
                     <span className="font-sans text-base text-muted-foreground">
                       once
                     </span>
