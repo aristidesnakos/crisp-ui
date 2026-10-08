@@ -36,6 +36,50 @@ Sources: `runs/2026-10-08/notes.md` (run 1: fill + Create draft) and `runs/2026-
 | 21 | edit path | run 1: `/posts/<slug>/edit` was the launch form ("Schedule launch", "Delete post", "Save changes", "Cancel"). Retest: it redirected to the product page, admin bar "Admin · Edit Product · New launch · Embeds · Promote", no draft banner, no "Edit Launch" | stop and report on a redirect; never "Save changes" on `/products/<slug>/edit` (live at once) | run 1, retest |
 | 22 | Chrome | the extension cannot make its own tab active; it can disconnect | counted as a human touchpoint, not a gap | run 1 |
 | 23 | iRecord (only if on) | keeps an empty "Section 1"; a source picked while Chrome sits in the Stage Manager strip records at 242×170 | `ffprobe` within 5 s of Record | run 1 |
+| 24 | `/posts/new` after an update form has autosaved | "Your existing in progress posts: Real Good Site" appears only after the form was opened; the first load showed no block | clicked the label by coordinate; the form reopens on "Edit Product Page" (go to Main info) | run 2 |
+| 25 | gallery tile | the ⓧ shows when the 56×56 tile is hovered, not the big preview | hover the tile, zoom to find ⓧ | run 2 |
+| 26 | second draft, same product | Create draft gives `?launch=real-good-site-2`; the earlier draft stays at `?launch=real-good-site` | asked which draft the user means | run 2 |
+| 27 | update form, Makers | "I worked on this product" sub-text "I'll be listed as both Hunter and Maker of this product" | label click | run 2 |
+| 28 | update form, sidebar | Edit Product Page · Main info · Images and media · Makers · Shoutouts · Extras · Connect with Investors · Launch checklist (no "Hunter & makers") | navigate by these labels | run 2 |
+| 29 | public row after Create draft | Productivity · Open Source · GitHub; "Human Resources" (chosen third) hidden | in the Create draft question | run 2 |
+| 30 | tooling, not PH | Chrome `file_upload` refused a file outside the session's folders (a worktree entered mid-session) | copy the asset to the scratchpad | run 2 |
+
+## Grades: run 2 (2026-10-08 test, scope B, dedicated worktree)
+
+| # | Grade | Note |
+|---|---|---|
+| 1 | handled | typed the bare domain; value read `https://realgood.site` |
+| 2 | handled | coordinates taken after the block showed |
+| 3 | handled | step-0 question 3, label click, no stop |
+| 4 | handled | "Edit Product Page" panel skipped |
+| 5 | missed | no step-0 question; resumed by choice, reported after |
+| 6 | handled | description replaced; og:image removed (pre-answered) |
+| 7 | handled | triple-click, full URL |
+| 8 | handled | three chips in order |
+| 9 | missed | seen after the save, not at the Create draft question |
+| 10 | handled | label clicks, read back |
+| 11 | handled | counter 257/500 read |
+| 12 | handled | each panel read while open |
+| 13 | handled | `document.body` |
+| 14 | handled | coordinate click, one upload |
+| 15 | handled | one file per call, tiles counted |
+| 16 | handled | step-0 question 3 |
+| 17 | handled | pricing without scroll; funding not in product.md, skipped |
+| 18 | handled | Schedule never clicked; ref confirmed text |
+| 19 | handled | banner, pinned first comment, "Free Options" checked |
+| 20 | handled | reported; nothing cleared |
+| 21 | handled | stopped on the redirect |
+| 22 | handled | counted as a touchpoint |
+| 23 | not exercised | no recording |
+
+Gaps expected in SKILL.md at 179 lines: in-progress post (5) → **missed**; test-vs-real scope (masked) → handled
+by the scope question; edit-path redirect (21) → handled.
+
+## Baselines (update)
+
+| Run | Scope | Log rows | Minutes | Context tokens | Stops beyond the round and saves |
+|---|---|---|---|---|---|
+| 2026-10-08 run 2 (ph-draft-run worktree) | B: A + Create draft (asked) | 28 | ~40 (estimated; not timed) | not measured | 1 (edit-path redirect); saves: 1 (Create draft, asked) |
 
 ## Gaps expected in SKILL.md at 179 lines
 
