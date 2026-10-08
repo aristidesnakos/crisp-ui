@@ -55,7 +55,7 @@ const PLANS = [
     price: "€900",
     note: "from, once",
     blurb: "We set it up and hand it over working.",
-    cta: { label: "Talk to us", href: "/pricing#faq" },
+    cta: { label: "Chat with us", href: "https://cal.com/ari-nakos/chat" },
     features: [
       "Everything in Pro",
       "Your people and training loaded from your spreadsheet",
@@ -144,7 +144,13 @@ export default function PricingPage() {
                 size="lg"
                 variant={plan.featured ? "default" : "outline"}
               >
-                <Link href={plan.cta.href}>{plan.cta.label}</Link>
+                {plan.cta.href.startsWith("http") ? (
+                  <a href={plan.cta.href} target="_blank" rel="noreferrer">
+                    {plan.cta.label}
+                  </a>
+                ) : (
+                  <Link href={plan.cta.href}>{plan.cta.label}</Link>
+                )}
               </Button>
               <ul className="flex list-none flex-col gap-2.5 p-0 text-sm">
                 {plan.features.map((feature) => (
