@@ -1,0 +1,32 @@
+34a35,38
+> 5. Scope: stop at "100% Complete" (test; stop before the save) or go on to Create draft (real)? [test]
+> 6. An in-progress post is listed on `/posts/new` ("Your existing in progress posts: <name>")? Resume it
+>    or start fresh? [resume; it reopens on "Edit Product Page": go to Main info]
+> 
+43c47,48
+<   Gallery 1270×760 (2× is fine), first image = social preview. Assets must be inside the session's folders.
+---
+>   Gallery 1270×760 (2× is fine), first image = social preview. Assets must be inside the session's folders (a worktree
+>   entered mid-session is not one: copy the assets to the scratchpad and upload from there).
+75a81,83
+>   Click its label by coordinate; the form restores on "Edit Product Page" (go to Main info).
+> - Update form sidebar: Edit Product Page · Main info · Images and media · Makers · Shoutouts · Extras ·
+>   Connect with Investors · Launch checklist. No "Hunter & makers" (that is the edit page).
+90c98,99
+<   Mention it at the Create draft question.
+---
+>   Put it in the Create draft question (step 6). 2026-10-08 retest: the public row read Productivity, Open
+>   Source, GitHub (Human Resources hidden).
+103c112,113
+<   remove a tile: hover it, click the ⓧ at its top-right (≈ x+54, y+5); no confirm. Remove right to left so
+---
+>   remove a tile: hover the small 56×56 tile (hovering the big preview shows nothing), zoom to find the ⓧ at
+>   its top-right (≈ x+54, y+5 from the tile's top-left); no confirm. Remove right to left so
+108c118,119
+< "Did you work on this launch?": "I worked on this product" / "I didn't work on this product" · "Who worked on
+---
+> "Did you work on this launch?": "I worked on this product" (sub-text "I'll be listed as both Hunter and Maker
+> of this product") / "I didn't work on this product" · "Who worked on
+128a140,141
+> - A second draft for the same product gets `-2` in the URL (`?launch=<slug>-2`), and the earlier draft stays
+>   listed. Ask which one the user means before editing either.
