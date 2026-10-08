@@ -1,7 +1,8 @@
-import { type Metadata } from "next"
+import { type Metadata, type ResolvingMetadata } from "next"
 import Link from "next/link"
 import { Check, ChevronRight } from "lucide-react"
 
+import { siteConfig } from "@/lib/config"
 import { TRACKER_MOMENTS } from "@/lib/tools"
 import { DevFeedback } from "@/components/dev/dev-feedback"
 import { MakeItYours } from "@/components/marketing/make-it-yours"
@@ -11,10 +12,37 @@ import { EVERYWHERE } from "@/components/marketing/tracker-data"
 import { TrainingTrackerDemo } from "@/components/marketing/training-tracker-demo"
 import { Button } from "@/registry/new-york-v4/ui/button"
 
-export const metadata: Metadata = {
-  title: "Training tracker",
-  description:
-    "Know who's done it, chase who hasn't, and prove it later. A finished tracker for training, certificates, licences and sign-offs.",
+const title = "Training tracker"
+const description =
+  "Know who's done it, chase who hasn't, and prove it later. A finished tracker for training, certificates, licences and sign-offs."
+
+export async function generateMetadata(
+  _props: unknown,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  // This openGraph replaces the layout's whole object, so carry over the
+  // layout's card. Twitter falls back to it.
+  const { openGraph } = await parent
+  const socialTitle = `${title} - ${siteConfig.name}`
+
+  return {
+    title,
+    description,
+    alternates: { canonical: "/tools/training-tracker" },
+    openGraph: {
+      type: "website",
+      url: "/tools/training-tracker",
+      title: socialTitle,
+      description,
+      siteName: siteConfig.name,
+      images: openGraph?.images,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: socialTitle,
+      description,
+    },
+  }
 }
 
 const FREE = [

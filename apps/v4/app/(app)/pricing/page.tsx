@@ -1,8 +1,9 @@
-import { type Metadata } from "next"
+import { type Metadata, type ResolvingMetadata } from "next"
 import Link from "next/link"
 import { cn } from "cn"
 import { Check } from "lucide-react"
 
+import { siteConfig } from "@/lib/config"
 import { DevFeedback } from "@/components/dev/dev-feedback"
 import { Eyebrow, Section } from "@/components/marketing/section"
 import {
@@ -13,10 +14,37 @@ import {
 } from "@/registry/new-york-v4/ui/accordion"
 import { Button } from "@/registry/new-york-v4/ui/button"
 
-export const metadata: Metadata = {
-  title: "Pricing",
-  description:
-    "Try every tool free with sample data. Pay once to take a tool live in your own account, or have us set it up for you.",
+const title = "Pricing"
+const description =
+  "Try every tool free with sample data. Pay once to take a tool live in your own account, or have us set it up for you."
+
+export async function generateMetadata(
+  _props: unknown,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  // This openGraph replaces the layout's whole object, so carry over the
+  // layout's card. Twitter falls back to it.
+  const { openGraph } = await parent
+  const socialTitle = `${title} - ${siteConfig.name}`
+
+  return {
+    title,
+    description,
+    alternates: { canonical: "/pricing" },
+    openGraph: {
+      type: "website",
+      url: "/pricing",
+      title: socialTitle,
+      description,
+      siteName: siteConfig.name,
+      images: openGraph?.images,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: socialTitle,
+      description,
+    },
+  }
 }
 
 const PLANS = [
