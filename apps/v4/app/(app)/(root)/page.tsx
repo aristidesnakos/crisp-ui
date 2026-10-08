@@ -55,7 +55,7 @@ const STEPS = [
   },
   {
     title: "Go live in your own account",
-    text: "One click sets up sign-in, your database and email reminders in accounts you own. Your people's records never pass through us.",
+    text: "One click sets up sign-in and your database in accounts you own. Your people's records never pass through us.",
   },
 ]
 
@@ -70,9 +70,8 @@ const BUILT_IN = [
   ],
   [
     "A record that writes itself",
-    "Every reminder, sign-off and failure, saved by the server, not the browser.",
+    "Every send, sign-off and failure, saved by the server, not the browser.",
   ],
-  ["Quiet hours", "Reminders wait until morning."],
   [
     "No personal details in emails",
     "First name and training name. Nothing else.",
@@ -95,8 +94,8 @@ function LandingHero() {
           <p className="max-w-2xl text-lg text-pretty text-muted-foreground md:text-xl">
             Start from a finished tracker for training, certificates and
             sign-offs. Describe it in plain words and your AI assistant makes it
-            yours. Reminders, sign-offs and a record you can show anyone who
-            asks come built in.
+            yours. Sign-offs and a record you can show anyone who asks come
+            built in.
           </p>
           <div className="mt-2 flex flex-wrap justify-center gap-3">
             <Button size="lg" asChild>
@@ -140,7 +139,7 @@ function LandingHowItWorks() {
         tone="paper"
         eyebrow="How it works"
         title="From sample to yours in three steps"
-        lede="A spreadsheet never reminds anyone, off-the-shelf software fits someone else's process, and a developer takes months. Now you start from a finished tool and shape it in plain words."
+        lede="Off-the-shelf software fits someone else's process, and a developer takes months. Now you start from a finished tool and shape it in plain words."
       >
         <ol className="grid list-none gap-12 p-0 md:grid-cols-3 md:gap-14">
           {STEPS.map((step, i) => (

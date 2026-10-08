@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { cn } from "cn"
-import { BellRing, CircleAlert, CircleCheck, Clock, Lock } from "lucide-react"
+import { CircleAlert, CircleCheck, Clock, Lock, Mail } from "lucide-react"
 
 import {
   DEMO_NOW,
@@ -180,7 +180,7 @@ export function TrainingTrackerDemo({ className }: { className?: string }) {
   const [sent, setSent] = React.useState<AuditEvent[]>([])
   const [sending, setSending] = React.useState(false)
   const [sentCount, setSentCount] = React.useState<number | null>(null)
-  const [reminded, setReminded] = React.useState<Set<string>>(new Set())
+  const [messaged, setMessaged] = React.useState<Set<string>>(new Set())
 
   function pick(example: TrackExample) {
     setTraining(example.training)
@@ -214,13 +214,13 @@ export function TrainingTrackerDemo({ className }: { className?: string }) {
       id: `send-${count}`,
       at: new Date(DEMO_NOW.getTime() + count * 2 * MINUTE).toISOString(),
       actor: ORG.sender,
-      action: "sent a reminder to",
+      action: "sent a message to",
       target: `${n} ${n === 1 ? "person" : who}`,
       outcome: "succeeded",
       detail: `${what}. First name and what is due, nothing else.`,
     }
     setSent((prev) => [event, ...prev])
-    setReminded((prev) => new Set([...prev, ...recipients]))
+    setMessaged((prev) => new Set([...prev, ...recipients]))
     setSentCount(n)
     setSending(false)
   }
@@ -320,7 +320,7 @@ export function TrainingTrackerDemo({ className }: { className?: string }) {
               />
             </Moment>
 
-            <div className="flex flex-col gap-3">
+            <Moment n={2} label="Decide">
               <div
                 role="group"
                 aria-label="Which people to list"
@@ -357,7 +357,7 @@ export function TrainingTrackerDemo({ className }: { className?: string }) {
                     <TableRow>
                       <TableHead className="w-10">
                         <Checkbox
-                          aria-label="Select everyone who needs a reminder"
+                          aria-label="Select everyone who needs attention"
                           checked={
                             allSelected
                               ? true
@@ -371,7 +371,7 @@ export function TrainingTrackerDemo({ className }: { className?: string }) {
                       <TableHead>Name</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead className="hidden sm:table-cell">
-                        <span className="sr-only">Reminded</span>
+                        <span className="sr-only">Messaged</span>
                       </TableHead>
                     </TableRow>
                   </TableHeader>
@@ -406,13 +406,10 @@ export function TrainingTrackerDemo({ className }: { className?: string }) {
                             <StatusCell person={person} />
                           </TableCell>
                           <TableCell className="hidden text-right sm:table-cell">
-                            {reminded.has(person.id) ? (
+                            {messaged.has(person.id) ? (
                               <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2 py-0.5 text-xs text-muted-foreground">
-                                <BellRing
-                                  className="size-3"
-                                  aria-hidden="true"
-                                />
-                                Reminded today
+                                <Mail className="size-3" aria-hidden="true" />
+                                Messaged today
                               </span>
                             ) : null}
                           </TableCell>
@@ -422,19 +419,6 @@ export function TrainingTrackerDemo({ className }: { className?: string }) {
                   </TableBody>
                 </Table>
               </div>
-            </div>
-
-            <Moment n={2} label="Decide">
-              <p className="flex gap-2.5 text-sm">
-                <BellRing
-                  className="mt-0.5 size-4 shrink-0 text-brand"
-                  aria-hidden="true"
-                />
-                <span>
-                  Reminders go 30 and 7 days before it is due, then weekly.
-                  After two, {ORG.cc} is copied. Never between 9pm and 8am.
-                </span>
-              </p>
             </Moment>
 
             <Moment n="3–4" label="Act, then confirm">
@@ -443,8 +427,8 @@ export function TrainingTrackerDemo({ className }: { className?: string }) {
                   count={selected.size}
                   noun="person"
                   nounPlural={who}
-                  label="Send reminder"
-                  emptyReason="Select who to remind first"
+                  label="Send message"
+                  emptyReason="Select who to message first"
                   sending={sending}
                   sentCount={sentCount}
                   onSend={send}
@@ -474,7 +458,7 @@ export function TrainingTrackerDemo({ className }: { className?: string }) {
       </div>
 
       <p className="text-center text-sm text-muted-foreground">
-        Made-up people. Type what you track, pick who to remind, and send.
+        Made-up people. Type what you track, pick who to message, and send.
         Nothing is sent or saved.
       </p>
     </div>

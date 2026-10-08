@@ -8,7 +8,7 @@ import { Eyebrow } from "@/components/marketing/section"
 
 const title = "Tools"
 const description =
-  "Finished tools for jobs that need a paper trail: training, sign-offs, approvals, inspections and incidents."
+  "Finished tools for jobs that need a paper trail. The training tracker is ready; sign-offs, approvals, inspections and incidents are coming next."
 
 export async function generateMetadata(
   _props: unknown,

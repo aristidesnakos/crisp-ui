@@ -82,8 +82,8 @@ export const TRACKER_MOMENTS: MomentItem[] = [
   },
   {
     stage: "Decide",
-    quote: "Remind at 30 and 7 days",
-    text: "Rules you can read as a sentence, with quiet hours so nobody gets a 2am email.",
+    quote: "7 need attention",
+    text: "Everyone overdue or due soon is already picked. Untick anyone you have spoken to.",
   },
   {
     stage: "Act",

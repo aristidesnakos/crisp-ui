@@ -134,7 +134,6 @@ export const ORG = {
   name: "Your team",
   host: "tracker.your-team.example",
   sender: { name: "Joy Okafor", role: "Office manager" },
-  cc: "their manager",
 }
 
 const DAY = 24 * 60 * 60 * 1000
@@ -219,8 +218,8 @@ export function historyFor(training: string, people: string): AuditEvent[] {
     {
       id: "h2",
       at: at(1, "08:00"),
-      actor: "Reminder rule",
-      action: "sent a 30-day reminder to",
+      actor: ORG.sender,
+      action: "sent a message to",
       target: `2 ${people}`,
       outcome: "succeeded",
       detail: `${training}. First name and what is due, nothing else.`,
@@ -229,14 +228,15 @@ export function historyFor(training: string, people: string): AuditEvent[] {
       id: "h3",
       at: at(3, "16:45"),
       actor: ORG.sender,
-      action: "changed the reminder rule",
-      reason: "Agreed at the team meeting",
-      detail: "Copy managers after 2 reminders",
+      action: "added",
+      target: `2 new ${people}`,
+      reason: "Started on Monday",
+      detail: training,
     },
   ]
 }
 
-/** The people a reminder would go to: everyone not up to date. */
+/** The people who need attention: everyone not up to date. */
 export function needsAttention(people: TrackedPerson[]) {
   return people.filter((p) => p.status !== "current")
 }

@@ -98,7 +98,7 @@ export function buildLlmsTxt({
     "",
     `> ${oneLine(summary)}`,
     "",
-    `${name} is a small set of UI patterns for internal-tool dashboards, such as a status headline, who gets notified, confirm-then-send, and an unsaved-changes bar. It is a shadcn registry: the source is installed into your project and you own it. There is no package to depend on.`,
+    `${name} makes finished tools for whoever keeps the spreadsheet, such as a training tracker. These docs cover its building blocks, the UI parts those tools are made of, such as a status headline, who gets notified, confirm-then-send, and an unsaved-changes bar. They are a shadcn registry: the source is installed into your project and you own it. There is no package to depend on.`,
     "",
     "## For coding agents",
     "",

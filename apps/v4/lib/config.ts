@@ -2,7 +2,7 @@ export const siteConfig = {
   name: "Real Good Site",
   url: process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:4000",
   description:
-    "Finished tools for whoever keeps the spreadsheet: training, certificates, sign-offs and approvals. Describe it in plain words and your AI assistant makes it yours, with reminders and a record built in.",
+    "Finished tools for whoever keeps the spreadsheet, starting with a tracker for training, certificates and licences. Describe it in plain words and your AI assistant makes it yours, with a record built in.",
   links: {
     github: "https://github.com/aristidesnakos/crisp-ui",
   },

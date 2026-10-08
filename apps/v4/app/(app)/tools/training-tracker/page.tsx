@@ -55,7 +55,6 @@ const PRO = [
   "Sign-in with roles: staff, managers, admins",
   "Your own database, with access rules we have tested",
   "A record that writes itself and cannot be edited",
-  "Automatic email reminders with quiet hours",
   "Certificate uploads and spreadsheet import",
   "One-click setup in accounts you own",
   "12 months of updates",
