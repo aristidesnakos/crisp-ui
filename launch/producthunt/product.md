@@ -16,7 +16,7 @@ state is Product Hunt's "Create draft". Never Schedule or Launch.
 | Link to the product | `https://realgood.site` | |
 | Name | `Real Good Site` | 14 |
 | Tagline | `Know who's done it, chase who hasn't, prove it later` | 52 / 60 |
-| Launch tags (up to 3) | Productivity, Human Resources, Open Source. *Saved as Productivity, Open Source, GitHub: PH swapped HR for GitHub; Ari kept it.* | |
+| Launch tags (up to 3) | Productivity, Human Resources, Open Source. *Saved: all three, plus a 4th tag "GitHub" PH added (likely from the GitHub link). The public page shows only the first three (Productivity, Open Source, GitHub); the edit form has all four.* | |
 | Other links | GitHub: `https://github.com/aristidesnakos/crisp-ui` | |
 | Pricing | Free, with a paid plan (PH's closest option, e.g. "Paid (with a free trial or plan)"; log the label seen) | |
 | Makers | "I worked on this product" (Aris Nakos, the signed-in account); solo maker: yes | |

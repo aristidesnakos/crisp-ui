@@ -12,11 +12,11 @@ https://www.producthunt.com/products/real-good-site?launch=real-good-site
 | Link | https://realgood.site (+ https://github.com/aristidesnakos/crisp-ui) |
 | Name / tagline | Real Good Site / Know who's done it, chase who hasn't, prove it later (52/60) |
 | Description | product.md text, 257/500 (PH pre-filled the site meta description; replaced) |
-| Launch tags | **Productivity, Open Source, GitHub**. The form showed Productivity, Human Resources, Open Source at save; PH swapped in GitHub (likely from the GitHub link). Ari: keep as saved. |
+| Launch tags | Productivity, Human Resources, Open Source **plus "GitHub"**, a 4th tag PH added (likely from the GitHub link). The public page shows only the first three (Productivity, Open Source, GitHub), which first looked like HR was dropped; the edit form (`/posts/real-good-site/edit`) has all four (validator, confirmed). |
 | Thumbnail / gallery | assets/thumbnail.png; gallery tracker demo, Built with (the auto-filled og.png removed) |
-| First comment | product.md text, 1221 chars, pinned as Maker |
+| First comment | product.md text, 1221 chars, pinned as Maker on the draft page (not shown in the edit form) |
 | Makers | "I worked on this product", Aris Nakos @ari_nakos, solo maker ticked (Ari) |
-| Pricing | Paid (with a free trial or plan) |
+| Pricing | Paid (with a free trial or plan); the public page labels it "Free Options" |
 | Not set (optional) | X account, open-source checkbox, video/Loom, interactive demo, shoutouts, investors, promo code |
 
 ## Video: unusable
@@ -45,6 +45,11 @@ Record; under 1000 px wide → Stop and redo.
 7. The extension cannot make its tab the active one (new tabs open in the background); Ari clicked it.
 8. iRecord's plan sheet (and "Replace Plan") always keeps the default "Section 1"; used as pre-roll.
    "Plan next lecture…" opens the series' next blank recording, which was the pilot's.
+
+9. Editing a saved draft is a different form: `/posts/<slug>/edit` (the "Edit Launch" link ignores ref clicks;
+   navigate instead), one long page, sidebar Main info · Images and media · Hunter & makers · Shoutouts · Extras ·
+   Connect with Investors, no first comment, no thumbnail input, buttons "Schedule launch" (top), "Delete post",
+   "Save changes", "Cancel". Found by the read-only validation subagent.
 
 ## Where the run needed Ari
 
