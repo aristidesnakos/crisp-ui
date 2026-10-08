@@ -1,0 +1,85 @@
+10c10,11
+< Labels below were seen on 2026-10-08. **If a label differs, stop, re-read the page and tell the user.**
+---
+> Labels below were seen on 2026-10-08 (first run and a cold retest). **If a label differs, stop, re-read the
+> page and tell the user.**
+17c18,19
+< - Ask in chat right before **Create draft**, "Save changes" or any other save button.
+---
+> - Ask in chat right before **Create draft**, "Save changes" or any other save button. Never touch "Edit product
+>   info" (update form) or "Save changes" on `/products/<slug>/edit`: both change the live product page at once.
+28,30c30,33
+< 3. Click "Get started" without stopping? Makers: "I worked on this product", solo maker? [yes; from product.md]
+< 4. Optional fields (X account, open-source checkbox, video/Loom, demo, shoutouts, investors, promo code)?
+<    Record with iRecord? [skip unless product.md has them; no recording]
+---
+> 3. Click "Get started" without stopping (if the product is already on PH: "Yes! Attach this launch…" and
+>    "Create an update for <name>" too)? Makers: "I worked on this product", solo maker? [yes; from product.md]
+> 4. Optional fields (X account, open-source checkbox, video/Loom, demo, shoutouts, investors, promo code,
+>    funding)? Record with iRecord? [skip unless product.md has them; no recording]
+32c35,36
+< After that, only Create draft is asked again.
+---
+> After that, only Create draft is asked again. Stopping short of it still leaves an in-progress post (see
+> *Leaving without Create draft*): say so.
+50,51c54,57
+< - Navigate with the sidebar. Skip the red "Next step: …" buttons. Sidebar clicks smooth-scroll: wait ~1 s
+<   before reading or taking a screenshot.
+---
+> - Navigate with the sidebar. Skip the red "Next step: …" buttons. The new form shows ONE panel at a time
+>   (only the open panel is in the DOM): fill and read back each panel while it is open. Sidebar clicks
+>   smooth-scroll: wait ~1 s. "Extras" lands with Pricing under the sticky header: scroll up 3 ticks first.
+> - DOM reads: query `document.body`, not `document` (`<meta name="description">` shadows `[name=description]`).
+62a69,75
+> - **Product already on PH** (URL in use): "Get started" adds "Is this a new launch for <name>?": "Yes! Attach
+>   this launch to <name>'s page when it goes live." (label click) / "No, it's a different product" (disabled:
+>   "The provided URL is already in use by <name>."). The button becomes **"Create an update for <name>"**; it
+>   opens the form, saving nothing yet. That form has an extra first panel, "Edit Product Page" ("Changes made
+>   to your product information will be applied immediately…"): skip it, never "Edit product info".
+> - "Your existing in progress posts: <name>" (below "Get started") is a button with no href; ref clicks do
+>   nothing. "Launching again?" loads late and pushes it down: take its coordinates after that block shows.
+72c85,86
+< - Tags: click the tag input, type the name, click the match row just under the input; repeat; Escape.
+---
+> - Tags: click the tag input, type the name, click the match row just under the input; repeat; Escape. Chips
+>   render below the input (hidden while the dropdown is open); the input disappears after the third.
+83,84c97,101
+< - `file_upload` to `#file-input-thumbnailImageUuid`, then all gallery files in one call, in order, to the
+<   first `#file-input-media` (`find` "file input" returns both refs).
+---
+> - Thumbnail: `file_upload` to `#file-input-thumbnailImageUuid`. In the update form it is hidden: click "Add a
+>   separate thumbnail for this launch" by coordinate first (it collapses after a panel switch; the upload stays).
+> - Gallery: ONE file per `file_upload` call, in order, to the last `#file-input-media` (the "+" tile; with a
+>   prefilled image the first one sits over the big preview). Tiles appear ~10 s later: count the 56×56 tiles
+>   before uploading again (a re-upload duplicates; a 2-file call can land reversed).
+86,87c103,104
+<   remove a tile: scroll to the gallery, hover the tile, click the ⓧ at its top-right. A stale og:image is a
+<   site bug: tell the user.
+---
+>   remove a tile: hover it, click the ⓧ at its top-right (≈ x+54, y+5); no confirm. Remove right to left so
+>   positions hold. A stale og:image is a site bug: tell the user.
+99c116,117
+< offer?", "Promo code", "Expiration Date" (all three or none).
+---
+> offer?", "Promo code", "Expiration Date" (all three or none). "Funding information" (optional): "Bootstrapped"
+> / "Y Combinator company" / "Venture backed".
+114a133,138
+> ## Leaving without Create draft
+> 
+> No "Leave site?" dialog, and nothing is discarded: the form autosaves to `localStorage["post_submission"]`
+> (with a `draftUuid`), `/posts/new` lists it as "Your existing in progress posts: <name>", and reopening
+> restores every field and upload. Report it; never clear it (the user decides).
+> 
+116a141,146
+> Retest 2026-10-08: `/posts/<slug>/edit` redirected to `/products/<slug>?launch=<slug>`, whose admin bar read
+> "Admin · Edit Product · New launch · Embeds · Promote" (no draft banner, no "Edit Launch"). If so, stop and
+> tell the user. "Edit Product" (`/products/<slug>/edit`, "Manage <name> Product Page") is product-level only
+> (name, tagline, URL, description, social URLs, categories, pricing, thumbnail, gallery); its "Save changes"
+> is live at once and it has no Cancel (navigate away). Earlier the same day the launch form was:
+> 
+148,149c178,179
+< Draft URL · saved fields vs product.md (any PH swaps) · skipped fields · every point that needed the user ·
+< labels that differed from this file (then update this file).
+---
+> Draft URL · saved fields vs product.md (any PH swaps) · skipped fields · what PH kept (in-progress post,
+> uploads) · every point that needed the user · labels that differed from this file (then update this file).
